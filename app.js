@@ -125,24 +125,45 @@ function decodeAbstract(index){
   if(!index)return"";const words=[];Object.entries(index).forEach(([word,positions])=>positions.forEach(position=>words[position]=word));return words.join(" ");
 }
 function scorePaper(work,model){
-  const title=(work.title||"").toLowerCase(),abstract=decodeAbstract(work.abstract_inverted_index).toLowerCase();
+  const title=cleanPhrase(work.title||""),abstract=cleanPhrase(decodeAbstract(work.abstract_inverted_index)),topics=cleanPhrase((work.topics||[]).map(t=>t.display_name||"").join(" "));
+  const body=[title,abstract,topics].filter(Boolean).join(" ");
   const excluded=(state.profile.excluded||"").split(/[,;\n]/).map(cleanPhrase).filter(Boolean);
-  if(excluded.some(value=>hasExact(title,value)||hasExact(abstract,value)))return null;
-  const matches=[];let raw=0,phraseHits=0,interestHits=0,titleHits=0,abstractInterestHits=0;
-  model.phrases.forEach(value=>{const inTitle=hasExact(title,value),inAbstract=hasExact(abstract,value);if(inTitle||inAbstract){const points=inTitle?16:9;raw+=points;phraseHits++;if(inTitle)titleHits++;matches.push({value,points});}});
-  model.interestTerms.forEach(value=>{const inTitle=hasExact(title,value),inAbstract=hasExact(abstract,value);if(inTitle||inAbstract){const points=(inTitle?6:0)+(inAbstract?2:0);raw+=points;interestHits++;if(inTitle)titleHits++;if(inAbstract)abstractInterestHits++;matches.push({value,points});}});
-  model.cvTerms.forEach(value=>{const inTitle=hasExact(title,value),inAbstract=hasExact(abstract,value);if(inTitle||inAbstract){const points=(inTitle?2:0)+(inAbstract?1:0);raw+=points;matches.push({value,points});}});
-  const strong=raw>=12&&(phraseHits>=1||interestHits>=2||titleHits>=2);
-  const moderate=!strong&&(phraseHits>=1||titleHits>=1||abstractInterestHits>=2)&&raw>=4;
-  if(!strong&&!moderate)return null;
-  return{value:Math.min(98,Math.round((strong?42:28)+raw*(strong?2.2:2))),tier:strong?"strong":"moderate",hits:matches.sort((x,y)=>y.points-x.points).slice(0,6).map(m=>m.value),explanation:phraseHits?phraseHits+" research phrase"+(phraseHits===1?"":"s")+" + "+interestHits+" supporting term"+(interestHits===1?"":"s"):interestHits+" independent research terms"};
+  if(excluded.some(value=>hasExact(title,value)||hasExact(abstract,value)||hasExact(topics,value)))return null;
+  const matches=[];let raw=0,phraseHits=0,interestHits=0,titleHits=0,topicHits=0;
+  model.phrases.forEach(value=>{
+    const words=value.split(" ").filter(Boolean);
+    const exactTitle=hasExact(title,value),exactAbstract=hasExact(abstract,value),exactTopic=hasExact(topics,value);
+    const covered=words.length>=2&&words.every(word=>hasExact(body,word));
+    if(exactTitle||exactAbstract||exactTopic||covered){
+      const points=exactTitle?16:exactTopic?11:exactAbstract?9:Math.min(8,3+words.length);
+      raw+=points;phraseHits++;if(exactTitle)titleHits++;if(exactTopic)topicHits++;matches.push({value,points});
+    }
+  });
+  model.interestTerms.forEach(value=>{
+    const inTitle=hasExact(title,value),inAbstract=hasExact(abstract,value),inTopics=hasExact(topics,value);
+    if(inTitle||inAbstract||inTopics){
+      const points=(inTitle?7:0)+(inTopics?4:0)+(inAbstract?2:0);
+      raw+=points;interestHits++;if(inTitle)titleHits++;if(inTopics)topicHits++;matches.push({value,points});
+    }
+  });
+  model.cvTerms.forEach(value=>{
+    const inTitle=hasExact(title,value),inAbstract=hasExact(abstract,value),inTopics=hasExact(topics,value);
+    if(inTitle||inAbstract||inTopics){const points=(inTitle?2:0)+(inTopics?1:0)+(inAbstract?1:0);raw+=points;matches.push({value,points});}
+  });
+  const specificTitleHit=model.interestTerms.some(value=>value.length>=7&&hasExact(title,value));
+  const strong=raw>=14&&(phraseHits>=1||interestHits>=2||titleHits>=2||topicHits>=2);
+  const candidate=!strong&&raw>=7&&(phraseHits>=1||interestHits>=2||specificTitleHit||(titleHits>=1&&topicHits>=1));
+  if(!strong&&!candidate)return null;
+  const evidence=phraseHits?phraseHits+" concept phrase"+(phraseHits===1?"":"s")+" + "+interestHits+" supporting term"+(interestHits===1?"":"s"):interestHits+" independent research terms";
+  return{value:Math.min(98,Math.round((strong?40:24)+raw*(strong?2.1:2.4))),tier:strong?"strong":"candidate",hits:matches.sort((x,y)=>y.points-x.points).slice(0,6).map(m=>m.value),explanation:evidence};
 }
 function renderPapers(works){
   const model=profileModel();
   let ranked=works.map(w=>({work:w,score:scorePaper(w,model)})).filter(x=>x.score);
   ranked.sort((a,b)=>(a.score.tier==="strong"?0:1)-(b.score.tier==="strong"?0:1)||b.score.value-a.score.value||String(b.work.publication_date).localeCompare(String(a.work.publication_date)));
-  const strongCount=ranked.filter(x=>x.score.tier==="strong").length;
-  ranked=(strongCount?ranked.filter(x=>x.score.tier==="strong"):ranked.filter(x=>x.score.tier==="moderate").slice(0,8)).slice(0,25);
+  const strong=ranked.filter(x=>x.score.tier==="strong");
+  const candidates=ranked.filter(x=>x.score.tier==="candidate");
+  ranked=[...strong,...candidates.slice(0,Math.max(0,12-strong.length))].slice(0,25);
   $("#paper-list").innerHTML=ranked.map(({work,score})=>{
     const source=work.primary_location?.source?.display_name||"Research article",abstract=decodeAbstract(work.abstract_inverted_index);
     const summary=abstract?abstract.split(/(?<=[.!?])\s+/).slice(0,2).join(" "):"Abstract not available in OpenAlex. Open the paper to read more.";
@@ -153,8 +174,8 @@ function renderPapers(works){
   $("#empty-state h3").textContent="No strong matches yet";
   $("#empty-state p").textContent=state.profile.favoriteJournals.length?"No relevant papers were found in your favorite journals for this time window.":"Try a longer time window or broader interests.";
   $("#empty-state button").textContent="Adjust my profile";
-  const showingModerate=ranked.length&&ranked.every(x=>x.score.tier==="moderate");
-  $("#feed-status").textContent=ranked.length?`${ranked.length} ${showingModerate?"possible":"strong"} match${ranked.length===1?"":"es"} found${state.profile.favoriteJournals.length?` in ${state.profile.favoriteJournals.length} favorite journals`:""}`:"No papers with enough research-topic evidence were found in this scan.";
+  const strongShown=ranked.filter(x=>x.score.tier==="strong").length;
+  $("#feed-status").textContent=ranked.length?`${ranked.length} relevant match${ranked.length===1?"":"es"} found (${strongShown} strong)${state.profile.favoriteJournals.length?` in ${state.profile.favoriteJournals.length} favorite journals`:""}`:"No papers with enough research-topic evidence were found in this scan.";
   $$(".save-paper").forEach(b=>b.addEventListener("click",()=>{state.saved.has(b.dataset.id)?state.saved.delete(b.dataset.id):state.saved.add(b.dataset.id);localStorage.setItem("paper-radar-saved",JSON.stringify([...state.saved]));b.textContent=state.saved.has(b.dataset.id)?"★":"☆";}));
 }
 async function fetchWorks(){
