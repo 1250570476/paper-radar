@@ -17,12 +17,20 @@ const escapeHtml=(value="")=>String(value).replace(/[&<>"']/g,c=>({"&":"&amp;","
 const stopWords=new Set("the and for with from into using use based study studies effect effects development design analysis novel approach applications application research system systems method methods results their our this that are was were have has its can may".split(" "));
 const sourceId=s=>String(s.id||"").split("/").pop();
 
-function terms(text){
+function terms(text,limit=24){
   const words=(text.toLowerCase().match(/[a-z][a-z0-9-]{2,}/g)||[]).filter(w=>!stopWords.has(w));
   const counts={};words.forEach(w=>counts[w]=(counts[w]||0)+1);
-  return Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,24).map(([w])=>w);
+  return Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,limit).map(([w])=>w);
 }
-function profileTerms(){return terms(state.profile.interests+" "+state.profile.cvText.slice(0,12000));}
+function cleanPhrase(value){return value.toLowerCase().replace(/[^a-z0-9+ -]/g," ").replace(/\s+/g," ").trim();}
+function interestPhrases(){
+  const chunks=(state.profile.interests||"").split(/[;,\n.!?]|\band\b/).map(cleanPhrase).filter(Boolean),phrases=[];
+  chunks.forEach(chunk=>{const words=chunk.split(" ").filter(w=>w.length>2&&!stopWords.has(w));if(words.length>=2&&words.length<=6)phrases.push(words.join(" "));for(let size=Math.min(4,words.length);size>=2;size--)for(let i=0;i<=words.length-size;i++)phrases.push(words.slice(i,i+size).join(" "));});
+  return [...new Set(phrases)].sort((a,b)=>b.split(" ").length-a.split(" ").length).slice(0,24);
+}
+function profileModel(){const interestTerms=terms(state.profile.interests,20);return{phrases:interestPhrases(),interestTerms,cvTerms:terms(state.profile.cvText.slice(0,12000),12).filter(t=>!interestTerms.includes(t))};}
+function profileTerms(){const model=profileModel();return [...model.phrases.slice(0,4),...model.interestTerms.slice(0,8)];}
+function hasExact(text,value){return (" "+cleanPhrase(text)+" ").includes(" "+cleanPhrase(value)+" ");}
 function saveProfile(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state.profile));}
 function formatDate(value){return value?new Intl.DateTimeFormat(undefined,{dateStyle:"medium"}).format(new Date(value)):"Not checked";}
 
@@ -116,27 +124,32 @@ $("#profile-form").addEventListener("submit",e=>{
 function decodeAbstract(index){
   if(!index)return"";const words=[];Object.entries(index).forEach(([word,positions])=>positions.forEach(position=>words[position]=word));return words.join(" ");
 }
-function scorePaper(work,keywords){
+function scorePaper(work,model){
   const title=(work.title||"").toLowerCase(),abstract=decodeAbstract(work.abstract_inverted_index).toLowerCase();
-  const excluded=terms(state.profile.excluded);if(excluded.some(t=>title.includes(t)||abstract.includes(t)))return 0;
-  const hits=[];keywords.forEach(k=>{const n=(title.includes(k)?3:0)+(abstract.includes(k)?1:0);if(n)hits.push([k,n]);});
-  const raw=hits.reduce((sum,[,n])=>sum+n,0);return{value:Math.min(99,Math.round(28+raw*7)),hits:hits.sort((a,b)=>b[1]-a[1]).slice(0,5).map(x=>x[0])};
+  const excluded=(state.profile.excluded||"").split(/[,;\n]/).map(cleanPhrase).filter(Boolean);
+  if(excluded.some(value=>hasExact(title,value)||hasExact(abstract,value)))return null;
+  const matches=[];let raw=0,phraseHits=0,interestHits=0,titleHits=0;
+  model.phrases.forEach(value=>{const inTitle=hasExact(title,value),inAbstract=hasExact(abstract,value);if(inTitle||inAbstract){const points=inTitle?16:9;raw+=points;phraseHits++;if(inTitle)titleHits++;matches.push({value,points});}});
+  model.interestTerms.forEach(value=>{const inTitle=hasExact(title,value),inAbstract=hasExact(abstract,value);if(inTitle||inAbstract){const points=(inTitle?6:0)+(inAbstract?2:0);raw+=points;interestHits++;if(inTitle)titleHits++;matches.push({value,points});}});
+  model.cvTerms.forEach(value=>{const inTitle=hasExact(title,value),inAbstract=hasExact(abstract,value);if(inTitle||inAbstract){const points=(inTitle?2:0)+(inAbstract?1:0);raw+=points;matches.push({value,points});}});
+  if(!(raw>=12&&(phraseHits>=1||interestHits>=2||titleHits>=2)))return null;
+  return{value:Math.min(98,Math.round(42+raw*2.2)),hits:matches.sort((x,y)=>y.points-x.points).slice(0,6).map(m=>m.value),explanation:phraseHits?phraseHits+" research phrase"+(phraseHits===1?"":"s")+" + "+interestHits+" supporting term"+(interestHits===1?"":"s"):interestHits+" independent research terms"};
 }
 function renderPapers(works){
-  const keywords=profileTerms();
-  let ranked=works.map(w=>({work:w,score:scorePaper(w,keywords)})).filter(x=>x.score&&x.score.value>28);
+  const model=profileModel();
+  let ranked=works.map(w=>({work:w,score:scorePaper(w,model)})).filter(x=>x.score);
   ranked.sort((a,b)=>b.score.value-a.score.value||String(b.work.publication_date).localeCompare(String(a.work.publication_date)));ranked=ranked.slice(0,25);
   $("#paper-list").innerHTML=ranked.map(({work,score})=>{
     const source=work.primary_location?.source?.display_name||"Research article",abstract=decodeAbstract(work.abstract_inverted_index);
     const summary=abstract?abstract.split(/(?<=[.!?])\s+/).slice(0,2).join(" "):"Abstract not available in OpenAlex. Open the paper to read more.";
     const url=work.doi||work.primary_location?.landing_page_url||work.id;
-    return `<article class="paper-card"><div class="score" style="--score:${score.value}"><strong>${score.value}</strong><small>MATCH</small></div><div><div class="paper-meta">${escapeHtml(source)} · ${escapeHtml(work.publication_date||"New")}</div><h3>${escapeHtml(work.title||"Untitled paper")}</h3><p>${escapeHtml(summary.slice(0,520))}</p><div class="why">Matches: ${score.hits.map(escapeHtml).join(", ")||"your research profile"}</div></div><div class="paper-actions"><button class="icon-button save-paper" data-id="${escapeHtml(work.id)}" title="Save paper">${state.saved.has(work.id)?"★":"☆"}</button><a class="icon-button" href="${escapeHtml(url)}" target="_blank" rel="noreferrer" title="Open paper">↗</a></div></article>`;
+    return `<article class="paper-card"><div class="score" style="--score:${score.value}"><strong>${score.value}</strong><small>RELEVANCE</small></div><div><div class="paper-meta">${escapeHtml(source)} · ${escapeHtml(work.publication_date||"New")}</div><h3>${escapeHtml(work.title||"Untitled paper")}</h3><p>${escapeHtml(summary.slice(0,520))}</p><div class="why"><strong>Why it matches:</strong> ${escapeHtml(score.explanation)} · ${score.hits.map(escapeHtml).join(", ")}</div></div><div class="paper-actions"><button class="icon-button save-paper" data-id="${escapeHtml(work.id)}" title="Save paper">${state.saved.has(work.id)?"★":"☆"}</button><a class="icon-button" href="${escapeHtml(url)}" target="_blank" rel="noreferrer" title="Open paper">↗</a></div></article>`;
   }).join("");
   $(".empty").classList.toggle("hidden",ranked.length>0);
   $("#empty-state h3").textContent="No strong matches yet";
   $("#empty-state p").textContent=state.profile.favoriteJournals.length?"No relevant papers were found in your favorite journals for this time window.":"Try a longer time window or broader interests.";
   $("#empty-state button").textContent="Adjust my profile";
-  $("#feed-status").textContent=ranked.length?`${ranked.length} relevant papers found${state.profile.favoriteJournals.length?` in ${state.profile.favoriteJournals.length} favorite journals`:""}`:"No strong matches found in this scan.";
+  $("#feed-status").textContent=ranked.length?`${ranked.length} relevant papers found${state.profile.favoriteJournals.length?` in ${state.profile.favoriteJournals.length} favorite journals`:""}`:"No papers passed the stricter relevance threshold in this scan.";
   $$(".save-paper").forEach(b=>b.addEventListener("click",()=>{state.saved.has(b.dataset.id)?state.saved.delete(b.dataset.id):state.saved.add(b.dataset.id);localStorage.setItem("paper-radar-saved",JSON.stringify([...state.saved]));b.textContent=state.saved.has(b.dataset.id)?"★":"☆";}));
 }
 async function fetchWorks(){
