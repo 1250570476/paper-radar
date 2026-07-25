@@ -3,15 +3,19 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="description" content="A private, no-cost personalized feed for newly published research." />
+  <meta name="description" content="A no-cost personalized feed for newly published research." />
   <title>Paper Radar</title>
   <link rel="preconnect" href="https://api.openalex.org" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css?v=4" />
 </head>
 <body>
   <header class="topbar">
     <a class="brand" href="#"><span class="brand-mark">PR</span><span>Paper Radar</span></a>
-    <nav><button class="nav-button active" data-view="feed">My feed</button><button class="nav-button" data-view="profile">Research profile</button></nav>
+    <nav>
+      <button class="nav-button active" data-view="feed">My feed</button>
+      <button class="nav-button" data-view="journals">Journals</button>
+      <button class="nav-button" data-view="profile">Research profile</button>
+    </nav>
   </header>
 
   <main>
@@ -22,11 +26,28 @@
         <button id="refresh-button" class="primary">Refresh papers</button>
       </div>
       <div id="profile-warning" class="notice hidden">Add your research interests to generate a personalized feed. <button data-go-profile>Set up profile</button></div>
+      <div id="journal-warning" class="notice hidden">Choose favorite journals to restrict your feed. <button data-go-journals>Browse journals</button></div>
       <div class="feed-toolbar"><div><h2>Recommended for you</h2><p id="feed-status">Ready to scan the latest literature.</p></div>
         <label>Time window<select id="days-select"><option value="7">7 days</option><option value="30" selected>30 days</option><option value="90">90 days</option></select></label>
       </div>
       <div id="paper-list" class="paper-list"></div>
       <div id="empty-state" class="empty"><div class="radar-icon">⌁</div><h3>Your radar is ready</h3><p>Set up your profile, then scan recent research from OpenAlex.</p><button class="secondary" data-go-profile>Build my profile</button></div>
+    </section>
+
+    <section id="journals-view" class="view hidden">
+      <div class="section-heading"><p class="eyebrow">JOURNAL LIBRARY</p><h1>Follow the journals that matter</h1><p>Search the OpenAlex catalog and add journals to your favorites. When favorites exist, your feed includes papers only from those journals.</p></div>
+      <article class="panel journal-browser">
+        <div class="journal-search-row">
+          <label class="field">Search journals by name, field, or ISSN
+            <input id="journal-search" type="search" placeholder="e.g., Science Robotics, biomaterials, 1945-0877" />
+          </label>
+          <button id="journal-search-button" class="primary" type="button">Search</button>
+        </div>
+        <div class="catalog-meta"><span id="journal-search-status">Search a comprehensive catalog powered by OpenAlex.</span><span id="last-checked"></span></div>
+        <div id="journal-results" class="journal-results"></div>
+      </article>
+      <div class="favorites-heading"><div><h2>Favorite journals</h2><p id="favorites-count">0 journals selected</p></div><button id="check-journals-button" class="secondary">Check for new papers</button></div>
+      <div id="favorite-journals" class="favorite-journals"></div>
     </section>
 
     <section id="profile-view" class="view hidden">
@@ -43,15 +64,15 @@
           <label class="field">Keywords to exclude<input id="excluded" placeholder="cancer, astronomy (optional)" /></label>
         </article>
         <article class="panel journals">
-          <div class="step"><span>3</span><div><h2>Follow journals</h2><p>Use the curated list, add your own, or leave all unchecked to search broadly.</p></div></div>
-          <div id="journal-options" class="journal-options"></div>
-          <div class="add-journal"><input id="custom-journal" placeholder="Add another journal" /><button id="add-journal-button" type="button" class="secondary">Add</button></div>
+          <div class="step"><span>3</span><div><h2>Choose journals</h2><p>Journal selection now lives in the searchable Journals page.</p></div></div>
+          <button type="button" class="secondary" data-go-journals>Browse and select journals</button>
+          <p id="profile-journal-summary" class="inline-summary"></p>
         </article>
         <div class="form-actions"><span id="save-status"></span><button class="primary" type="submit">Save and generate feed</button></div>
       </form>
     </section>
   </main>
-  <footer>Paper metadata provided by <a href="https://openalex.org" target="_blank" rel="noreferrer">OpenAlex</a>. No paid API is required.</footer>
-  <script type="module" src="app.js?v=3"></script>
+  <footer>Paper and journal metadata provided by <a href="https://openalex.org" target="_blank" rel="noreferrer">OpenAlex</a>. No paid API is required.</footer>
+  <script type="module" src="app.js?v=4"></script>
 </body>
 </html>
