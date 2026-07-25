@@ -77,14 +77,21 @@ function renderPapers(works){
     const url=work.doi||work.primary_location?.landing_page_url||work.id;
     return `<article class="paper-card"><div class="score" style="--score:${score.value}"><strong>${score.value}</strong><small>MATCH</small></div><div><div class="paper-meta">${escapeHtml(source)} · ${escapeHtml(work.publication_date||"New")}</div><h3>${escapeHtml(work.title||"Untitled paper")}</h3><p>${escapeHtml(summary.slice(0,520))}</p><div class="why">Matches: ${score.hits.map(escapeHtml).join(", ")||"your research profile"}</div></div><div class="paper-actions"><button class="icon-button save-paper" data-id="${escapeHtml(work.id)}" title="Save paper">${state.saved.has(work.id)?"★":"☆"}</button><a class="icon-button" href="${escapeHtml(url)}" target="_blank" rel="noreferrer" title="Open paper">↗</a></div></article>`;
   }).join("");
-  $(".empty").classList.toggle("hidden",ranked.length>0);$("#feed-status").textContent=ranked.length?`${ranked.length} relevant papers found`:"No strong matches found in this scan.";
+  $(".empty").classList.toggle("hidden",ranked.length>0);\n  $("#empty-state h3").textContent="No strong matches yet";\n  $("#empty-state p").textContent="Try a longer time window, broader interests, or fewer journal restrictions.";\n  $("#empty-state button").textContent="Adjust my profile";\n  $("#feed-status").textContent=ranked.length?`${ranked.length} relevant papers found`:"No strong matches found in this scan.";
   $$(".save-paper").forEach(b=>b.addEventListener("click",()=>{state.saved.has(b.dataset.id)?state.saved.delete(b.dataset.id):state.saved.add(b.dataset.id);localStorage.setItem("paper-radar-saved",JSON.stringify([...state.saved]));b.textContent=state.saved.has(b.dataset.id)?"★":"☆";}));
 }
 async function refreshFeed(){
   if(!state.profile.interests){$("#profile-warning").classList.remove("hidden");return;}
   $("#profile-warning").classList.add("hidden");$("#refresh-button").disabled=true;document.body.classList.add("loading");$("#feed-status").textContent="Scanning recent research…";
-  const days=Number($("#days-select").value),date=new Date(Date.now()-days*864e5).toISOString().slice(0,10),query=profileTerms().slice(0,8).join(" ");
-  try{const params=new URLSearchParams({search:query,filter:`from_publication_date:${date},type:article`,sort:"publication_date:desc",per_page:"100"});const res=await fetch("https://api.openalex.org/works?"+params);if(!res.ok)throw new Error("OpenAlex request failed");renderPapers((await res.json()).results||[]);}
+  const days=Number($("#days-select").value),date=new Date(Date.now()-days*864e5).toISOString().slice(0,10),queries=profileTerms().slice(0,6);
+  try{
+    const responses=await Promise.all(queries.map(search=>{
+      const params=new URLSearchParams({search,filter:`from_publication_date:${date},type:article`,sort:"publication_date:desc",per_page:"40"});
+      return fetch("https://api.openalex.org/works?"+params).then(async res=>{if(!res.ok)throw new Error("OpenAlex request failed");return (await res.json()).results||[];});
+    }));
+    const unique=[...new Map(responses.flat().map(work=>[work.id,work])).values()];
+    renderPapers(unique);
+  }
   catch(err){$("#feed-status").textContent="The literature service is temporarily unavailable. Try again shortly.";console.error(err);}
   finally{$("#refresh-button").disabled=false;document.body.classList.remove("loading");}
 }
