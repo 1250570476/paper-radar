@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="A private, no-cost personalized feed for newly published research." />
+  <title>Paper Radar</title>
+  <link rel="preconnect" href="https://api.openalex.org" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#"><span class="brand-mark">PR</span><span>Paper Radar</span></a>
+    <nav><button class="nav-button active" data-view="feed">My feed</button><button class="nav-button" data-view="profile">Research profile</button></nav>
+  </header>
+
+  <main>
+    <section id="feed-view" class="view">
+      <div class="hero">
+        <div><p class="eyebrow">YOUR RESEARCH, FILTERED</p><h1>Important papers.<br><span>Without the noise.</span></h1>
+        <p>Paper Radar checks recent scholarly literature and ranks new work against your research interests.</p></div>
+        <button id="refresh-button" class="primary">Refresh papers</button>
+      </div>
+      <div id="profile-warning" class="notice hidden">Add your research interests to generate a personalized feed. <button data-go-profile>Set up profile</button></div>
+      <div class="feed-toolbar"><div><h2>Recommended for you</h2><p id="feed-status">Ready to scan the latest literature.</p></div>
+        <label>Time window<select id="days-select"><option value="7">7 days</option><option value="30" selected>30 days</option><option value="90">90 days</option></select></label>
+      </div>
+      <div id="paper-list" class="paper-list"></div>
+      <div id="empty-state" class="empty"><div class="radar-icon">⌁</div><h3>Your radar is ready</h3><p>Set up your profile, then scan recent research from OpenAlex.</p><button class="secondary" data-go-profile>Build my profile</button></div>
+    </section>
+
+    <section id="profile-view" class="view hidden">
+      <div class="section-heading"><p class="eyebrow">PERSONALIZATION</p><h1>Build your research profile</h1><p>Your information remains in this browser for the no-cost prototype.</p></div>
+      <form id="profile-form" class="profile-grid">
+        <article class="panel">
+          <div class="step"><span>1</span><div><h2>Upload your CV</h2><p>PDF, TXT, or Markdown. We extract research terms locally in your browser.</p></div></div>
+          <label class="dropzone" for="cv-file"><input id="cv-file" type="file" accept=".pdf,.txt,.md,text/plain,application/pdf" /><strong>Choose a CV file</strong><span id="file-label">or drag it here</span></label>
+          <label class="field">Extracted CV text<textarea id="cv-text" rows="8" placeholder="Extracted text will appear here. You can also paste CV text directly."></textarea></label>
+        </article>
+        <article class="panel">
+          <div class="step"><span>2</span><div><h2>Describe your interests</h2><p>Use specific materials, methods, systems, and applications.</p></div></div>
+          <label class="field">Research interests<textarea id="interests" rows="7" required placeholder="Example: biodegradable magnetic hydrogel microrobots, ultrasound neuromodulation, microfluidics, piezoelectric nanoparticles"></textarea></label>
+          <label class="field">Keywords to exclude<input id="excluded" placeholder="cancer, astronomy (optional)" /></label>
+        </article>
+        <article class="panel journals">
+          <div class="step"><span>3</span><div><h2>Follow journals</h2><p>Use the curated list, add your own, or leave all unchecked to search broadly.</p></div></div>
+          <div id="journal-options" class="journal-options"></div>
+          <div class="add-journal"><input id="custom-journal" placeholder="Add another journal" /><button id="add-journal-button" type="button" class="secondary">Add</button></div>
+        </article>
+        <div class="form-actions"><span id="save-status"></span><button class="primary" type="submit">Save and generate feed</button></div>
+      </form>
+    </section>
+  </main>
+  <footer>Paper metadata provided by <a href="https://openalex.org" target="_blank" rel="noreferrer">OpenAlex</a>. No paid API is required.</footer>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
