@@ -77,7 +77,11 @@ function renderPapers(works){
     const url=work.doi||work.primary_location?.landing_page_url||work.id;
     return `<article class="paper-card"><div class="score" style="--score:${score.value}"><strong>${score.value}</strong><small>MATCH</small></div><div><div class="paper-meta">${escapeHtml(source)} · ${escapeHtml(work.publication_date||"New")}</div><h3>${escapeHtml(work.title||"Untitled paper")}</h3><p>${escapeHtml(summary.slice(0,520))}</p><div class="why">Matches: ${score.hits.map(escapeHtml).join(", ")||"your research profile"}</div></div><div class="paper-actions"><button class="icon-button save-paper" data-id="${escapeHtml(work.id)}" title="Save paper">${state.saved.has(work.id)?"★":"☆"}</button><a class="icon-button" href="${escapeHtml(url)}" target="_blank" rel="noreferrer" title="Open paper">↗</a></div></article>`;
   }).join("");
-  $(".empty").classList.toggle("hidden",ranked.length>0);\n  $("#empty-state h3").textContent="No strong matches yet";\n  $("#empty-state p").textContent="Try a longer time window, broader interests, or fewer journal restrictions.";\n  $("#empty-state button").textContent="Adjust my profile";\n  $("#feed-status").textContent=ranked.length?`${ranked.length} relevant papers found`:"No strong matches found in this scan.";
+  $(".empty").classList.toggle("hidden",ranked.length>0);
+  $("#empty-state h3").textContent="No strong matches yet";
+  $("#empty-state p").textContent="Try a longer time window, broader interests, or fewer journal restrictions.";
+  $("#empty-state button").textContent="Adjust my profile";
+  $("#feed-status").textContent=ranked.length?`${ranked.length} relevant papers found`:"No strong matches found in this scan.";
   $$(".save-paper").forEach(b=>b.addEventListener("click",()=>{state.saved.has(b.dataset.id)?state.saved.delete(b.dataset.id):state.saved.add(b.dataset.id);localStorage.setItem("paper-radar-saved",JSON.stringify([...state.saved]));b.textContent=state.saved.has(b.dataset.id)?"★":"☆";}));
 }
 async function refreshFeed(){
