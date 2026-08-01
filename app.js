@@ -1,238 +1,378 @@
-const STORAGE_KEY="paper-radar-profile-v2";
-const LEGACY_KEY="paper-radar-profile-v1";
-const CHECK_KEY="paper-radar-last-check";
-const DAY=864e5;
-const starterNames=["Nature Biomedical Engineering","Science Robotics","Advanced Materials","Advanced Functional Materials","Small","Soft Robotics","Lab on a Chip","Biofabrication","Acta Biomaterialia","ACS Nano"];
-const legacy=JSON.parse(localStorage.getItem(LEGACY_KEY)||"null");
-const state={
-  profile:JSON.parse(localStorage.getItem(STORAGE_KEY)||"null")||{cvText:legacy?.cvText||"",interests:legacy?.interests||"",excluded:legacy?.excluded||"",favoriteJournals:[]},
-  saved:new Set(JSON.parse(localStorage.getItem("paper-radar-saved")||"[]")),
-  lastCheck:JSON.parse(localStorage.getItem(CHECK_KEY)||"null"),
-  latestByJournal:{}
+const STORAGE_KEY = "paper-radar-profile-v2";
+const LEGACY_KEY = "paper-radar-profile-v1";
+const DAY = 864e5;
+
+const legacy = JSON.parse(localStorage.getItem(LEGACY_KEY) || "null");
+const state = {
+  profile: JSON.parse(localStorage.getItem(STORAGE_KEY) || "null") || {
+    cvText: legacy?.cvText || "",
+    interests: legacy?.interests || "",
+    excluded: legacy?.excluded || "",
+    favoriteJournals: []
+  },
+  saved: new Set(JSON.parse(localStorage.getItem("paper-radar-saved") || "[]")),
+  journals: [],
+  papers: [],
+  generatedAt: null,
+  latestByJournal: {}
 };
 
-const $=s=>document.querySelector(s);
-const $$=s=>[...document.querySelectorAll(s)];
-const escapeHtml=(value="")=>String(value).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
-const stopWords=new Set(["the","and","for","with","from","into","using","use","based","study","studies","effect","effects","development","design","analysis","novel","approach","applications","application","research","system","systems","method","methods","results","their","our","this","that","are","was","were","have","has","its","can","may","university","engineering","mechanical","present","student","grade","author","publications","experience","skills"]);
-const sourceId=s=>String(s.id||"").split("/").pop();
-const conceptFamilies=[{"id":"microrobotics","label":"micro/millirobots","terms":["microrobot","microrobots","microrobotic","microrobotics","millirobot","millirobots","microswimmer","microswimmers","microbot","microbots","soft robot","untethered robot","medical robot"]},{"id":"magnetic","label":"magnetic actuation","terms":["magnetic actuation","magnetically actuated","magnetic robot","magnetic microrobot","magnetic particle","magnetic particles","microroller","microrollers","rotating magnetic field","iron oxide","fe3o4"]},{"id":"acoustics","label":"ultrasound/acoustics","terms":["ultrasound","ultrasonic","acoustic actuation","acoustically actuated","focused ultrasound","low intensity focused ultrasound","lifu","acoustic streaming","microbubble","microbubbles","cavitation","sonication"]},{"id":"neuro","label":"neuromodulation","terms":["neuromodulation","neurostimulation","neural stimulation","nerve stimulation","neuronal stimulation","brain stimulation","peripheral nerve","bioelectronic medicine"]},{"id":"hydrogel","label":"hydrogels","terms":["hydrogel","hydrogels","alginate","soft biomaterial","soft biomaterials","biodegradable particle","biodegradable particles","injectable biomaterial","polymer network"]},{"id":"piezo","label":"piezoelectric materials","terms":["piezoelectric","piezoelectricity","barium titanate","batio3","piezoelectric nanoparticle","piezoelectric nanoparticles","piezoelectric composite","piezocatalytic"]},{"id":"iontronics","label":"iontronics","terms":["iontronic","iontronics","ionotronic","ionotronics","ionic device","ionic devices","ionic transistor","ionic transistors","ionic sensor","ionic sensors","ionic actuator","ionic actuators","ion transport"]},{"id":"microfluidics","label":"microfluidics","terms":["microfluidic","microfluidics","lab on a chip","lab-on-a-chip","droplet microfluidics","droplet-based microfluidics","flow focusing","microchannel","microchannels","micromixer","micromixers","organ on a chip"]},{"id":"separation","label":"particle/cell separation","terms":["particle separation","cell separation","deterministic lateral displacement","dld","inertial microfluidics","inertial separation","circulating tumor cell","size-based separation"]},{"id":"biomaterials","label":"biomaterials/tissue engineering","terms":["biomaterial","biomaterials","tissue engineering","scaffold","scaffolds","bone regeneration","regenerative medicine","chitosan","polyvinyl alcohol","carbon nanotube","graphene"]},{"id":"biofilm","label":"biofilm removal","terms":["biofilm","biofilms","antibiofilm","biofilm removal","bacterial adhesion","microneedle","microneedles"]},{"id":"biofabrication","label":"micro/nanofabrication","terms":["microfabrication","nanofabrication","two photon polymerization","two-photon polymerization","soft lithography","3d printing","additive manufacturing","nanoscribe"]},{"id":"imaging","label":"biomedical imaging","terms":["optoacoustic","photoacoustic","multispectral optoacoustic","msot","biomedical imaging","image guided","image-guided"]}];
-function terms(text,limit=30){const words=(cleanPhrase(text).match(/[a-z][a-z0-9-]{2,}/g)||[]).filter(w=>!stopWords.has(w)&&w.length>3);const counts={};words.forEach(w=>counts[w]=(counts[w]||0)+1);return Object.entries(counts).sort((a,b)=>b[1]-a[1]||b[0].length-a[0].length).slice(0,limit).map(([w])=>w);}
-function cleanPhrase(value){return String(value||"").toLowerCase().replace(/[^a-z0-9+ -]/g," ").replace(/\s+/g," ").trim();}
-function interestPhrases(){const chunks=(state.profile.interests||"").split(/[;,\n.!?]|\band\b/).map(cleanPhrase).filter(Boolean),phrases=[];chunks.forEach(chunk=>{const words=chunk.split(" ").filter(w=>w.length>2&&!stopWords.has(w));if(words.length>=2&&words.length<=8)phrases.push(words.join(" "));for(let size=Math.min(5,words.length);size>=2;size--)for(let i=0;i<=words.length-size;i++)phrases.push(words.slice(i,i+size).join(" "));});return [...new Set(phrases)].sort((a,b)=>b.split(" ").length-a.split(" ").length).slice(0,40);}
-function hasExact(text,value){return (" "+cleanPhrase(text)+" ").includes(" "+cleanPhrase(value)+" ");}
-function familyActivated(family,profileText){return family.terms.some(term=>hasExact(profileText,term));}
-function profileModel(){const explicit=cleanPhrase(state.profile.interests),cv=cleanPhrase((state.profile.cvText||"").slice(0,30000)),all=explicit+" "+cv;const phrases=interestPhrases();const activeFamilies=conceptFamilies.filter(f=>familyActivated(f,all)).map(f=>({...f,priority:familyActivated(f,explicit)?3:1}));const interestTerms=terms(explicit,28);const cvTerms=terms(cv,24).filter(t=>!interestTerms.includes(t));return{phrases,interestTerms,cvTerms,activeFamilies};}
-function buildSearchPlan(model){const queries=[],add=(q,stage,reason)=>{q=cleanPhrase(q);if(q.length>2&&!queries.some(x=>x.query===q))queries.push({query:q,stage,reason});};model.phrases.slice(0,8).forEach(q=>add(q,"exact","written-interest phrase"));model.activeFamilies.filter(f=>f.priority===3).slice(0,8).forEach(f=>f.terms.slice(0,3).forEach(q=>add(q,"concept",f.label)));const primary=model.activeFamilies.filter(f=>f.priority===3);for(let i=0;i<primary.length;i++)for(let j=i+1;j<primary.length;j++)add(primary[i].terms[0]+" "+primary[j].terms[0],"combined",primary[i].label+" + "+primary[j].label);model.interestTerms.slice(0,10).forEach(q=>add(q,"term","explicit profile term"));return queries.slice(0,28);}
-function profileTerms(){return buildSearchPlan(profileModel()).map(x=>x.query);}
-function saveProfile(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state.profile));}
-function formatDate(value){return value?new Intl.DateTimeFormat(undefined,{dateStyle:"medium"}).format(new Date(value)):"Not checked";}
+const $ = selector => document.querySelector(selector);
+const $$ = selector => [...document.querySelectorAll(selector)];
+const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+const escapeHtml = (value = "") => String(value).replace(/[&<>"']/g, character => ({
+  "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
+}[character]));
+const clean = value => String(value || "").toLowerCase().replace(/[^a-z0-9+ -]/g, " ").replace(/\s+/g, " ").trim();
+const normalizeTitle = value => clean(value).replace(/\bthe\b/g, "").replace(/\s+/g, " ").trim();
+const journalId = journal => journal?.id || normalizeTitle(journal?.title || journal?.display_name || "").replace(/\s+/g, "-");
+const formatDate = value => value ? new Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(new Date(value)) : "Not checked";
 
+const stopWords = new Set(["the", "and", "for", "with", "from", "into", "using", "use", "based", "study", "studies", "effect", "effects", "development", "design", "analysis", "novel", "approach", "applications", "application", "research", "system", "systems", "method", "methods", "results", "their", "our", "this", "that", "are", "was", "were", "have", "has", "its", "can", "may", "university", "engineering", "mechanical", "present", "student", "grade", "author", "publications", "experience", "skills"]);
+const conceptFamilies = [
+  { label: "micro/millirobots", terms: ["microrobot", "microrobots", "microrobotic", "millirobot", "millirobots", "microswimmer", "microswimmers", "microbot", "micromachine", "micromachines", "untethered robot", "medical robot"] },
+  { label: "soft robotics", terms: ["soft robot", "soft robots", "soft robotic", "hydrogel robot", "continuum robot", "shape morphing", "shape-morphing", "bioinspired robot"] },
+  { label: "magnetic actuation", terms: ["magnetic actuation", "magnetically actuated", "magnetic robot", "magnetic microrobot", "microroller", "rotating magnetic field", "janus microrobot"] },
+  { label: "ultrasound/acoustics", terms: ["ultrasound", "ultrasonic", "acoustic actuation", "acoustically actuated", "focused ultrasound", "acoustic streaming", "acoustofluidic", "acoustofluidics"] },
+  { label: "neuromodulation", terms: ["neuromodulation", "neurostimulation", "neural stimulation", "nerve stimulation", "peripheral nerve", "bioelectronic medicine"] },
+  { label: "hydrogels", terms: ["hydrogel", "hydrogels", "alginate", "soft biomaterial", "biodegradable particle", "injectable biomaterial"] },
+  { label: "piezoelectric materials", terms: ["piezoelectric", "piezoelectricity", "barium titanate", "batio3", "piezoelectric nanoparticle"] },
+  { label: "iontronics", terms: ["iontronic", "iontronics", "ionotronic", "ionotronics", "ionic device", "ionic transistor", "ionic sensor", "ionic actuator", "ion transport"] },
+  { label: "microfluidics", terms: ["microfluidic", "microfluidics", "lab on a chip", "lab-on-a-chip", "droplet microfluidics", "flow focusing", "microchannel", "organ on a chip", "microphysiological system"] },
+  { label: "particle/cell separation", terms: ["particle separation", "cell separation", "deterministic lateral displacement", "inertial microfluidics", "circulating tumor cell"] },
+  { label: "biomaterials", terms: ["biomaterial", "biomaterials", "tissue engineering", "scaffold", "regenerative medicine"] },
+  { label: "micro/nanofabrication", terms: ["microfabrication", "nanofabrication", "two photon polymerization", "soft lithography", "3d printing"] }
+];
 
-function openScan(){$("#search-progress").classList.remove("hidden","minimized");$(".scan-body").classList.remove("hidden");$("#expand-scan").classList.add("hidden");$("#scan-progress-bar").style.width="3%";$("#scan-percent").textContent="3%";$("#scan-mini-percent").textContent="3%";$("#scan-candidates").textContent="0";$("#scan-matches").textContent="0";$("#scan-title").textContent="Checking recent papers";$("#scan-stage").textContent="Preparing scan…";$("#scan-current-label").textContent="JOURNAL BEING CHECKED";$("#scan-current-value").textContent="Preparing selected journals";}
-function updateScan(data){data=data||{};if(data.progress!=null){const p=Math.max(3,Math.min(100,Math.round(data.progress)));$("#scan-progress-bar").style.width=p+"%";$("#scan-percent").textContent=p+"%";$("#scan-mini-percent").textContent=p+"%";}if(data.title)$("#scan-title").textContent=data.title;if(data.stage)$("#scan-stage").textContent=data.stage;if(data.current)$("#scan-current-value").textContent=data.current;if(data.label)$("#scan-current-label").textContent=data.label;if(data.candidates!=null)$("#scan-candidates").textContent=Number(data.candidates).toLocaleString();if(data.matches!=null)$("#scan-matches").textContent=Number(data.matches).toLocaleString();$("#scan-mini-text").textContent=data.current||data.stage||"Scanning papers…";}
-function closeScan(success){updateScan({progress:100,title:success?"Scan complete":"Scan paused",stage:success?"Your feed is ready.":"The scan could not be completed.",current:success?"All selected journals checked":"Try again shortly",label:success?"STATUS":"SCAN PAUSED"});setTimeout(function(){$("#search-progress").classList.add("hidden");},success?2200:3500);}
-$("#minimize-scan").addEventListener("click",function(){$("#search-progress").classList.add("minimized");$(".scan-body").classList.add("hidden");$("#expand-scan").classList.remove("hidden");});
-$("#expand-scan").addEventListener("click",function(){$("#search-progress").classList.remove("minimized");$(".scan-body").classList.remove("hidden");$("#expand-scan").classList.add("hidden");});
-
-function showView(name){
-  $$(".view").forEach(v=>v.classList.toggle("hidden",v.id!==`${name}-view`));
-  $$(".nav-button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
-  if(name==="journals")renderFavorites();
+function hasExact(text, value) {
+  return (` ${clean(text)} `).includes(` ${clean(value)} `);
 }
-$$(".nav-button").forEach(b=>b.addEventListener("click",()=>showView(b.dataset.view)));
-$$("[data-go-profile]").forEach(b=>b.addEventListener("click",()=>showView("profile")));
-$$("[data-go-journals]").forEach(b=>b.addEventListener("click",()=>showView("journals")));
 
-function populateProfile(){
-  $("#cv-text").value=state.profile.cvText;
-  $("#interests").value=state.profile.interests;
-  $("#excluded").value=state.profile.excluded;
+function frequentTerms(text, limit = 25) {
+  const words = (clean(text).match(/[a-z][a-z0-9-]{2,}/g) || []).filter(word => word.length > 3 && !stopWords.has(word));
+  const counts = {};
+  words.forEach(word => { counts[word] = (counts[word] || 0) + 1; });
+  return Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, limit).map(([word]) => word);
+}
+
+function profileModel() {
+  const interests = clean(state.profile.interests);
+  const cv = clean((state.profile.cvText || "").slice(0, 30000));
+  const explicitTerms = frequentTerms(interests, 30);
+  const activeFamilies = conceptFamilies.filter(family => family.terms.some(term => hasExact(`${interests} ${cv}`, term))).map(family => ({
+    ...family,
+    priority: family.terms.some(term => hasExact(interests, term)) ? 3 : 1
+  }));
+  return { interests, explicitTerms, activeFamilies };
+}
+
+function scorePaper(paper, model) {
+  const title = clean(paper.title);
+  const abstract = clean(paper.abstract || paper.summary);
+  const text = `${title} ${abstract}`;
+  const excluded = String(state.profile.excluded || "").split(/[,;\n]/).map(clean).filter(Boolean);
+  if (excluded.some(term => hasExact(text, term))) return null;
+
+  let raw = 0;
+  let titleSignals = 0;
+  let familyHits = 0;
+  let explicitHits = 0;
+  const evidence = [];
+
+  model.activeFamilies.forEach(family => {
+    const titleTerms = family.terms.filter(term => hasExact(title, term));
+    const abstractTerms = family.terms.filter(term => hasExact(abstract, term));
+    if (!titleTerms.length && !abstractTerms.length) return;
+    const points = family.priority * (titleTerms.length ? 8 : 3) + Math.min(5, titleTerms.length + abstractTerms.length - 1);
+    raw += points;
+    familyHits += 1;
+    if (titleTerms.length) titleSignals += 1;
+    evidence.push({ value: family.label, points });
+  });
+
+  model.explicitTerms.forEach(term => {
+    const inTitle = hasExact(title, term);
+    const inAbstract = hasExact(abstract, term);
+    if (!inTitle && !inAbstract) return;
+    const points = inTitle ? 7 : 2;
+    raw += points;
+    explicitHits += 1;
+    if (inTitle) titleSignals += 1;
+    evidence.push({ value: term, points });
+  });
+
+  const strong = raw >= 25 && (titleSignals >= 1 || familyHits >= 2) && (familyHits >= 2 || explicitHits >= 2);
+  const candidate = !strong && raw >= 13 && (titleSignals >= 1 || familyHits >= 2) && (familyHits >= 1 || explicitHits >= 2);
+  if (!strong && !candidate) return null;
+  const hits = evidence.sort((a, b) => b.points - a.points).filter((item, index, list) => list.findIndex(other => other.value === item.value) === index).slice(0, 5).map(item => item.value);
+  return {
+    tier: strong ? "strong" : "candidate",
+    value: strong ? Math.min(98, 80 + Math.round((raw - 25) * 0.8)) : Math.min(79, 45 + Math.round((raw - 13) * 2)),
+    hits,
+    explanation: `${familyHits} research concept${familyHits === 1 ? "" : "s"} and ${explicitHits} explicit interest term${explicitHits === 1 ? "" : "s"}`
+  };
+}
+
+function saveProfile() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state.profile));
+}
+
+async function loadPublisherData(force = false) {
+  const suffix = force ? `?t=${Date.now()}` : "";
+  const [journalsResponse, papersResponse] = await Promise.all([
+    fetch(`data/journals.json${suffix}`),
+    fetch(`data/papers.json${suffix}`)
+  ]);
+  if (!journalsResponse.ok || !papersResponse.ok) throw new Error("Publisher data is unavailable");
+  state.journals = await journalsResponse.json();
+  const snapshot = await papersResponse.json();
+  state.papers = snapshot.papers || [];
+  state.generatedAt = snapshot.generated_at || null;
+  state.latestByJournal = snapshot.latest_by_journal || {};
+  migrateFavorites();
+}
+
+function migrateFavorites() {
+  const names = new Set((state.profile.favoriteJournals || []).map(item => normalizeTitle(item.title || item.display_name)));
+  state.profile.favoriteJournals = state.journals.filter(journal => names.has(normalizeTitle(journal.title)));
+  saveProfile();
+}
+
+function showView(name) {
+  $$(".view").forEach(view => view.classList.toggle("hidden", view.id !== `${name}-view`));
+  $$(".nav-button").forEach(button => button.classList.toggle("active", button.dataset.view === name));
+  if (name === "journals") renderFavorites();
+}
+
+$$(".nav-button").forEach(button => button.addEventListener("click", () => showView(button.dataset.view)));
+$$("[data-go-profile]").forEach(button => button.addEventListener("click", () => showView("profile")));
+$$("[data-go-journals]").forEach(button => button.addEventListener("click", () => showView("journals")));
+
+function populateProfile() {
+  $("#cv-text").value = state.profile.cvText;
+  $("#interests").value = state.profile.interests;
+  $("#excluded").value = state.profile.excluded;
   updateFavoriteSummaries();
 }
-function updateFavoriteSummaries(){
-  const n=state.profile.favoriteJournals.length;
-  $("#favorites-count").textContent=`${n} journal${n===1?"":"s"} selected`;
-  $("#profile-journal-summary").textContent=n?`${n} favorite journal${n===1?"":"s"} will restrict your feed.`:"No favorites yet; the feed will search broadly.";
-  $("#journal-warning").classList.toggle("hidden",n>0);
+
+function updateFavoriteSummaries() {
+  const count = state.profile.favoriteJournals.length;
+  $("#favorites-count").textContent = `${count} journal${count === 1 ? "" : "s"} selected`;
+  $("#profile-journal-summary").textContent = count ? `${count} favorite journal${count === 1 ? "" : "s"} will restrict your feed.` : "No favorites yet; search will use every supported journal.";
+  $("#journal-warning").classList.toggle("hidden", count > 0);
 }
-function journalCard(j,{favorite=false}={}){
-  const id=sourceId(j),latest=state.latestByJournal[id];
-  return `<article class="journal-card">
-    <div><div class="journal-type">${escapeHtml(j.type||"Journal")}${j.is_oa?" · Open access":""}</div>
-    <h3>${escapeHtml(j.display_name)}</h3>
-    <p>${escapeHtml(j.host_organization_name||"Independent publisher")}${j.issn_l?` · ISSN ${escapeHtml(j.issn_l)}`:""}</p>
-    <small>${Number(j.works_count||0).toLocaleString()} indexed works${latest?` · Latest indexed article: ${escapeHtml(latest)}`:""}</small></div>
-    <button class="${favorite?"remove-journal secondary":"add-favorite primary"}" data-id="${escapeHtml(id)}">${favorite?"Remove":"Add to favorites"}</button>
-  </article>`;
+
+function journalCard(journal, { favorite = false } = {}) {
+  const latest = state.latestByJournal[journal.id];
+  return `<article class="journal-card"><div><div class="journal-type">${escapeHtml(journal.publisher || "Publisher website")}</div><h3>${escapeHtml(journal.title)}</h3><p>${escapeHtml(journal.frequency || "Checked daily")} · Direct publisher source</p><small>${latest ? `Latest publisher item: ${escapeHtml(formatDate(latest))}` : "Awaiting first publisher-page update"}</small></div><button class="${favorite ? "remove-journal secondary" : "add-favorite primary"}" data-id="${escapeHtml(journal.id)}">${favorite ? "Remove" : "Add to favorites"}</button></article>`;
 }
-function bindJournalButtons(container,journals){
-  container.querySelectorAll(".add-favorite").forEach(button=>button.addEventListener("click",()=>{
-    const journal=journals.find(j=>sourceId(j)===button.dataset.id);
-    if(journal&&!state.profile.favoriteJournals.some(f=>sourceId(f)===button.dataset.id)){
-      state.profile.favoriteJournals.push(journal);saveProfile();renderFavorites();button.textContent="Added";button.disabled=true;updateFavoriteSummaries();
+
+function bindJournalButtons(container, journals) {
+  container.querySelectorAll(".add-favorite").forEach(button => button.addEventListener("click", () => {
+    const journal = journals.find(item => item.id === button.dataset.id);
+    if (journal && !state.profile.favoriteJournals.some(item => item.id === journal.id)) {
+      state.profile.favoriteJournals.push(journal);
+      saveProfile();
+      renderFavorites();
+      searchJournals();
     }
   }));
-  container.querySelectorAll(".remove-journal").forEach(button=>button.addEventListener("click",()=>{
-    state.profile.favoriteJournals=state.profile.favoriteJournals.filter(j=>sourceId(j)!==button.dataset.id);
-    saveProfile();renderFavorites();updateFavoriteSummaries();
+  container.querySelectorAll(".remove-journal").forEach(button => button.addEventListener("click", () => {
+    state.profile.favoriteJournals = state.profile.favoriteJournals.filter(item => item.id !== button.dataset.id);
+    saveProfile();
+    renderFavorites();
   }));
 }
-function renderFavorites(){
-  const box=$("#favorite-journals"),journals=state.profile.favoriteJournals;
-  box.innerHTML=journals.length?journals.map(j=>journalCard(j,{favorite:true})).join(""):`<div class="empty compact"><h3>No favorite journals yet</h3><p>Search above and add journals to make your feed journal-specific.</p></div>`;
-  bindJournalButtons(box,journals);updateFavoriteSummaries();
-  $("#last-checked").textContent=state.lastCheck?`Last daily check: ${formatDate(state.lastCheck.date)}`:"Daily check has not run yet";
+
+function renderFavorites() {
+  const box = $("#favorite-journals");
+  const favorites = state.profile.favoriteJournals;
+  box.innerHTML = favorites.length ? favorites.map(journal => journalCard(journal, { favorite: true })).join("") : `<div class="empty compact"><h3>No favorite journals yet</h3><p>Search above and add journals to make your feed journal-specific.</p></div>`;
+  bindJournalButtons(box, favorites);
+  updateFavoriteSummaries();
+  $("#last-checked").textContent = state.generatedAt ? `Publisher pages updated: ${formatDate(state.generatedAt)}` : "Publisher pages have not been indexed yet";
 }
 
-async function searchJournals(){
-  const query=$("#journal-search").value.trim();
-  if(!query)return;
-  $("#journal-search-button").disabled=true;$("#journal-search-status").textContent="Searching the journal catalog…";
-  try{
-    const params=new URLSearchParams({search:query,filter:"type:journal",sort:"works_count:desc",per_page:"30"});
-    const res=await fetch("https://api.openalex.org/sources?"+params);
-    if(!res.ok)throw new Error("Journal search failed");
-    const journals=(await res.json()).results||[];
-    $("#journal-results").innerHTML=journals.length?journals.map(j=>journalCard(j,{favorite:state.profile.favoriteJournals.some(f=>sourceId(f)===sourceId(j))})).join(""):`<div class="empty compact"><h3>No journals found</h3><p>Try a shorter title, field name, or ISSN.</p></div>`;
-    bindJournalButtons($("#journal-results"),journals);
-    $("#journal-search-status").textContent=`${journals.length} journal results`;
-  }catch(error){$("#journal-search-status").textContent="Journal search is temporarily unavailable. Try again.";console.error(error);}
-  finally{$("#journal-search-button").disabled=false;}
+function searchJournals() {
+  const query = clean($("#journal-search").value);
+  const results = query ? state.journals.filter(journal => clean(`${journal.title} ${journal.publisher} ${journal.issn || ""}`).includes(query)) : state.journals;
+  $("#journal-results").innerHTML = results.length ? results.map(journal => journalCard(journal, { favorite: state.profile.favoriteJournals.some(item => item.id === journal.id) })).join("") : `<div class="empty compact"><h3>No supported journal found</h3><p>Try a shorter journal title.</p></div>`;
+  bindJournalButtons($("#journal-results"), results);
+  $("#journal-search-status").textContent = `${results.length} direct publisher source${results.length === 1 ? "" : "s"}`;
 }
-$("#journal-search-button").addEventListener("click",searchJournals);
-$("#journal-search").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();searchJournals();}});
 
-async function extractPdf(file){
-  const pdfjs=await import("https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs");
-  pdfjs.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs";
-  const pdf=await pdfjs.getDocument({data:await file.arrayBuffer()}).promise;let text="";
-  for(let i=1;i<=pdf.numPages;i++){const page=await pdf.getPage(i);const content=await page.getTextContent();text+=content.items.map(x=>x.str).join(" ")+"\n";}
+$("#journal-search-button").addEventListener("click", searchJournals);
+$("#journal-search").addEventListener("keydown", event => {
+  if (event.key === "Enter") { event.preventDefault(); searchJournals(); }
+});
+
+async function extractPdf(file) {
+  const pdfjs = await import("https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs");
+  pdfjs.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs";
+  const pdf = await pdfjs.getDocument({ data: await file.arrayBuffer() }).promise;
+  let text = "";
+  for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
+    const page = await pdf.getPage(pageNumber);
+    const content = await page.getTextContent();
+    text += `${content.items.map(item => item.str).join(" ")}\n`;
+  }
   return text;
 }
-$("#cv-file").addEventListener("change",async e=>{
-  const file=e.target.files[0];if(!file)return;
-  $("#file-label").textContent="Reading "+file.name+"…";
-  try{const text=file.type==="application/pdf"||file.name.endsWith(".pdf")?await extractPdf(file):await file.text();$("#cv-text").value=text;$("#file-label").textContent=file.name;}
-  catch(err){$("#file-label").textContent="Could not extract this file. Paste its text below.";console.error(err);}
-});
-$("#profile-form").addEventListener("submit",e=>{
-  e.preventDefault();
-  state.profile.cvText=$("#cv-text").value.trim();state.profile.interests=$("#interests").value.trim();state.profile.excluded=$("#excluded").value.trim();
-  saveProfile();$("#save-status").textContent="Profile saved locally";setTimeout(()=>$("#save-status").textContent="",1800);showView("feed");refreshFeed();
+
+$("#cv-file").addEventListener("change", async event => {
+  const file = event.target.files[0];
+  if (!file) return;
+  $("#file-label").textContent = `Reading ${file.name}…`;
+  try {
+    $("#cv-text").value = file.type === "application/pdf" || file.name.endsWith(".pdf") ? await extractPdf(file) : await file.text();
+    $("#file-label").textContent = file.name;
+  } catch (error) {
+    $("#file-label").textContent = "Could not extract this file. Paste its text below.";
+    console.error(error);
+  }
 });
 
-function decodeAbstract(index){
-  if(!index)return"";const words=[];Object.entries(index).forEach(([word,positions])=>positions.forEach(position=>words[position]=word));return words.join(" ");
+$("#profile-form").addEventListener("submit", event => {
+  event.preventDefault();
+  state.profile.cvText = $("#cv-text").value.trim();
+  state.profile.interests = $("#interests").value.trim();
+  state.profile.excluded = $("#excluded").value.trim();
+  saveProfile();
+  $("#save-status").textContent = "Profile saved locally";
+  setTimeout(() => { $("#save-status").textContent = ""; }, 1800);
+  showView("feed");
+  $("#feed-status").textContent = "Profile saved. Press Search papers when you are ready.";
+});
+
+function openScan() {
+  $("#search-progress").classList.remove("hidden", "minimized");
+  $(".scan-body").classList.remove("hidden");
+  $("#expand-scan").classList.add("hidden");
+  updateScan({ progress: 2, current: "Preparing selected journals", candidates: 0, matches: 0 });
 }
-function scorePaper(work,model){
- const title=cleanPhrase(work.title||""),abstract=cleanPhrase(decodeAbstract(work.abstract_inverted_index)),topics=cleanPhrase((work.topics||[]).map(t=>t.display_name||"").join(" ")),text=[title,abstract].filter(Boolean).join(" "),body=[text,topics].filter(Boolean).join(" ");
- const excluded=(state.profile.excluded||"").split(/[,;\n]/).map(cleanPhrase).filter(Boolean);if(excluded.some(v=>hasExact(title,v)||hasExact(abstract,v)||hasExact(topics,v)))return null;
- const evidence=[];let raw=0,titleSignal=0,phraseHits=0,explicitHits=0,familyHits=0;
- model.phrases.forEach(value=>{const words=value.split(" ").filter(Boolean),et=hasExact(title,value),ea=hasExact(abstract,value),coverage=words.filter(w=>hasExact(text,w)).length/Math.max(1,words.length);if(et||ea||coverage>=.67){const points=et?18:ea?11:Math.round(4+coverage*7);raw+=points;phraseHits++;if(et)titleSignal++;evidence.push({value,points});}});
- model.activeFamilies.forEach(f=>{const lexical=f.terms.filter(t=>hasExact(text,t));if(lexical.length){const tm=f.terms.some(t=>hasExact(title,t)),pm=f.terms.some(t=>hasExact(topics,t)),points=f.priority*(tm?7:pm?4:3)+Math.min(4,lexical.length-1);raw+=points;familyHits++;if(tm)titleSignal++;evidence.push({value:f.label,points});}});
- model.interestTerms.forEach(value=>{const it=hasExact(title,value),ia=hasExact(abstract,value),ip=hasExact(topics,value);if(it||ia||ip){const points=(it?7:0)+(ip?4:0)+(ia?2:0);raw+=points;explicitHits++;if(it)titleSignal++;evidence.push({value,points});}});
- model.cvTerms.forEach(value=>{const it=hasExact(title,value),ip=hasExact(topics,value);if(it||ip){const points=it?2:1;raw+=points;evidence.push({value,points});}});
- const strong=raw>=26&&(familyHits>=2||titleSignal>=2||titleSignal>=1&&phraseHits>=1&&familyHits>=1),candidate=!strong&&raw>=14&&(familyHits>=1||phraseHits>=1)&&(titleSignal>=1||familyHits>=2);if(!strong&&!candidate)return null;
- const top=evidence.sort((x,y)=>y.points-x.points).filter((x,i,z)=>z.findIndex(y=>y.value===x.value)===i).slice(0,6);
- return{value:strong?Math.min(98,Math.max(80,Math.round(56+raw*1.25))):Math.min(79,Math.max(45,Math.round(30+raw*1.7))),tier:strong?"strong":"candidate",hits:top.map(x=>x.value),explanation:`${familyHits} supported research concept${familyHits===1?"":"s"}, ${phraseHits} phrase match${phraseHits===1?"":"es"}, ${explicitHits} explicit term${explicitHits===1?"":"s"}`};
+
+function updateScan({ progress, current, candidates, matches }) {
+  if (progress != null) {
+    const value = Math.max(2, Math.min(100, Math.round(progress)));
+    $("#scan-progress-bar").style.width = `${value}%`;
+    $("#scan-percent").textContent = `${value}%`;
+    $("#scan-mini-percent").textContent = `${value}%`;
+  }
+  if (current) {
+    $("#scan-current-value").textContent = current;
+    $("#scan-mini-text").textContent = current;
+  }
+  if (candidates != null) $("#scan-candidates").textContent = Number(candidates).toLocaleString();
+  if (matches != null) $("#scan-matches").textContent = Number(matches).toLocaleString();
 }
-function renderPapers(works){
-  const model=profileModel();
-  let ranked=works.map(w=>({work:w,score:scorePaper(w,model)})).filter(x=>x.score);
-  ranked.sort((a,b)=>(a.score.tier==="strong"?0:1)-(b.score.tier==="strong"?0:1)||b.score.value-a.score.value||String(b.work.publication_date).localeCompare(String(a.work.publication_date)));
-  const strong=ranked.filter(x=>x.score.tier==="strong");
-  const candidates=ranked.filter(x=>x.score.tier==="candidate");
-  ranked=[...strong,...candidates.slice(0,Math.max(0,12-strong.length))].slice(0,25);
-  $("#paper-list").innerHTML=ranked.map(({work,score})=>{
-    const source=work.primary_location?.source?.display_name||"Research article",abstract=decodeAbstract(work.abstract_inverted_index);
-    const summary=abstract?abstract.split(/(?<=[.!?])\s+/).slice(0,2).join(" "):"Abstract not available in OpenAlex. Open the paper to read more.";
-    const url=work.doi||work.primary_location?.landing_page_url||work.id;
-    return `<article class="paper-card"><div class="score" style="--score:${score.value}"><strong>${score.value}</strong><small>RELEVANCE</small></div><div><div class="paper-meta">${escapeHtml(source)} · ${escapeHtml(work.publication_date||"New")}</div><h3>${escapeHtml(work.title||"Untitled paper")}</h3><p>${escapeHtml(summary.slice(0,520))}</p><div class="why"><strong>Why it matches:</strong> ${escapeHtml(score.explanation)} · ${score.hits.map(escapeHtml).join(", ")}</div></div><div class="paper-actions"><button class="icon-button save-paper" data-id="${escapeHtml(work.id)}" title="Save paper">${state.saved.has(work.id)?"★":"☆"}</button><a class="icon-button" href="${escapeHtml(url)}" target="_blank" rel="noreferrer" title="Open paper">↗</a></div></article>`;
+
+function closeScan() {
+  updateScan({ progress: 100, current: "Search complete" });
+  setTimeout(() => $("#search-progress").classList.add("hidden"), 900);
+}
+
+$("#minimize-scan").addEventListener("click", () => {
+  $("#search-progress").classList.add("minimized");
+  $(".scan-body").classList.add("hidden");
+  $("#expand-scan").classList.remove("hidden");
+});
+$("#expand-scan").addEventListener("click", () => {
+  $("#search-progress").classList.remove("minimized");
+  $(".scan-body").classList.remove("hidden");
+  $("#expand-scan").classList.add("hidden");
+});
+
+function renderPapers(ranked) {
+  $("#paper-list").innerHTML = ranked.map(({ paper, score }) => {
+    const summary = paper.abstract || paper.summary || "Open the publisher page to read the abstract.";
+    return `<article class="paper-card"><div class="score" style="--score:${score.value}"><strong>${score.value}</strong><small>RELEVANCE</small></div><div><div class="paper-meta">${escapeHtml(paper.journal)} · ${escapeHtml(paper.published || "New")}</div><h3>${escapeHtml(paper.title)}</h3><p>${escapeHtml(summary.slice(0, 520))}</p><div class="why"><strong>Why it matches:</strong> ${escapeHtml(score.explanation)} · ${score.hits.map(escapeHtml).join(", ")}</div></div><div class="paper-actions"><button class="icon-button save-paper" data-id="${escapeHtml(paper.id)}" title="Save paper">${state.saved.has(paper.id) ? "★" : "☆"}</button><a class="icon-button" href="${escapeHtml(paper.url)}" target="_blank" rel="noreferrer" title="Open publisher page">↗</a></div></article>`;
   }).join("");
-  $(".empty").classList.toggle("hidden",ranked.length>0);
-  $("#empty-state h3").textContent="No strong matches yet";
-  $("#empty-state p").textContent=state.profile.favoriteJournals.length?"No relevant papers were found in your favorite journals for this time window.":"Try a longer time window or broader interests.";
-  $("#empty-state button").textContent="Adjust my profile";
-  const strongShown=ranked.filter(x=>x.score.tier==="strong").length;
-  updateScan({matches:ranked.length});
-  $("#feed-status").textContent=ranked.length?`${ranked.length} relevant match${ranked.length===1?"":"es"} found (${strongShown} strong)${state.profile.favoriteJournals.length?` in ${state.profile.favoriteJournals.length} favorite journals`:""}`:"No papers with enough research-topic evidence were found in this scan.";
-  $$(".save-paper").forEach(b=>b.addEventListener("click",()=>{state.saved.has(b.dataset.id)?state.saved.delete(b.dataset.id):state.saved.add(b.dataset.id);localStorage.setItem("paper-radar-saved",JSON.stringify([...state.saved]));b.textContent=state.saved.has(b.dataset.id)?"★":"☆";}));
-}
-async function openAlexWorks(params,attempt=0){const res=await fetch("https://api.openalex.org/works?"+params);if(res.status===429&&attempt<3){const wait=Math.max(1200,Number(res.headers.get("retry-after")||0)*1000||1200*(attempt+1));await new Promise(resolve=>setTimeout(resolve,wait));return openAlexWorks(params,attempt+1);}if(!res.ok)throw new Error("OpenAlex request failed ("+res.status+")");return res.json();}
-function uniqueWorks(works){return [...new Map(works.filter(Boolean).map(w=>[w.doi||w.id,w])).values()];}
-const journalCensusCache=new Map();
-async function fetchJournalCensus(ids,date,onProgress){const cacheKey=ids+"|"+date;if(journalCensusCache.has(cacheKey)){const cached=journalCensusCache.get(cacheKey);onProgress?.(0,cached.length,cached);return cached;}const works=[];let cursor="*",page=0,previous=-1;while(cursor&&page<30){const params=new URLSearchParams({filter:`from_publication_date:${date},type:article,primary_location.source.id:${ids}`,sort:"publication_date:desc",per_page:"200",select:"id,doi,title,publication_date,abstract_inverted_index,primary_location,topics,type",cursor});const data=await openAlexWorks(params);works.push(...(data.results||[]));page++;cursor=data.meta?.next_cursor||null;onProgress?.(page,works.length,works);if(works.length===previous||(data.results||[]).length===0)break;previous=works.length;}journalCensusCache.set(cacheKey,works);return works;}
-async function fetchTargeted(ids,date,plan,onProgress){
-  const works=[],batchSize=4;
-  for(let offset=0;offset<plan.length;offset+=batchSize){
-    const batch=plan.slice(offset,offset+batchSize);
-    const results=await Promise.all(batch.map(item=>{
-      const filters=[`from_publication_date:${date}`,"type:article"];
-      if(ids)filters.push(`primary_location.source.id:${ids}`);
-      const params=new URLSearchParams({search:item.query,filter:filters.join(","),sort:"relevance_score:desc",per_page:"100",select:"id,doi,title,publication_date,abstract_inverted_index,primary_location,topics,type"});
-      return openAlexWorks(params);
-    }));
-    results.forEach(data=>works.push(...(data.results||[])));
-    onProgress?.(Math.min(offset+batch.length,plan.length),plan.length,batch[batch.length-1],works);
-  }
-  return works;
-}
-async function fetchWorks(){
-  const days=Number($("#days-select").value),date=new Date(Date.now()-days*DAY).toISOString().slice(0,10),favorites=state.profile.favoriteJournals,model=profileModel(),plan=buildSearchPlan(model),collected=[];
-  let scans=0;
-  const report=()=>{const unique=uniqueWorks(collected);return{checked:unique.length,matches:unique.filter(w=>scorePaper(w,model)).length};};
-  if(favorites.length){
-    // A complete journal census already contains every candidate in the selected
-    // date window. Running dozens of keyword searches first only duplicated work.
-    for(let j=0;j<favorites.length;j++){
-      const journal=favorites[j],name=journal.display_name||"Selected journal",id=sourceId(journal),base=5+Math.round(82*j/favorites.length),span=82/favorites.length;
-      updateScan({progress:base,title:"Checking selected journals",stage:`Journal ${j+1} of ${favorites.length}`,current:name,label:"JOURNAL BEING CHECKED"});
-      const census=await fetchJournalCensus(id,date,(page,count,currentWorks)=>{
-        const existing=report(),combined=uniqueWorks([...collected,...(currentWorks||[])]),liveMatches=combined.filter(w=>scorePaper(w,model)).length;
-        updateScan({progress:page===0?base+span*.9:base+Math.min(span*.9,page*span*.28),stage:page===0?"Using results from this session":`Checking recent papers · page ${page}`,current:name,candidates:existing.checked+count,matches:liveMatches});
-      });
-      collected.push(...census);scans++;
-      const r=report();
-      updateScan({progress:base+span*.95,stage:`${name} complete`,current:name,candidates:r.checked,matches:r.matches});
-    }
-  }else{
-    updateScan({progress:8,title:"Searching recent literature",stage:"Searching topic variants",current:"All indexed journals",label:"SEARCH SCOPE"});
-    collected.push(...await fetchTargeted("",date,plan,(i,total,item,pending)=>{const combined=uniqueWorks([...collected,...pending]),matches=combined.filter(w=>scorePaper(w,model)).length;updateScan({progress:8+60*i/Math.max(1,total),stage:`Searching ${i}/${total} topic variants`,current:"All indexed journals",candidates:combined.length,matches});}));
-    scans+=plan.length;
-    const initial=report();
-    if(initial.matches<12){
-      const expansions=model.activeFamilies.flatMap(f=>f.terms.slice(3,7).map(query=>({query,stage:"expanded",reason:f.label}))).slice(0,20);
-      collected.push(...await fetchTargeted("",date,expansions,(i,total,item,pending)=>{const combined=uniqueWorks([...collected,...pending]),matches=combined.filter(w=>scorePaper(w,model)).length;updateScan({progress:68+16*i/Math.max(1,total),stage:`Expanding scientific terms ${i}/${total}`,current:"All indexed journals",candidates:combined.length,matches});}));
-      scans+=expansions.length;
-    }
-  }
-  const unique=uniqueWorks(collected),matches=unique.filter(w=>scorePaper(w,model)).length;
-  updateScan({progress:90,title:"Ranking relevant papers",stage:"Final relevance check",current:favorites.length?"Selected journals":"All indexed journals",label:"SEARCH SCOPE",candidates:unique.length,matches});
-  state.lastSearchReport={queries:favorites.length?0:plan.length,scans,candidates:unique.length,journals:favorites.length,date};return unique;
-}
-let refreshInFlight=false;
-async function refreshFeed(){if(refreshInFlight)return;if(!state.profile.interests){$("#profile-warning").classList.remove("hidden");return;}refreshInFlight=true;$("#profile-warning").classList.add("hidden");$("#refresh-button").disabled=true;document.body.classList.add("loading");$("#feed-status").textContent="Building a multi-pass search plan…";openScan();try{const works=await fetchWorks();$("#feed-status").textContent=`Ranking ${works.length} unique candidates…`;updateScan({progress:96,current:"Selected journals",label:"SEARCH SCOPE",stage:"Final relevance check"});renderPapers(works);closeScan(true);const r=state.lastSearchReport;$("#feed-status").textContent+=` · ${r.candidates} unique papers examined across ${r.scans} retrieval passes`;}catch(err){$("#feed-status").textContent="The literature service is temporarily unavailable. Try again shortly.";closeScan(false);console.error(err);}finally{refreshInFlight=false;$("#refresh-button").disabled=false;document.body.classList.remove("loading");}}
-async function checkFavoriteJournals(force=false){
-  if(!state.profile.favoriteJournals.length)return;
-  if(!force&&state.lastCheck&&Date.now()-new Date(state.lastCheck.date).getTime()<DAY)return;
-  $("#check-journals-button").disabled=true;$("#last-checked").textContent="Checking favorite journals…";
-  try{
-    await Promise.all(state.profile.favoriteJournals.map(async journal=>{
-      const params=new URLSearchParams({filter:`primary_location.source.id:${sourceId(journal)},type:article`,sort:"publication_date:desc",per_page:"1"});
-      const res=await fetch("https://api.openalex.org/works?"+params);if(!res.ok)throw new Error("Daily check failed");
-      const latest=(await res.json()).results?.[0];state.latestByJournal[sourceId(journal)]=latest?.publication_date||"No articles found";
-    }));
-    state.lastCheck={date:new Date().toISOString()};localStorage.setItem(CHECK_KEY,JSON.stringify(state.lastCheck));renderFavorites();
-    if(state.profile.interests)refreshFeed();
-  }catch(err){$("#last-checked").textContent="Daily check failed. Try again.";console.error(err);}
-  finally{$("#check-journals-button").disabled=false;}
-}
-$("#refresh-button").addEventListener("click",refreshFeed);
-$("#days-select").addEventListener("change",refreshFeed);
-$("#check-journals-button").addEventListener("click",()=>checkFavoriteJournals(true));
 
-populateProfile();renderFavorites();
-if(state.profile.interests)refreshFeed();else $("#profile-warning").classList.remove("hidden");
-checkFavoriteJournals();
-if(!state.profile.favoriteJournals.length){$("#journal-search").value=starterNames[0];searchJournals();}
+  $("#empty-state").classList.toggle("hidden", ranked.length > 0);
+  $("#empty-state h3").textContent = "No relevant papers found";
+  $("#empty-state p").textContent = "Try a longer time window, more journals, or broader research interests.";
+  $("#empty-state button").textContent = "Adjust my profile";
+  const strongCount = ranked.filter(item => item.score.tier === "strong").length;
+  $("#feed-status").textContent = ranked.length ? `${ranked.length} relevant match${ranked.length === 1 ? "" : "es"} found (${strongCount} strong) from direct publisher data.` : "No papers passed the relevance threshold.";
+  $$(".save-paper").forEach(button => button.addEventListener("click", () => {
+    state.saved.has(button.dataset.id) ? state.saved.delete(button.dataset.id) : state.saved.add(button.dataset.id);
+    localStorage.setItem("paper-radar-saved", JSON.stringify([...state.saved]));
+    button.textContent = state.saved.has(button.dataset.id) ? "★" : "☆";
+  }));
+}
+
+let searchInFlight = false;
+async function searchPapers() {
+  if (searchInFlight) return;
+  if (!state.profile.interests) {
+    $("#profile-warning").classList.remove("hidden");
+    return;
+  }
+  searchInFlight = true;
+  $("#profile-warning").classList.add("hidden");
+  $("#refresh-button").disabled = true;
+  openScan();
+  try {
+    const days = Number($("#days-select").value);
+    const cutoff = Date.now() - days * DAY;
+    const favorites = state.profile.favoriteJournals.length ? state.profile.favoriteJournals : state.journals;
+    const favoriteIds = new Set(favorites.map(journal => journal.id));
+    const model = profileModel();
+    const candidates = [];
+    let matches = 0;
+
+    for (let index = 0; index < favorites.length; index += 1) {
+      const journal = favorites[index];
+      const journalPapers = state.papers.filter(paper => paper.journal_id === journal.id && new Date(paper.published).getTime() >= cutoff);
+      candidates.push(...journalPapers);
+      matches = candidates.filter(paper => scorePaper(paper, model)).length;
+      updateScan({ progress: 5 + (index + 1) * 85 / favorites.length, current: journal.title, candidates: candidates.length, matches });
+      await wait(70);
+    }
+
+    const unique = [...new Map(candidates.filter(paper => favoriteIds.has(paper.journal_id)).map(paper => [paper.doi || paper.url || paper.id, paper])).values()];
+    const ranked = unique.map(paper => ({ paper, score: scorePaper(paper, model) })).filter(item => item.score).sort((a, b) => (a.score.tier === "strong" ? 0 : 1) - (b.score.tier === "strong" ? 0 : 1) || b.score.value - a.score.value || String(b.paper.published).localeCompare(String(a.paper.published))).slice(0, 40);
+    updateScan({ progress: 96, current: "Ranking matches", candidates: unique.length, matches: ranked.length });
+    renderPapers(ranked);
+    closeScan();
+  } catch (error) {
+    $("#feed-status").textContent = "Publisher data could not be loaded. Try again shortly.";
+    $("#search-progress").classList.add("hidden");
+    console.error(error);
+  } finally {
+    searchInFlight = false;
+    $("#refresh-button").disabled = false;
+  }
+}
+
+$("#refresh-button").addEventListener("click", searchPapers);
+$("#days-select").addEventListener("change", () => {
+  $("#feed-status").textContent = "Time window changed. Press Search papers to update the feed.";
+});
+$("#check-journals-button").addEventListener("click", async () => {
+  $("#check-journals-button").disabled = true;
+  $("#last-checked").textContent = "Reloading the latest publisher snapshot…";
+  try {
+    await loadPublisherData(true);
+    renderFavorites();
+    $("#feed-status").textContent = "Publisher data reloaded. Press Search papers to update the feed.";
+  } catch (error) {
+    $("#last-checked").textContent = "Could not reload publisher data.";
+  } finally {
+    $("#check-journals-button").disabled = false;
+  }
+});
+
+async function initialize() {
+  populateProfile();
+  try {
+    await loadPublisherData();
+    renderFavorites();
+  } catch (error) {
+    $("#feed-status").textContent = "Publisher index is being prepared. Try again shortly.";
+    console.error(error);
+  }
+  if (!state.profile.interests) $("#profile-warning").classList.remove("hidden");
+}
+
+initialize();
