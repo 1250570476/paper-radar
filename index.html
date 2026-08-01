@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="description" content="A no-cost personalized feed for newly published research." />
   <title>Paper Radar</title>
-  <link rel="preconnect" href="https://api.openalex.org" />
   <link rel="stylesheet" href="styles.css?v=7" />
   <link rel="stylesheet" href="progress.css?v=1" />
 </head>
@@ -23,8 +22,8 @@
     <section id="feed-view" class="view">
       <div class="hero">
         <div><p class="eyebrow">YOUR RESEARCH, FILTERED</p><h1>Important papers.<br><span>Without the noise.</span></h1>
-        <p>Paper Radar checks recent scholarly literature and ranks new work against your research interests.</p></div>
-        <button id="refresh-button" class="primary">Refresh papers</button>
+        <p>Paper Radar checks journal publisher pages and ranks new work against your research interests.</p></div>
+        <button id="refresh-button" class="primary">Search papers</button>
       </div>
       <div id="profile-warning" class="notice hidden">Add your research interests to generate a personalized feed. <button data-go-profile>Set up profile</button></div>
       <div id="journal-warning" class="notice hidden">Choose favorite journals to restrict your feed. <button data-go-journals>Browse journals</button></div>
@@ -32,22 +31,22 @@
         <label>Time window<select id="days-select"><option value="7">7 days</option><option value="30" selected>30 days</option><option value="90">90 days</option></select></label>
       </div>
       <div id="paper-list" class="paper-list"></div>
-      <div id="empty-state" class="empty"><div class="radar-icon">⌁</div><h3>Your radar is ready</h3><p>Set up your profile, then scan recent research from OpenAlex.</p><button class="secondary" data-go-profile>Build my profile</button></div>
+      <div id="empty-state" class="empty"><div class="radar-icon">⌁</div><h3>Your radar is ready</h3><p>Set up your profile, then press Search papers.</p><button class="secondary" data-go-profile>Build my profile</button></div>
     </section>
 
     <section id="journals-view" class="view hidden">
-      <div class="section-heading"><p class="eyebrow">JOURNAL LIBRARY</p><h1>Follow the journals that matter</h1><p>Search the OpenAlex catalog and add journals to your favorites. When favorites exist, your feed includes papers only from those journals.</p></div>
+      <div class="section-heading"><p class="eyebrow">JOURNAL LIBRARY</p><h1>Follow the journals that matter</h1><p>Search supported publisher journals and add them to your favorites. Paper Radar reads their journal pages directly—without OpenAlex.</p></div>
       <article class="panel journal-browser">
         <div class="journal-search-row">
-          <label class="field">Search journals by name, field, or ISSN
+          <label class="field">Search journals by name or ISSN
             <input id="journal-search" type="search" placeholder="e.g., Science Robotics, biomaterials, 1945-0877" />
           </label>
           <button id="journal-search-button" class="primary" type="button">Search</button>
         </div>
-        <div class="catalog-meta"><span id="journal-search-status">Search a comprehensive catalog powered by OpenAlex.</span><span id="last-checked"></span></div>
+        <div class="catalog-meta"><span id="journal-search-status">Search journals checked directly on their publisher websites.</span><span id="last-checked"></span></div>
         <div id="journal-results" class="journal-results"></div>
       </article>
-      <div class="favorites-heading"><div><h2>Favorite journals</h2><p id="favorites-count">0 journals selected</p></div><button id="check-journals-button" class="secondary">Check for new papers</button></div>
+      <div class="favorites-heading"><div><h2>Favorite journals</h2><p id="favorites-count">0 journals selected</p></div><button id="check-journals-button" class="secondary">Reload publisher data</button></div>
       <div id="favorite-journals" class="favorite-journals"></div>
     </section>
 
@@ -74,14 +73,14 @@
     </section>
   </main>
   <aside id="search-progress" class="search-progress hidden" aria-live="polite" aria-label="Paper search progress">
-    <div class="scan-head"><div class="scan-orbit" aria-hidden="true"><span></span></div><div><p class="scan-kicker">RADAR SCAN IN PROGRESS</p><h2 id="scan-title">Preparing your search</h2></div><button id="minimize-scan" class="scan-minimize" type="button" aria-label="Minimize search progress">−</button></div>
-    <div class="scan-body"><div class="scan-progress-track"><span id="scan-progress-bar"></span></div><div class="scan-progress-meta"><strong id="scan-percent">0%</strong><span id="scan-stage">Preparing scan…</span></div>
+    <div class="scan-head"><div class="scan-orbit" aria-hidden="true"><span></span></div><div><p class="scan-kicker">SEARCHING SELECTED JOURNALS</p><h2>Paper search</h2></div><button id="minimize-scan" class="scan-minimize" type="button" aria-label="Minimize search progress">−</button></div>
+    <div class="scan-body"><div class="scan-progress-track"><span id="scan-progress-bar"></span></div><div class="scan-progress-meta"><strong id="scan-percent">0%</strong></div>
       <div class="scan-current"><span class="scan-pulse"></span><div><small id="scan-current-label">JOURNAL BEING CHECKED</small><strong id="scan-current-value">Preparing selected journals</strong></div></div>
       <div class="scan-stats"><div><strong id="scan-candidates">0</strong><span>papers checked</span></div><div><strong id="scan-matches">0</strong><span>matches found</span></div></div>
     </div>
     <button id="expand-scan" class="scan-expand hidden" type="button"><span class="scan-pulse"></span><span id="scan-mini-text">Scanning papers…</span><strong id="scan-mini-percent">0%</strong></button>
   </aside>
-  <footer>Paper and journal metadata provided by <a href="https://openalex.org" target="_blank" rel="noreferrer">OpenAlex</a>. No paid API is required.</footer>
-  <script type="module" src="app.js?v=fast-journal-scan-2"></script>
+  <footer>Paper metadata is collected directly from journal publisher pages. No OpenAlex or paid API is used.</footer>
+  <script type="module" src="app.js?v=direct-publisher-1"></script>
 </body>
 </html>
