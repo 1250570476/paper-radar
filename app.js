@@ -162,7 +162,7 @@ function renderPapers(works){
 async function openAlexWorks(params,attempt=0){const res=await fetch("https://api.openalex.org/works?"+params);if(res.status===429&&attempt<3){const wait=Math.max(1200,Number(res.headers.get("retry-after")||0)*1000||1200*(attempt+1));await new Promise(resolve=>setTimeout(resolve,wait));return openAlexWorks(params,attempt+1);}if(!res.ok)throw new Error("OpenAlex request failed ("+res.status+")");return res.json();}
 function uniqueWorks(works){return [...new Map(works.filter(Boolean).map(w=>[w.doi||w.id,w])).values()];}
 const journalCensusCache=new Map();
-async function fetchJournalCensus(ids,date,onProgress){const cacheKey=ids+"|"+date;if(journalCensusCache.has(cacheKey)){const cached=journalCensusCache.get(cacheKey);onProgress?.(0,cached.length,cached);return cached;}const works=[];let cursor="*",page=0,previous=-1;while(cursor&&page<30){const params=new URLSearchParams({filter:`from_publication_date:${date},type:article,primary_location.source.id:${ids}`,sort:"publication_date:desc",per_page:"200",cursor});const data=await openAlexWorks(params);works.push(...(data.results||[]));page++;cursor=data.meta?.next_cursor||null;onProgress?.(page,works.length,works);if(works.length===previous||(data.results||[]).length===0)break;previous=works.length;}journalCensusCache.set(cacheKey,works);return works;}
+async function fetchJournalCensus(ids,date,onProgress){const cacheKey=ids+"|"+date;if(journalCensusCache.has(cacheKey)){const cached=journalCensusCache.get(cacheKey);onProgress?.(0,cached.length,cached);return cached;}const works=[];let cursor="*",page=0,previous=-1;while(cursor&&page<30){const params=new URLSearchParams({filter:`from_publication_date:${date},type:article,primary_location.source.id:${ids}`,sort:"publication_date:desc",per_page:"200",select:"id,doi,title,publication_date,abstract_inverted_index,primary_location,topics,type",cursor});const data=await openAlexWorks(params);works.push(...(data.results||[]));page++;cursor=data.meta?.next_cursor||null;onProgress?.(page,works.length,works);if(works.length===previous||(data.results||[]).length===0)break;previous=works.length;}journalCensusCache.set(cacheKey,works);return works;}
 async function fetchTargeted(ids,date,plan,onProgress){
   const works=[],batchSize=4;
   for(let offset=0;offset<plan.length;offset+=batchSize){
@@ -170,7 +170,7 @@ async function fetchTargeted(ids,date,plan,onProgress){
     const results=await Promise.all(batch.map(item=>{
       const filters=[`from_publication_date:${date}`,"type:article"];
       if(ids)filters.push(`primary_location.source.id:${ids}`);
-      const params=new URLSearchParams({search:item.query,filter:filters.join(","),sort:"relevance_score:desc",per_page:"100"});
+      const params=new URLSearchParams({search:item.query,filter:filters.join(","),sort:"relevance_score:desc",per_page:"100",select:"id,doi,title,publication_date,abstract_inverted_index,primary_location,topics,type"});
       return openAlexWorks(params);
     }));
     results.forEach(data=>works.push(...(data.results||[])));
