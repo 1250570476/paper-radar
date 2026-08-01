@@ -120,8 +120,8 @@ function saveProfile() {
 async function loadPublisherData(force = false) {
   const suffix = force ? `?t=${Date.now()}` : "";
   const [journalsResponse, papersResponse] = await Promise.all([
-    fetch(`data/journals.json${suffix}`),
-    fetch(`data/papers.json${suffix}`)
+    fetch(`data/journals.json${suffix}`, { cache: "no-store" }),
+    fetch(`data/papers.json${suffix}`, { cache: "no-store" })
   ]);
   if (!journalsResponse.ok || !papersResponse.ok) throw new Error("Publisher data is unavailable");
   state.journals = await journalsResponse.json();
