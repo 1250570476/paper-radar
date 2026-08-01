@@ -9,6 +9,7 @@ import re
 import time
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta, timezone
+from email.utils import parsedate_to_datetime
 from pathlib import Path
 from urllib.parse import urlencode, urljoin
 from urllib.request import Request, urlopen
@@ -22,7 +23,7 @@ BACKFILL_PATH = ROOT / "data" / "backfill.json"
 CUTOFF = datetime.now(timezone.utc) - timedelta(days=190)
 HEADERS = {
     "User-Agent": "PaperRadar/1.0 (+https://github.com/1250570476/paper-radar; publisher-metadata index)",
-    "Accept": "text/html,application/xhtml+xml",
+    "Accept": "text/html,application/xhtml+xml,application/rss+xml,application/atom+xml,application/xml,text/xml",
 }
 
 
@@ -54,6 +55,11 @@ def parse_date(value: str | None) -> datetime | None:
             return datetime.strptime(value, pattern).replace(tzinfo=timezone.utc)
         except ValueError:
             pass
+    try:
+        parsed = parsedate_to_datetime(value)
+        return parsed.replace(tzinfo=parsed.tzinfo or timezone.utc)
+    except (TypeError, ValueError, OverflowError):
+        pass
     return None
 
 
@@ -70,83 +76,50 @@ def meta_content(soup: BeautifulSoup, names: tuple[str, ...]) -> str:
 
 
 def article_details(url: str) -> tuple[str, str]:
-    """Read abstract and DOI from several publisher-native representations."""
     try:
         soup = BeautifulSoup(fetch(url), "html.parser")
     except Exception:
         return "", ""
-
-    doi = meta_content(soup, ("citation_doi", "dc.identifier", "prism.doi"))
+    abstract = meta_content(soup, ("description", "dc.description", "citation_abstract", "og:description"))
+    doi = meta_content(soup, ("citation_doi", "dc.identifier"))
     if doi.lower().startswith("doi:"):
         doi = doi[4:].strip()
-
-    candidates = [
-        meta_content(soup, ("citation_abstract", "dc.description", "description", "og:description")),
-    ]
-    for script in soup.select('script[type="application/ld+json"]'):
-        try:
-            payload = json.loads(script.string or script.get_text())
-            records = payload if isinstance(payload, list) else [payload]
-            for record in records:
-                if isinstance(record, dict):
-                    candidates.append(str(record.get("description") or record.get("abstract") or ""))
-        except (json.JSONDecodeError, TypeError):
-            continue
-    for selector in (
-        "#Abs1-content",
-        "section[data-title='Abstract']",
-        ".c-article-section__content",
-        ".c-article__section--abstract",
-        "[data-test='article-description']",
-    ):
-        node = soup.select_one(selector)
-        if node:
-            candidates.append(text_of(node))
-
-    boilerplate = ("check access", "buy or subscribe", "nature portfolio", "springer nature")
-    abstract = max(
-        (
-            " ".join(value.split())
-            for value in candidates
-            if value and len(value.split()) >= 12 and not any(marker in value.lower() for marker in boilerplate)
-        ),
-        key=len,
-        default="",
-    )
     return abstract, doi
 
 
 def scrape_feed(journal: dict) -> list[dict]:
     """Use the journal's own RSS as a resilient direct-source fallback."""
-    feed_url = journal["listing_url"].rsplit("/", 1)[0] + ".rss"
+    feed_url = journal.get("feed_url")
+    if not feed_url:
+        feed_url = journal["listing_url"].rsplit("/", 1)[0] + ".rss"
     try:
         root = ET.fromstring(fetch(feed_url))
     except Exception:
         return []
     papers: list[dict] = []
-    items = [node for node in root.iter() if node.tag.split("}")[-1] == "item"]
+    items = [node for node in root.iter() if node.tag.split("}")[-1] in {"item", "entry"}]
     for item in items:
         def field(name: str) -> str:
-            node = item.find(name)
+            node = next((child for child in item.iter() if child.tag.split("}")[-1] == name), None)
             if node is None:
-                node = next((child for child in item if child.tag.split("}")[-1] == name), None)
-            return " ".join((node.text or "").split()) if node is not None else ""
+                return ""
+            return " ".join("".join(node.itertext()).split())
 
         title = field("title")
-        url = field("link") or next((value for key, value in item.attrib.items() if key.split("}")[-1] == "about"), "")
-        published = parse_date(field("date") or field("pubDate"))
+        link_node = next((child for child in item.iter() if child.tag.split("}")[-1] == "link"), None)
+        url = (link_node.get("href", "") if link_node is not None else "") or field("link")
+        url = url or next((value for key, value in item.attrib.items() if key.split("}")[-1] == "about"), "")
+        published = parse_date(field("date") or field("pubDate") or field("published") or field("updated"))
         if not title or not url or (published and published < CUTOFF):
             continue
-        summary = BeautifulSoup(field("description"), "html.parser").get_text(" ", strip=True)
-        doi = field("doi")
-        if not summary or not doi:
+        summary_html = field("description") or field("summary") or field("content")
+        summary = BeautifulSoup(summary_html, "html.parser").get_text(" ", strip=True)
+        doi = field("doi") or field("identifier")
+        doi = re.sub(r"^(?:doi:\s*|https?://(?:dx\.)?doi\.org/)", "", doi, flags=re.I).strip()
+        if journal.get("enrich_articles", True) and (not summary or not doi):
             detail_summary, detail_doi = article_details(url)
             summary = summary or detail_summary
             doi = doi or detail_doi
-        # Nature's d41586 identifiers are news, editorials and commentary,
-        # not primary research papers from the selected research-article feed.
-        if "/d41586-" in doi.lower():
-            continue
         papers.append({
             "id": doi or hashlib.sha1(url.encode()).hexdigest()[:16],
             "doi": doi,
@@ -163,6 +136,11 @@ def scrape_feed(journal: dict) -> list[dict]:
 
 
 def scrape_journal(journal: dict) -> list[dict]:
+    # Publishers that expose an official RSS/Atom feed do not need a
+    # site-specific HTML scraper. The same normalized paper schema is used.
+    if journal.get("feed_url") and not journal.get("listing_url"):
+        return scrape_feed(journal)
+
     papers: list[dict] = []
     seen_urls: set[str] = set()
     reached_cutoff = False
