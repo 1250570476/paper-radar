@@ -8,6 +8,7 @@ const status = document.querySelector("#auth-status");
 const signupTab = document.querySelector("#signup-tab");
 const signinTab = document.querySelector("#signin-tab");
 const accountButton = document.querySelector("#account-button");
+const authRedirectUrl = new URL("./", window.location.href).href;
 let mode = "signup";
 let session = readSession();
 
@@ -86,7 +87,7 @@ async function submitAuth(event) {
   setStatus(mode === "signup" ? "Creating your account…" : "Signing you in…");
   try {
     const data = mode === "signup"
-      ? await authRequest("/signup", { email, password, data: { alert_frequency: document.querySelector("#alert-frequency").value } })
+      ? await authRequest(`/signup?redirect_to=${encodeURIComponent(authRedirectUrl)}`, { email, password, data: { alert_frequency: document.querySelector("#alert-frequency").value } })
       : await authRequest("/token?grant_type=password", { email, password });
     if (data.access_token) {
       saveSession(data);
@@ -98,6 +99,40 @@ async function submitAuth(event) {
     setStatus(error.message, "error");
   } finally {
     button.disabled = false;
+  }
+}
+
+async function restoreConfirmationSession() {
+  const callback = new URLSearchParams(window.location.hash.slice(1));
+  const accessToken = callback.get("access_token");
+  if (!accessToken || !isConfigured()) return;
+
+  try {
+    const response = await fetch(`${config.supabaseUrl}/auth/v1/user`, {
+      headers: {
+        apikey: config.supabaseAnonKey,
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+    const user = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(user.msg || user.message || "The confirmation session could not be restored.");
+
+    saveSession({
+      access_token: accessToken,
+      refresh_token: callback.get("refresh_token") || "",
+      expires_at: Number(callback.get("expires_at")) || null,
+      expires_in: Number(callback.get("expires_in")) || null,
+      token_type: callback.get("token_type") || "bearer",
+      user
+    });
+    window.history.replaceState({}, document.title, `${window.location.pathname}${window.location.search}`);
+    setMode("signin");
+    setStatus("Email confirmed. You are now signed in.", "success");
+    openAccount();
+  } catch (error) {
+    setMode("signin");
+    setStatus(`${error.message} Please sign in with your email and password.`, "warning");
+    openAccount();
   }
 }
 
@@ -122,3 +157,4 @@ document.querySelector("#signout-button").addEventListener("click", async () => 
 
 setMode("signup");
 updateAccountView();
+restoreConfirmationSession();
