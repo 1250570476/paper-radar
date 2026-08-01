@@ -88,7 +88,8 @@ def scrape_feed(journal: dict) -> list[dict]:
     except Exception:
         return []
     papers: list[dict] = []
-    for item in root.findall(".//item"):
+    items = [node for node in root.iter() if node.tag.split("}")[-1] == "item"]
+    for item in items:
         def field(name: str) -> str:
             node = item.find(name)
             if node is None:
@@ -96,7 +97,7 @@ def scrape_feed(journal: dict) -> list[dict]:
             return " ".join((node.text or "").split()) if node is not None else ""
 
         title = field("title")
-        url = field("link")
+        url = field("link") or next((value for key, value in item.attrib.items() if key.split("}")[-1] == "about"), "")
         published = parse_date(field("date") or field("pubDate"))
         if not title or not url or (published and published < CUTOFF):
             continue
