@@ -263,7 +263,7 @@ $("#profile-form").addEventListener("submit", event => {
   $("#save-status").textContent = "Profile saved locally";
   setTimeout(() => { $("#save-status").textContent = ""; }, 1800);
   showView("feed");
-  $("#feed-status").textContent = "Profile saved. Scan your selected journals when you are ready.";
+  $("#feed-status").textContent = "Profile saved. Check for new papers when you are ready.";
 });
 
 function openScan() {
@@ -312,10 +312,10 @@ function renderPapers(ranked) {
 
   $("#empty-state").classList.toggle("hidden", ranked.length > 0);
   $("#empty-state h3").textContent = "No relevant papers found";
-  $("#empty-state p").textContent = "Try a longer publication window, add journals, or refine your research interests.";
+  $("#empty-state p").textContent = "Try a longer time window, more journals, or broader research interests.";
   $("#empty-state button").textContent = "Adjust my profile";
   const strongCount = ranked.filter(item => item.score.tier === "strong").length;
-  $("#feed-status").textContent = ranked.length ? `${ranked.length} relevant match${ranked.length === 1 ? "" : "es"} found (${strongCount} strong) from direct publisher data.` : "No papers crossed your relevance threshold.";
+  $("#feed-status").textContent = ranked.length ? `${ranked.length} relevant match${ranked.length === 1 ? "" : "es"} found (${strongCount} strong) from direct publisher data.` : "No papers passed the relevance threshold.";
   $$(".save-paper").forEach(button => button.addEventListener("click", () => {
     state.saved.has(button.dataset.id) ? state.saved.delete(button.dataset.id) : state.saved.add(button.dataset.id);
     localStorage.setItem("paper-radar-saved", JSON.stringify([...state.saved]));
@@ -369,7 +369,7 @@ async function searchPapers() {
 
 $("#refresh-button").addEventListener("click", searchPapers);
 $("#days-select").addEventListener("change", () => {
-  $("#feed-status").textContent = "Publication window changed. Scan again to update your radar.";
+  $("#feed-status").textContent = "Time window changed. Check new papers to update the feed.";
 });
 $("#check-journals-button").addEventListener("click", async () => {
   $("#check-journals-button").disabled = true;
@@ -377,7 +377,7 @@ $("#check-journals-button").addEventListener("click", async () => {
   try {
     await loadPublisherData(true);
     renderFavorites();
-    $("#feed-status").textContent = "Publisher data refreshed. Scan again to update your radar.";
+    $("#feed-status").textContent = "Publisher data reloaded. Check new papers to update the feed.";
   } catch (error) {
     $("#last-checked").textContent = "Could not reload publisher data.";
   } finally {

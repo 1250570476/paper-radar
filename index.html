@@ -3,116 +3,127 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="description" content="Track new research from journals you choose. Paper Radar checks publisher sources directly and ranks papers against your research profile." />
-  <meta name="theme-color" content="#123d32" />
+  <meta name="description" content="PaperFlare monitors the journals you trust and alerts you when newly published research matches your work." />
+  <meta name="theme-color" content="#1f684f" />
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Paper Radar — Personalized Research Paper Discovery" />
-  <meta property="og:description" content="A focused research feed built from journals you trust and the topics you care about." />
+  <meta property="og:title" content="PaperFlare — Never miss a paper that matters" />
+  <meta property="og:description" content="Newly published research, matched to your interests and delivered without the noise." />
   <meta property="og:url" content="https://1250570476.github.io/paper-radar/" />
   <link rel="canonical" href="https://1250570476.github.io/paper-radar/" />
-  <title>Paper Radar — Personalized Research Paper Discovery</title>
-  <link rel="stylesheet" href="styles.css?v=brand-2" />
+  <title>PaperFlare — Never miss a paper that matters</title>
+  <link rel="stylesheet" href="styles.css?v=paperflare-1" />
   <link rel="stylesheet" href="progress.css?v=1" />
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Paper Radar","applicationCategory":"EducationalApplication","operatingSystem":"Web","description":"Personalized research paper discovery from selected journal publisher sources.","url":"https://1250570476.github.io/paper-radar/"}</script>
+  <link rel="stylesheet" href="paperflare.css?v=1" />
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
   <header class="topbar">
-    <a class="brand" href="#" aria-label="Paper Radar home">
-      <span class="brand-mark" aria-hidden="true"><i></i></span>
-      <span class="brand-copy"><strong>Paper Radar</strong><small>Publisher-direct discovery</small></span>
-    </a>
-    <nav aria-label="Primary navigation">
-      <button class="nav-button active" data-view="feed">My radar</button>
-      <button class="nav-button" data-view="journals">Journals</button>
-      <button class="nav-button" data-view="profile">Profile</button>
-    </nav>
+    <a class="brand" href="#" aria-label="PaperFlare home"><span class="brand-mark" aria-hidden="true">PF</span><span>PaperFlare</span></a>
+    <div class="top-actions">
+      <nav aria-label="Primary navigation">
+        <button class="nav-button active" data-view="feed">My papers</button>
+        <button class="nav-button" data-view="journals">Journals</button>
+        <button class="nav-button" data-view="profile">Research profile</button>
+      </nav>
+      <button id="account-button" class="account-button" type="button">Create account</button>
+    </div>
   </header>
 
   <main id="main-content">
     <section id="feed-view" class="view">
       <div class="hero">
-        <div class="hero-copy">
-          <p class="eyebrow"><span></span> PERSONALIZED JOURNAL MONITORING</p>
-          <h1>New research.<br><span>Worth your attention.</span></h1>
-          <p class="hero-summary">A focused paper feed built from the journals you choose. Paper Radar checks publisher sources directly and ranks new work against your research profile.</p>
-          <div class="hero-actions">
-            <button id="refresh-button" class="primary">Search selected journals</button>
-          </div>
-        </div>
-        <div class="hero-radar" aria-hidden="true"><div class="radar-sweep"></div><span class="signal signal-one"></span><span class="signal signal-two"></span><span class="signal signal-three"></span></div>
+        <div><p class="eyebrow">YOUR FIELD, ALWAYS WITHIN REACH</p><h1>Never miss a paper<br><span>that matters.</span></h1>
+        <p>PaperFlare monitors the journals you trust, detects newly published work, and matches it to your research interests—so the right paper reaches you while it is still new.</p>
+        <div class="hero-actions"><button id="refresh-button" class="primary">Check new papers</button><button class="secondary" type="button" data-open-account>Create free account</button></div></div>
+        <div class="flare-visual" aria-hidden="true"><span class="flare-core"></span><span class="flare-ring ring-one"></span><span class="flare-ring ring-two"></span><i class="flare-dot dot-one"></i><i class="flare-dot dot-two"></i><i class="flare-dot dot-three"></i><strong>NEW<br>PAPER</strong></div>
       </div>
-
-      <div class="trust-strip" aria-label="How Paper Radar works">
-        <div><span>01</span><strong>Publisher sources</strong><small>Official feeds and journal pages</small></div>
-        <div><span>02</span><strong>Research profile</strong><small>Matched to your scientific interests</small></div>
-        <div><span>03</span><strong>Selected journals</strong><small>Limited to the sources you follow</small></div>
+      <div class="value-strip" aria-label="PaperFlare core values">
+        <div><span>01</span><strong>Complete coverage</strong><small>Follow the journals you trust</small></div>
+        <div><span>02</span><strong>Timely discovery</strong><small>See research as it appears</small></div>
+        <div><span>03</span><strong>Personal relevance</strong><small>Only papers connected to your work</small></div>
       </div>
-
-      <div id="profile-warning" class="notice hidden">Add your research interests to personalize your radar. <button data-go-profile>Set up profile</button></div>
-      <div id="journal-warning" class="notice hidden">Choose journals to focus your results. <button data-go-journals>Browse journals</button></div>
-      <div class="feed-toolbar"><div><p class="section-kicker">RECENT MATCHES</p><h2>Relevant papers</h2><p id="feed-status">No search run yet.</p></div>
-        <label>Publication window<select id="days-select"><option value="7">Past 7 days</option><option value="30" selected>Past 30 days</option><option value="90">Past 90 days</option></select></label>
+      <div id="profile-warning" class="notice hidden">Add your research interests to generate a personalized feed. <button data-go-profile>Set up profile</button></div>
+      <div id="journal-warning" class="notice hidden">Choose favorite journals to restrict your feed. <button data-go-journals>Browse journals</button></div>
+      <div class="feed-toolbar"><div><h2>New and relevant to you</h2><p id="feed-status">Ready to check the latest publisher updates.</p></div>
+        <label>Time window<select id="days-select"><option value="7">7 days</option><option value="30" selected>30 days</option><option value="90">90 days</option></select></label>
       </div>
       <div id="paper-list" class="paper-list"></div>
-      <div id="empty-state" class="empty">
-        <div class="empty-radar" aria-hidden="true"><span></span></div>
-        <h3>Start your first search</h3>
-        <p>Add your research interests and select journals to generate a ranked paper feed.</p>
-        <div class="empty-steps"><span><b>1</b> Define interests</span><span><b>2</b> Select journals</span><span><b>3</b> Search papers</span></div>
-        <button class="secondary" data-go-profile>Set up profile</button>
-      </div>
+      <div id="empty-state" class="empty"><div class="radar-icon">✦</div><h3>Your next important paper starts here</h3><p>Define your interests and trusted journals, then let PaperFlare separate the signal from the noise.</p><button class="secondary" data-go-profile>Build my research profile</button></div>
     </section>
 
     <section id="journals-view" class="view hidden">
-      <div class="section-heading"><p class="eyebrow"><span></span> JOURNAL SOURCES</p><h1>Select journals<br><em>to follow.</em></h1><p>Build a focused source list from supported journals. Paper Radar monitors their official publisher pages and feeds.</p></div>
+      <div class="section-heading"><p class="eyebrow">YOUR TRUSTED SOURCES</p><h1>Follow the journals that matter</h1><p>Choose the journals PaperFlare should watch. New articles are collected from official publisher pages and checked against your research profile.</p></div>
       <article class="panel journal-browser">
         <div class="journal-search-row">
-          <label class="field">Find a journal by title or ISSN
-            <input id="journal-search" type="search" placeholder="Try Science Robotics, Biomaterials, or an ISSN" />
+          <label class="field">Search journals by name or ISSN
+            <input id="journal-search" type="search" placeholder="e.g., Science Robotics, biomaterials, 1945-0877" />
           </label>
-          <button id="journal-search-button" class="primary" type="button">Find journals</button>
+          <button id="journal-search-button" class="primary" type="button">Search</button>
         </div>
-        <div class="catalog-meta"><span id="journal-search-status">Search publisher-monitored journals.</span><span id="last-checked"></span></div>
+        <div class="catalog-meta"><span id="journal-search-status">Search journals checked directly on their publisher websites.</span><span id="last-checked"></span></div>
         <div id="journal-results" class="journal-results"></div>
       </article>
-      <div class="favorites-heading"><div><p class="section-kicker">YOUR SOURCE LIST</p><h2>Selected journals</h2><p id="favorites-count">0 journals selected</p></div><button id="check-journals-button" class="secondary">Refresh journal data</button></div>
+      <div class="favorites-heading"><div><h2>Favorite journals</h2><p id="favorites-count">0 journals selected</p></div><button id="check-journals-button" class="secondary">Reload publisher data</button></div>
       <div id="favorite-journals" class="favorite-journals"></div>
     </section>
 
     <section id="profile-view" class="view hidden">
-      <div class="section-heading"><p class="eyebrow"><span></span> RESEARCH PROFILE</p><h1>Define your<br><em>research interests.</em></h1><p>Describe your work in scientific language. Your profile remains in this browser and is used to rank papers from your selected journals.</p></div>
+      <div class="section-heading"><p class="eyebrow">PERSONAL RELEVANCE</p><h1>Teach PaperFlare what matters</h1><p>Your scientific interests guide every match. Until you connect an account, this profile remains only in this browser.</p></div>
       <form id="profile-form" class="profile-grid">
         <article class="panel">
-          <div class="step"><span>1</span><div><h2>Add your research context</h2><p>Upload a CV or paste selected research text. Extraction happens locally in your browser.</p></div></div>
-          <label class="dropzone" for="cv-file"><input id="cv-file" type="file" accept=".pdf,.txt,.md,text/plain,application/pdf" /><strong>Choose a CV file</strong><span id="file-label">PDF, TXT, or Markdown</span></label>
-          <label class="field">CV and research context<textarea id="cv-text" rows="8" placeholder="Extracted text appears here. You can also paste selected research context directly."></textarea></label>
+          <div class="step"><span>1</span><div><h2>Upload your CV</h2><p>PDF, TXT, or Markdown. We extract research terms locally in your browser.</p></div></div>
+          <label class="dropzone" for="cv-file"><input id="cv-file" type="file" accept=".pdf,.txt,.md,text/plain,application/pdf" /><strong>Choose a CV file</strong><span id="file-label">or drag it here</span></label>
+          <label class="field">Extracted CV text<textarea id="cv-text" rows="8" placeholder="Extracted text will appear here. You can also paste CV text directly."></textarea></label>
         </article>
         <article class="panel">
-          <div class="step"><span>2</span><div><h2>Define research interests</h2><p>Combine specific systems, materials, methods, mechanisms, and applications.</p></div></div>
-          <label class="field">Research interests<textarea id="interests" rows="7" required placeholder="Example: magnetic hydrogel microrobots, ultrasound neuromodulation, droplet microfluidics, piezoelectric nanoparticles"></textarea></label>
-          <label class="field">Topics to filter out<input id="excluded" placeholder="Optional: cancer, astronomy" /></label>
+          <div class="step"><span>2</span><div><h2>Describe your interests</h2><p>Use specific materials, methods, systems, and applications.</p></div></div>
+          <label class="field">Research interests<textarea id="interests" rows="7" required placeholder="Example: biodegradable magnetic hydrogel microrobots, ultrasound neuromodulation, microfluidics, piezoelectric nanoparticles"></textarea></label>
+          <label class="field">Keywords to exclude<input id="excluded" placeholder="cancer, astronomy (optional)" /></label>
         </article>
         <article class="panel journals">
-          <div class="step"><span>3</span><div><h2>Select trusted journals</h2><p>Your source list keeps discovery intentional and transparent.</p></div></div>
-          <button type="button" class="secondary" data-go-journals>Choose journals</button>
+          <div class="step"><span>3</span><div><h2>Choose journals</h2><p>Journal selection now lives in the searchable Journals page.</p></div></div>
+          <button type="button" class="secondary" data-go-journals>Browse and select journals</button>
           <p id="profile-journal-summary" class="inline-summary"></p>
         </article>
-        <div class="form-actions"><span id="save-status"></span><button class="primary" type="submit">Save research profile</button></div>
+        <div class="form-actions"><span id="save-status"></span><button class="primary" type="submit">Save profile</button></div>
       </form>
     </section>
   </main>
-
   <aside id="search-progress" class="search-progress hidden" aria-live="polite" aria-label="Paper search progress">
-    <div class="scan-head"><div class="scan-orbit" aria-hidden="true"><span></span></div><div><p class="scan-kicker">SEARCHING SELECTED JOURNALS</p><h2>Search in progress</h2></div><button id="minimize-scan" class="scan-minimize" type="button" aria-label="Minimize search progress">−</button></div>
+    <div class="scan-head"><div class="scan-orbit" aria-hidden="true"><span></span></div><div><p class="scan-kicker">SEARCHING SELECTED JOURNALS</p><h2>Paper search</h2></div><button id="minimize-scan" class="scan-minimize" type="button" aria-label="Minimize search progress">−</button></div>
     <div class="scan-body"><div class="scan-progress-track"><span id="scan-progress-bar"></span></div><div class="scan-progress-meta"><strong id="scan-percent">0%</strong></div>
-      <div class="scan-current"><span class="scan-pulse"></span><div><small id="scan-current-label">CURRENT JOURNAL</small><strong id="scan-current-value">Preparing selected journals</strong></div></div>
+      <div class="scan-current"><span class="scan-pulse"></span><div><small id="scan-current-label">JOURNAL BEING CHECKED</small><strong id="scan-current-value">Preparing selected journals</strong></div></div>
       <div class="scan-stats"><div><strong id="scan-candidates">0</strong><span>papers checked</span></div><div><strong id="scan-matches">0</strong><span>matches found</span></div></div>
     </div>
     <button id="expand-scan" class="scan-expand hidden" type="button"><span class="scan-pulse"></span><span id="scan-mini-text">Scanning papers…</span><strong id="scan-mini-percent">0%</strong></button>
   </aside>
+  <dialog id="account-dialog" class="account-dialog" aria-labelledby="account-title">
+    <button id="close-account" class="dialog-close" type="button" aria-label="Close account dialog">×</button>
+    <div id="auth-forms">
+      <p class="eyebrow">PERSONAL PAPER ALERTS</p>
+      <h2 id="account-title">Create your PaperFlare account</h2>
+      <p id="account-intro" class="dialog-intro">Save your research setup and choose how often you want relevant new-paper alerts.</p>
+      <div class="auth-tabs" role="tablist" aria-label="Account options"><button id="signup-tab" class="active" type="button" role="tab" aria-selected="true">Create account</button><button id="signin-tab" type="button" role="tab" aria-selected="false">Sign in</button></div>
+      <form id="auth-form">
+        <label class="field">Email address<input id="auth-email" type="email" autocomplete="email" required placeholder="you@university.edu" /></label>
+        <label class="field">Password<input id="auth-password" type="password" autocomplete="new-password" minlength="8" required placeholder="At least 8 characters" /></label>
+        <label id="alert-frequency-field" class="field">Email alert frequency<select id="alert-frequency"><option value="daily" selected>Daily digest</option><option value="instant">As soon as possible</option><option value="weekly">Weekly digest</option></select></label>
+        <button id="auth-submit" class="primary auth-submit" type="submit">Create account</button>
+        <p id="auth-status" class="auth-status" role="status" aria-live="polite"></p>
+      </form>
+      <small class="privacy-note">PaperFlare never stores your password. Authentication is handled by Supabase, and email confirmation is required.</small>
+    </div>
+    <div id="account-panel" class="hidden">
+      <p class="eyebrow">YOUR ACCOUNT</p><h2>Welcome to PaperFlare</h2><p id="account-email" class="dialog-intro"></p>
+      <div class="account-benefit"><strong>Alert preference</strong><span id="account-frequency">Daily digest</span></div>
+      <p class="account-note">Your account is ready. Profile syncing and automatic paper-email delivery are the next backend connection.</p>
+      <button id="signout-button" class="secondary" type="button">Sign out</button>
+    </div>
+  </dialog>
 
-  <footer><div class="footer-brand"><span class="mini-mark" aria-hidden="true"></span><strong>Paper Radar</strong></div><p>Focused research discovery from official publisher sources.</p><small>Publisher metadata is updated daily. Your profile remains in your browser.</small></footer>
-  <script type="module" src="app.js?v=brand-2"></script>
+  <footer><strong>PaperFlare</strong><span>Never miss a paper that matters.</span><small>Research metadata is collected from official journal publisher sources.</small></footer>
+  <script src="supabase-config.js"></script>
+  <script type="module" src="auth.js?v=1"></script>
+  <script type="module" src="app.js?v=relevance-iterative-2"></script>
 </body>
 </html>
