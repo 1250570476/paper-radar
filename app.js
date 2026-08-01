@@ -30,19 +30,25 @@ const formatDate = value => value ? new Intl.DateTimeFormat(undefined, { dateSty
 
 const stopWords = new Set(["the", "and", "for", "with", "from", "into", "using", "use", "based", "study", "studies", "effect", "effects", "development", "design", "analysis", "novel", "approach", "applications", "application", "research", "system", "systems", "method", "methods", "results", "their", "our", "this", "that", "are", "was", "were", "have", "has", "its", "can", "may", "university", "engineering", "mechanical", "present", "student", "grade", "author", "publications", "experience", "skills"]);
 const conceptFamilies = [
-  { label: "micro/millirobots", terms: ["microrobot", "microrobots", "microrobotic", "millirobot", "millirobots", "microswimmer", "microswimmers", "microbot", "micromachine", "micromachines", "untethered robot", "medical robot"] },
-  { label: "soft robotics", terms: ["soft robot", "soft robots", "soft robotic", "hydrogel robot", "continuum robot", "shape morphing", "shape-morphing", "bioinspired robot"] },
-  { label: "magnetic actuation", terms: ["magnetic actuation", "magnetically actuated", "magnetic robot", "magnetic microrobot", "microroller", "rotating magnetic field", "janus microrobot"] },
-  { label: "ultrasound/acoustics", terms: ["ultrasound", "ultrasonic", "acoustic actuation", "acoustically actuated", "focused ultrasound", "acoustic streaming", "acoustofluidic", "acoustofluidics"] },
-  { label: "neuromodulation", terms: ["neuromodulation", "neurostimulation", "neural stimulation", "nerve stimulation", "peripheral nerve", "bioelectronic medicine"] },
-  { label: "hydrogels", terms: ["hydrogel", "hydrogels", "alginate", "soft biomaterial", "biodegradable particle", "injectable biomaterial"] },
-  { label: "piezoelectric materials", terms: ["piezoelectric", "piezoelectricity", "barium titanate", "batio3", "piezoelectric nanoparticle"] },
-  { label: "iontronics", terms: ["iontronic", "iontronics", "ionotronic", "ionotronics", "ionic device", "ionic transistor", "ionic sensor", "ionic actuator", "ion transport"] },
-  { label: "microfluidics", terms: ["microfluidic", "microfluidics", "lab on a chip", "lab-on-a-chip", "droplet microfluidics", "flow focusing", "microchannel", "organ on a chip", "microphysiological system"] },
-  { label: "particle/cell separation", terms: ["particle separation", "cell separation", "deterministic lateral displacement", "inertial microfluidics", "circulating tumor cell"] },
-  { label: "biomaterials", terms: ["biomaterial", "biomaterials", "tissue engineering", "scaffold", "regenerative medicine"] },
-  { label: "micro/nanofabrication", terms: ["microfabrication", "nanofabrication", "two photon polymerization", "soft lithography", "3d printing"] }
+  { label: "micro/millirobots", specificity: 4, standalone: true, terms: ["microrobot", "microrobots", "micro robot", "micro robots", "microrobotic", "millirobot", "millirobots", "milli robot", "milli robots", "microbot", "micromachine", "micromachines", "microswimmer", "microswimmers", "untethered robot", "untethered microrobot", "microroller", "micro roller"] },
+  { label: "medical soft robotics", specificity: 4, standalone: true, terms: ["medical soft robot", "medical soft robots", "surgical soft robot", "soft robotic catheter", "soft robotic implant", "vascular robot", "vascular tunneling machine", "tunneling machine", "robotic surgery"] },
+  { label: "soft robotics", specificity: 3, standalone: true, terms: ["soft robot", "soft robots", "soft robotic", "hydrogel robot", "continuum robot", "shape morphing robot", "shape-morphing robot", "bioinspired robot", "liquid crystal elastomer robot"] },
+  { label: "drug delivery", specificity: 3, standalone: true, terms: ["drug delivery", "drug-delivery", "targeted delivery", "controlled release", "on demand release", "on-demand release", "therapeutic delivery", "cargo delivery", "drug carrier"] },
+  { label: "microfluidics", specificity: 3, standalone: true, terms: ["microfluidic", "microfluidics", "lab on a chip", "lab-on-a-chip", "droplet microfluidic", "droplet microfluidics", "flow focusing", "microchannel", "microchannels", "organ on a chip", "organ-on-a-chip", "microphysiological system", "acoustofluidic", "optofluidic"] },
+  { label: "diagnostics", specificity: 2, standalone: true, terms: ["diagnostic", "diagnostics", "biosensor", "point of care", "point-of-care", "diagnostic assay", "liquid biopsy", "biomarker detection", "microfluidic detection"] },
+  { label: "dropletronics", specificity: 4, standalone: true, terms: ["dropletronic", "dropletronics", "droplet electronic", "droplet electronics", "droplet circuit", "fluidic circuit", "fluidic logic", "liquid droplet logic", "droplet network"] },
+  { label: "hydrogels", specificity: 1, standalone: false, broad: true, terms: ["hydrogel", "hydrogels", "alginate", "biogel", "soft biomaterial", "injectable gel"] },
+  { label: "magnetic actuation", specificity: 3, standalone: true, terms: ["magnetic actuation", "magnetically actuated", "magnetic robot", "magnetic microrobot", "rotating magnetic field", "janus microrobot"] },
+  { label: "ultrasound/acoustics", specificity: 3, standalone: true, terms: ["ultrasound", "ultrasonic", "acoustic actuation", "acoustically actuated", "focused ultrasound", "acoustic streaming", "acoustofluidic", "acoustofluidics"] },
+  { label: "neuromodulation", specificity: 4, standalone: true, terms: ["neuromodulation", "neurostimulation", "neural stimulation", "nerve stimulation", "peripheral nerve stimulation", "bioelectronic medicine"] },
+  { label: "piezoelectric materials", specificity: 2, standalone: true, terms: ["piezoelectric", "piezoelectricity", "barium titanate", "batio3", "piezoelectric nanoparticle"] },
+  { label: "iontronics", specificity: 3, standalone: true, terms: ["iontronic", "iontronics", "ionotronic", "ionotronics", "ionic device", "ionic transistor", "ionic sensor", "ionic actuator", "ion transport"] },
+  { label: "particle/cell separation", specificity: 3, standalone: true, terms: ["particle separation", "cell separation", "deterministic lateral displacement", "inertial microfluidics", "circulating tumor cell"] },
+  { label: "biomaterials", specificity: 1, standalone: false, broad: true, terms: ["biomaterial", "biomaterials", "tissue engineering", "scaffold", "regenerative medicine"] },
+  { label: "micro/nanofabrication", specificity: 2, standalone: false, terms: ["microfabrication", "nanofabrication", "two photon polymerization", "soft lithography", "3d printing"] }
 ];
+
+const nonResearchTitle = /^(author correction|correction|publisher correction|retraction|retraction note|editorial expression of concern|briefing|daily briefing|books? in brief|obituary|news and views|research highlight)/i;
 
 function hasExact(text, value) {
   return (` ${clean(text)} `).includes(` ${clean(value)} `);
@@ -58,12 +64,13 @@ function frequentTerms(text, limit = 25) {
 function profileModel() {
   const interests = clean(state.profile.interests);
   const cv = clean((state.profile.cvText || "").slice(0, 30000));
+  const explicitPhrases = String(state.profile.interests || "").split(/[,;\n]/).map(clean).filter(value => value.length >= 4);
   const explicitTerms = frequentTerms(interests, 30);
   const activeFamilies = conceptFamilies.filter(family => family.terms.some(term => hasExact(`${interests} ${cv}`, term))).map(family => ({
     ...family,
     priority: family.terms.some(term => hasExact(interests, term)) ? 3 : 1
   }));
-  return { interests, explicitTerms, activeFamilies };
+  return { interests, explicitPhrases, explicitTerms, activeFamilies };
 }
 
 function scorePaper(paper, model) {
@@ -72,44 +79,59 @@ function scorePaper(paper, model) {
   const text = `${title} ${abstract}`;
   const excluded = String(state.profile.excluded || "").split(/[,;\n]/).map(clean).filter(Boolean);
   if (excluded.some(term => hasExact(text, term))) return null;
+  if (nonResearchTitle.test(title) || String(paper.doi || "").toLowerCase().includes("/d41586-")) return null;
 
   let raw = 0;
   let titleSignals = 0;
-  let familyHits = 0;
-  let explicitHits = 0;
+  let abstractSignals = 0;
   const evidence = [];
 
   model.activeFamilies.forEach(family => {
     const titleTerms = family.terms.filter(term => hasExact(title, term));
     const abstractTerms = family.terms.filter(term => hasExact(abstract, term));
     if (!titleTerms.length && !abstractTerms.length) return;
-    const points = family.priority * (titleTerms.length ? 8 : 3) + Math.min(5, titleTerms.length + abstractTerms.length - 1);
-    raw += points;
-    familyHits += 1;
+    const points = titleTerms.length
+      ? 12 + family.specificity * 4 + (family.priority - 1) * 3
+      : 3 + family.specificity + (family.priority - 1) * 2;
+    raw += points + Math.min(4, titleTerms.length + abstractTerms.length - 1);
     if (titleTerms.length) titleSignals += 1;
-    evidence.push({ value: family.label, points });
+    else abstractSignals += 1;
+    evidence.push({ value: family.label, points, title: Boolean(titleTerms.length), family });
   });
 
-  model.explicitTerms.forEach(term => {
-    const inTitle = hasExact(title, term);
-    const inAbstract = hasExact(abstract, term);
+  model.explicitPhrases.forEach(phrase => {
+    if (phrase.split(" ").length < 2 || conceptFamilies.some(family => family.terms.some(term => hasExact(phrase, term)))) return;
+    const inTitle = hasExact(title, phrase);
+    const inAbstract = hasExact(abstract, phrase);
     if (!inTitle && !inAbstract) return;
-    const points = inTitle ? 7 : 2;
+    const points = inTitle ? 18 : 6;
     raw += points;
-    explicitHits += 1;
     if (inTitle) titleSignals += 1;
-    evidence.push({ value: term, points });
+    else abstractSignals += 1;
+    evidence.push({ value: phrase, points, title: inTitle, family: { specificity: 3, standalone: true } });
   });
 
-  const strong = raw >= 25 && (titleSignals >= 1 || familyHits >= 2) && (familyHits >= 2 || explicitHits >= 2);
-  const candidate = !strong && raw >= 13 && (titleSignals >= 1 || familyHits >= 2) && (familyHits >= 1 || explicitHits >= 2);
-  if (!strong && !candidate) return null;
-  const hits = evidence.sort((a, b) => b.points - a.points).filter((item, index, list) => list.findIndex(other => other.value === item.value) === index).slice(0, 5).map(item => item.value);
+  const uniqueEvidence = evidence.filter((item, index, list) => list.findIndex(other => other.value === item.value) === index);
+  const directSpecificTitle = uniqueEvidence.some(item => item.title && item.family.standalone && item.family.specificity >= 2);
+  const broadTitle = uniqueEvidence.some(item => item.title && item.family.broad);
+  const multiConcept = uniqueEvidence.length >= 2 && (titleSignals >= 1 || abstractSignals >= 2);
+  const supportedBroad = broadTitle && uniqueEvidence.some(item => item.value !== "hydrogels" && item.value !== "biomaterials");
+  const broadOnly = uniqueEvidence.length === 1 && broadTitle;
+
+  if (!directSpecificTitle && !multiConcept && !supportedBroad && !broadOnly) return null;
+
+  const strong = directSpecificTitle || titleSignals >= 2 || uniqueEvidence.length >= 3;
+  const hits = uniqueEvidence.sort((a, b) => b.points - a.points).slice(0, 5).map(item => item.value);
+  const value = strong
+    ? Math.min(98, 80 + Math.round(Math.max(0, raw - 20) * 0.45))
+    : Math.min(79, 48 + Math.round(raw * 0.7));
   return {
     tier: strong ? "strong" : "candidate",
-    value: strong ? Math.min(98, 80 + Math.round((raw - 25) * 0.8)) : Math.min(79, 45 + Math.round((raw - 13) * 2)),
+    value,
     hits,
-    explanation: `${familyHits} research concept${familyHits === 1 ? "" : "s"} and ${explicitHits} explicit interest term${explicitHits === 1 ? "" : "s"}`
+    explanation: titleSignals
+      ? `${titleSignals} title concept${titleSignals === 1 ? "" : "s"}${abstractSignals ? ` plus ${abstractSignals} abstract concept${abstractSignals === 1 ? "" : "s"}` : ""}`
+      : `${abstractSignals} supporting concepts in the abstract`
   };
 }
 
