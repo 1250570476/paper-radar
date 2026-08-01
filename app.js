@@ -161,7 +161,8 @@ function renderPapers(works){
 }
 async function openAlexWorks(params,attempt=0){const res=await fetch("https://api.openalex.org/works?"+params);if(res.status===429&&attempt<3){const wait=Math.max(1200,Number(res.headers.get("retry-after")||0)*1000||1200*(attempt+1));await new Promise(resolve=>setTimeout(resolve,wait));return openAlexWorks(params,attempt+1);}if(!res.ok)throw new Error("OpenAlex request failed ("+res.status+")");return res.json();}
 function uniqueWorks(works){return [...new Map(works.filter(Boolean).map(w=>[w.doi||w.id,w])).values()];}
-async function fetchJournalCensus(ids,date,onProgress){const works=[];let cursor="*",page=0,previous=-1;while(cursor&&page<30){const params=new URLSearchParams({filter:`from_publication_date:${date},type:article,primary_location.source.id:${ids}`,sort:"publication_date:desc",per_page:"200",cursor});const data=await openAlexWorks(params);works.push(...(data.results||[]));page++;cursor=data.meta?.next_cursor||null;onProgress?.(page,works.length);if(works.length===previous||(data.results||[]).length===0)break;previous=works.length;}return works;}
+const journalCensusCache=new Map();
+async function fetchJournalCensus(ids,date,onProgress){const cacheKey=ids+"|"+date;if(journalCensusCache.has(cacheKey)){const cached=journalCensusCache.get(cacheKey);onProgress?.(0,cached.length,cached);return cached;}const works=[];let cursor="*",page=0,previous=-1;while(cursor&&page<30){const params=new URLSearchParams({filter:`from_publication_date:${date},type:article,primary_location.source.id:${ids}`,sort:"publication_date:desc",per_page:"200",cursor});const data=await openAlexWorks(params);works.push(...(data.results||[]));page++;cursor=data.meta?.next_cursor||null;onProgress?.(page,works.length,works);if(works.length===previous||(data.results||[]).length===0)break;previous=works.length;}journalCensusCache.set(cacheKey,works);return works;}
 async function fetchTargeted(ids,date,plan,onProgress){
   const works=[],batchSize=4;
   for(let offset=0;offset<plan.length;offset+=batchSize){
@@ -187,9 +188,9 @@ async function fetchWorks(){
     for(let j=0;j<favorites.length;j++){
       const journal=favorites[j],name=journal.display_name||"Selected journal",id=sourceId(journal),base=5+Math.round(82*j/favorites.length),span=82/favorites.length;
       updateScan({progress:base,title:"Checking selected journals",stage:`Journal ${j+1} of ${favorites.length}`,current:name,label:"JOURNAL BEING CHECKED"});
-      const census=await fetchJournalCensus(id,date,(page,count)=>{
-        const existing=report();
-        updateScan({progress:base+Math.min(span*.9,page*span*.28),stage:`Checking recent papers · page ${page}`,current:name,candidates:existing.checked+count,matches:existing.matches});
+      const census=await fetchJournalCensus(id,date,(page,count,currentWorks)=>{
+        const existing=report(),combined=uniqueWorks([...collected,...(currentWorks||[])]),liveMatches=combined.filter(w=>scorePaper(w,model)).length;
+        updateScan({progress:page===0?base+span*.9:base+Math.min(span*.9,page*span*.28),stage:page===0?"Using results from this session":`Checking recent papers · page ${page}`,current:name,candidates:existing.checked+count,matches:liveMatches});
       });
       collected.push(...census);scans++;
       const r=report();
