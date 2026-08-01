@@ -18,6 +18,7 @@ from bs4 import BeautifulSoup
 ROOT = Path(__file__).resolve().parents[1]
 JOURNALS_PATH = ROOT / "data" / "journals.json"
 OUTPUT_PATH = ROOT / "data" / "papers.json"
+BACKFILL_PATH = ROOT / "data" / "backfill.json"
 CUTOFF = datetime.now(timezone.utc) - timedelta(days=190)
 HEADERS = {
     "User-Agent": "PaperRadar/1.0 (+https://github.com/1250570476/paper-radar; publisher-metadata index)",
@@ -202,6 +203,15 @@ def main() -> None:
         except Exception as error:
             errors[journal["id"]] = f"{type(error).__name__}: {error}"
             print(f"  failed: {errors[journal['id']]}", flush=True)
+
+    if BACKFILL_PATH.exists():
+        backfill = json.loads(BACKFILL_PATH.read_text(encoding="utf-8"))
+        for paper in backfill:
+            if not paper.get("abstract"):
+                abstract, doi = article_details(paper["url"])
+                paper["abstract"] = abstract
+                paper["doi"] = paper.get("doi") or doi
+            all_papers.append(paper)
 
     deduplicated = {paper["doi"] or paper["url"]: paper for paper in all_papers}
     papers = sorted(deduplicated.values(), key=lambda paper: paper["published"], reverse=True)
