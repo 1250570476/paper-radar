@@ -70,14 +70,49 @@ def meta_content(soup: BeautifulSoup, names: tuple[str, ...]) -> str:
 
 
 def article_details(url: str) -> tuple[str, str]:
+    """Read abstract and DOI from several publisher-native representations."""
     try:
         soup = BeautifulSoup(fetch(url), "html.parser")
     except Exception:
         return "", ""
-    abstract = meta_content(soup, ("description", "dc.description", "citation_abstract", "og:description"))
-    doi = meta_content(soup, ("citation_doi", "dc.identifier"))
+
+    doi = meta_content(soup, ("citation_doi", "dc.identifier", "prism.doi"))
     if doi.lower().startswith("doi:"):
         doi = doi[4:].strip()
+
+    candidates = [
+        meta_content(soup, ("citation_abstract", "dc.description", "description", "og:description")),
+    ]
+    for script in soup.select('script[type="application/ld+json"]'):
+        try:
+            payload = json.loads(script.string or script.get_text())
+            records = payload if isinstance(payload, list) else [payload]
+            for record in records:
+                if isinstance(record, dict):
+                    candidates.append(str(record.get("description") or record.get("abstract") or ""))
+        except (json.JSONDecodeError, TypeError):
+            continue
+    for selector in (
+        "#Abs1-content",
+        "section[data-title='Abstract']",
+        ".c-article-section__content",
+        ".c-article__section--abstract",
+        "[data-test='article-description']",
+    ):
+        node = soup.select_one(selector)
+        if node:
+            candidates.append(text_of(node))
+
+    boilerplate = ("check access", "buy or subscribe", "nature portfolio", "springer nature")
+    abstract = max(
+        (
+            " ".join(value.split())
+            for value in candidates
+            if value and len(value.split()) >= 12 and not any(marker in value.lower() for marker in boilerplate)
+        ),
+        key=len,
+        default="",
+    )
     return abstract, doi
 
 
@@ -108,6 +143,10 @@ def scrape_feed(journal: dict) -> list[dict]:
             detail_summary, detail_doi = article_details(url)
             summary = summary or detail_summary
             doi = doi or detail_doi
+        # Nature's d41586 identifiers are news, editorials and commentary,
+        # not primary research papers from the selected research-article feed.
+        if "/d41586-" in doi.lower():
+            continue
         papers.append({
             "id": doi or hashlib.sha1(url.encode()).hexdigest()[:16],
             "doi": doi,
