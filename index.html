@@ -3,84 +3,117 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="description" content="A no-cost personalized feed for newly published research." />
-  <title>Paper Radar</title>
-  <link rel="stylesheet" href="styles.css?v=7" />
+  <meta name="description" content="Track new research from journals you choose. Paper Radar checks publisher sources directly and ranks papers against your research profile." />
+  <meta name="theme-color" content="#123d32" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Paper Radar — Personalized Research Paper Discovery" />
+  <meta property="og:description" content="A focused research feed built from journals you trust and the topics you care about." />
+  <meta property="og:url" content="https://1250570476.github.io/paper-radar/" />
+  <link rel="canonical" href="https://1250570476.github.io/paper-radar/" />
+  <title>Paper Radar — Personalized Research Paper Discovery</title>
+  <link rel="stylesheet" href="styles.css?v=brand-1" />
   <link rel="stylesheet" href="progress.css?v=1" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Paper Radar","applicationCategory":"EducationalApplication","operatingSystem":"Web","description":"Personalized research paper discovery from selected journal publisher sources.","url":"https://1250570476.github.io/paper-radar/"}</script>
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
   <header class="topbar">
-    <a class="brand" href="#"><span class="brand-mark">PR</span><span>Paper Radar</span></a>
-    <nav>
-      <button class="nav-button active" data-view="feed">My feed</button>
+    <a class="brand" href="#" aria-label="Paper Radar home">
+      <span class="brand-mark" aria-hidden="true"><i></i></span>
+      <span class="brand-copy"><strong>Paper Radar</strong><small>Research signal, refined</small></span>
+    </a>
+    <nav aria-label="Primary navigation">
+      <button class="nav-button active" data-view="feed">My radar</button>
       <button class="nav-button" data-view="journals">Journals</button>
-      <button class="nav-button" data-view="profile">Research profile</button>
+      <button class="nav-button" data-view="profile">Profile</button>
     </nav>
   </header>
 
-  <main>
+  <main id="main-content">
     <section id="feed-view" class="view">
       <div class="hero">
-        <div><p class="eyebrow">YOUR RESEARCH, FILTERED</p><h1>Important papers.<br><span>Without the noise.</span></h1>
-        <p>Paper Radar checks journal publisher pages and ranks new work against your research interests.</p></div>
-        <button id="refresh-button" class="primary">Search papers</button>
+        <div class="hero-copy">
+          <p class="eyebrow"><span></span> PERSONALIZED RESEARCH DISCOVERY</p>
+          <h1>New research.<br><span>Worth your attention.</span></h1>
+          <p class="hero-summary">A focused paper feed built from the journals you choose. Paper Radar checks publisher sources directly and ranks new work against your research profile.</p>
+          <div class="hero-actions">
+            <button id="refresh-button" class="primary">Scan selected journals</button>
+            <small>Search starts only when you ask.</small>
+          </div>
+        </div>
+        <div class="hero-radar" aria-hidden="true"><div class="radar-sweep"></div><span class="signal signal-one"></span><span class="signal signal-two"></span><span class="signal signal-three"></span><strong>signal<br>over noise</strong></div>
       </div>
-      <div id="profile-warning" class="notice hidden">Add your research interests to generate a personalized feed. <button data-go-profile>Set up profile</button></div>
-      <div id="journal-warning" class="notice hidden">Choose favorite journals to restrict your feed. <button data-go-journals>Browse journals</button></div>
-      <div class="feed-toolbar"><div><h2>Recommended for you</h2><p id="feed-status">Ready to scan the latest literature.</p></div>
-        <label>Time window<select id="days-select"><option value="7">7 days</option><option value="30" selected>30 days</option><option value="90">90 days</option></select></label>
+
+      <div class="trust-strip" aria-label="How Paper Radar works">
+        <div><span>01</span><strong>Publisher-direct</strong><small>Official journal sources</small></div>
+        <div><span>02</span><strong>Profile-matched</strong><small>Your topics set the signal</small></div>
+        <div><span>03</span><strong>Researcher-controlled</strong><small>You decide when to scan</small></div>
+      </div>
+
+      <div id="profile-warning" class="notice hidden">Add your research interests to personalize your radar. <button data-go-profile>Set up profile</button></div>
+      <div id="journal-warning" class="notice hidden">Choose journals to focus your results. <button data-go-journals>Browse journals</button></div>
+      <div class="feed-toolbar"><div><p class="section-kicker">YOUR LATEST SIGNALS</p><h2>On your radar</h2><p id="feed-status">Ready when you are.</p></div>
+        <label>Publication window<select id="days-select"><option value="7">Past 7 days</option><option value="30" selected>Past 30 days</option><option value="90">Past 90 days</option></select></label>
       </div>
       <div id="paper-list" class="paper-list"></div>
-      <div id="empty-state" class="empty"><div class="radar-icon">⌁</div><h3>Your radar is ready</h3><p>Set up your profile, then press Search papers.</p><button class="secondary" data-go-profile>Build my profile</button></div>
+      <div id="empty-state" class="empty">
+        <div class="empty-radar" aria-hidden="true"><span></span></div>
+        <h3>Build your first research signal</h3>
+        <p>Tell Paper Radar what matters, choose the journals you trust, then scan when you are ready.</p>
+        <div class="empty-steps"><span><b>1</b> Define interests</span><span><b>2</b> Choose journals</span><span><b>3</b> Scan new papers</span></div>
+        <button class="secondary" data-go-profile>Set up my radar</button>
+      </div>
     </section>
 
     <section id="journals-view" class="view hidden">
-      <div class="section-heading"><p class="eyebrow">JOURNAL LIBRARY</p><h1>Follow the journals that matter</h1><p>Search supported publisher journals and add them to your favorites. Paper Radar reads their journal pages directly—without OpenAlex.</p></div>
+      <div class="section-heading"><p class="eyebrow"><span></span> SIGNAL SOURCES</p><h1>Choose the journals<br><em>you trust.</em></h1><p>Build a focused source list from supported journals. Paper Radar monitors their official publisher pages and feeds, then searches only when you press the scan button.</p></div>
       <article class="panel journal-browser">
         <div class="journal-search-row">
-          <label class="field">Search journals by name or ISSN
-            <input id="journal-search" type="search" placeholder="e.g., Science Robotics, biomaterials, 1945-0877" />
+          <label class="field">Find a journal by title or ISSN
+            <input id="journal-search" type="search" placeholder="Try Science Robotics, Biomaterials, or an ISSN" />
           </label>
-          <button id="journal-search-button" class="primary" type="button">Search</button>
+          <button id="journal-search-button" class="primary" type="button">Find journals</button>
         </div>
-        <div class="catalog-meta"><span id="journal-search-status">Search journals checked directly on their publisher websites.</span><span id="last-checked"></span></div>
+        <div class="catalog-meta"><span id="journal-search-status">Search publisher-monitored journals.</span><span id="last-checked"></span></div>
         <div id="journal-results" class="journal-results"></div>
       </article>
-      <div class="favorites-heading"><div><h2>Favorite journals</h2><p id="favorites-count">0 journals selected</p></div><button id="check-journals-button" class="secondary">Reload publisher data</button></div>
+      <div class="favorites-heading"><div><p class="section-kicker">YOUR SOURCE LIST</p><h2>Selected journals</h2><p id="favorites-count">0 journals selected</p></div><button id="check-journals-button" class="secondary">Refresh journal data</button></div>
       <div id="favorite-journals" class="favorite-journals"></div>
     </section>
 
     <section id="profile-view" class="view hidden">
-      <div class="section-heading"><p class="eyebrow">PERSONALIZATION</p><h1>Build your research profile</h1><p>Your information remains in this browser for the no-cost prototype.</p></div>
+      <div class="section-heading"><p class="eyebrow"><span></span> RESEARCH PROFILE</p><h1>Teach your radar<br><em>what matters.</em></h1><p>Describe your work in scientific language. Your profile stays in this browser and is used only to rank the publisher data you deliberately scan.</p></div>
       <form id="profile-form" class="profile-grid">
         <article class="panel">
-          <div class="step"><span>1</span><div><h2>Upload your CV</h2><p>PDF, TXT, or Markdown. We extract research terms locally in your browser.</p></div></div>
-          <label class="dropzone" for="cv-file"><input id="cv-file" type="file" accept=".pdf,.txt,.md,text/plain,application/pdf" /><strong>Choose a CV file</strong><span id="file-label">or drag it here</span></label>
-          <label class="field">Extracted CV text<textarea id="cv-text" rows="8" placeholder="Extracted text will appear here. You can also paste CV text directly."></textarea></label>
+          <div class="step"><span>1</span><div><h2>Add your research context</h2><p>Upload a CV or paste selected research text. Extraction happens locally in your browser.</p></div></div>
+          <label class="dropzone" for="cv-file"><input id="cv-file" type="file" accept=".pdf,.txt,.md,text/plain,application/pdf" /><strong>Choose a CV file</strong><span id="file-label">PDF, TXT, or Markdown</span></label>
+          <label class="field">CV and research context<textarea id="cv-text" rows="8" placeholder="Extracted text appears here. You can also paste selected research context directly."></textarea></label>
         </article>
         <article class="panel">
-          <div class="step"><span>2</span><div><h2>Describe your interests</h2><p>Use specific materials, methods, systems, and applications.</p></div></div>
-          <label class="field">Research interests<textarea id="interests" rows="7" required placeholder="Example: biodegradable magnetic hydrogel microrobots, ultrasound neuromodulation, microfluidics, piezoelectric nanoparticles"></textarea></label>
-          <label class="field">Keywords to exclude<input id="excluded" placeholder="cancer, astronomy (optional)" /></label>
+          <div class="step"><span>2</span><div><h2>Define your signal</h2><p>Combine specific systems, materials, methods, mechanisms, and applications.</p></div></div>
+          <label class="field">Research interests<textarea id="interests" rows="7" required placeholder="Example: magnetic hydrogel microrobots, ultrasound neuromodulation, droplet microfluidics, piezoelectric nanoparticles"></textarea></label>
+          <label class="field">Topics to filter out<input id="excluded" placeholder="Optional: cancer, astronomy" /></label>
         </article>
         <article class="panel journals">
-          <div class="step"><span>3</span><div><h2>Choose journals</h2><p>Journal selection now lives in the searchable Journals page.</p></div></div>
-          <button type="button" class="secondary" data-go-journals>Browse and select journals</button>
+          <div class="step"><span>3</span><div><h2>Select trusted journals</h2><p>Your source list keeps discovery intentional and transparent.</p></div></div>
+          <button type="button" class="secondary" data-go-journals>Choose journals</button>
           <p id="profile-journal-summary" class="inline-summary"></p>
         </article>
-        <div class="form-actions"><span id="save-status"></span><button class="primary" type="submit">Save profile</button></div>
+        <div class="form-actions"><span id="save-status"></span><button class="primary" type="submit">Save research profile</button></div>
       </form>
     </section>
   </main>
+
   <aside id="search-progress" class="search-progress hidden" aria-live="polite" aria-label="Paper search progress">
-    <div class="scan-head"><div class="scan-orbit" aria-hidden="true"><span></span></div><div><p class="scan-kicker">SEARCHING SELECTED JOURNALS</p><h2>Paper search</h2></div><button id="minimize-scan" class="scan-minimize" type="button" aria-label="Minimize search progress">−</button></div>
+    <div class="scan-head"><div class="scan-orbit" aria-hidden="true"><span></span></div><div><p class="scan-kicker">SCANNING YOUR SOURCES</p><h2>Radar in progress</h2></div><button id="minimize-scan" class="scan-minimize" type="button" aria-label="Minimize search progress">−</button></div>
     <div class="scan-body"><div class="scan-progress-track"><span id="scan-progress-bar"></span></div><div class="scan-progress-meta"><strong id="scan-percent">0%</strong></div>
-      <div class="scan-current"><span class="scan-pulse"></span><div><small id="scan-current-label">JOURNAL BEING CHECKED</small><strong id="scan-current-value">Preparing selected journals</strong></div></div>
+      <div class="scan-current"><span class="scan-pulse"></span><div><small id="scan-current-label">JOURNAL NOW SCANNING</small><strong id="scan-current-value">Preparing selected journals</strong></div></div>
       <div class="scan-stats"><div><strong id="scan-candidates">0</strong><span>papers checked</span></div><div><strong id="scan-matches">0</strong><span>matches found</span></div></div>
     </div>
     <button id="expand-scan" class="scan-expand hidden" type="button"><span class="scan-pulse"></span><span id="scan-mini-text">Scanning papers…</span><strong id="scan-mini-percent">0%</strong></button>
   </aside>
-  <footer>Paper metadata is collected directly from journal publisher pages. No OpenAlex or paid API is used.</footer>
+
+  <footer><div class="footer-brand"><span class="mini-mark" aria-hidden="true"></span><strong>Paper Radar</strong></div><p>Focused research discovery from official publisher sources.</p><small>No paid API. No automatic search. Your profile stays in your browser.</small></footer>
   <script type="module" src="app.js?v=relevance-iterative-1"></script>
 </body>
 </html>
