@@ -11,7 +11,7 @@
   <meta property="og:url" content="https://1250570476.github.io/paper-radar/" />
   <link rel="canonical" href="https://1250570476.github.io/paper-radar/" />
   <title>Paper Radar — Personalized Research Paper Discovery</title>
-  <link rel="stylesheet" href="styles.css?v=brand-1" />
+  <link rel="stylesheet" href="styles.css?v=brand-2" />
   <link rel="stylesheet" href="progress.css?v=1" />
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Paper Radar","applicationCategory":"EducationalApplication","operatingSystem":"Web","description":"Personalized research paper discovery from selected journal publisher sources.","url":"https://1250570476.github.io/paper-radar/"}</script>
 </head>
@@ -20,7 +20,7 @@
   <header class="topbar">
     <a class="brand" href="#" aria-label="Paper Radar home">
       <span class="brand-mark" aria-hidden="true"><i></i></span>
-      <span class="brand-copy"><strong>Paper Radar</strong><small>Research signal, refined</small></span>
+      <span class="brand-copy"><strong>Paper Radar</strong><small>Publisher-direct discovery</small></span>
     </a>
     <nav aria-label="Primary navigation">
       <button class="nav-button active" data-view="feed">My radar</button>
@@ -33,40 +33,39 @@
     <section id="feed-view" class="view">
       <div class="hero">
         <div class="hero-copy">
-          <p class="eyebrow"><span></span> PERSONALIZED RESEARCH DISCOVERY</p>
+          <p class="eyebrow"><span></span> PERSONALIZED JOURNAL MONITORING</p>
           <h1>New research.<br><span>Worth your attention.</span></h1>
           <p class="hero-summary">A focused paper feed built from the journals you choose. Paper Radar checks publisher sources directly and ranks new work against your research profile.</p>
           <div class="hero-actions">
-            <button id="refresh-button" class="primary">Scan selected journals</button>
-            <small>Search starts only when you ask.</small>
+            <button id="refresh-button" class="primary">Search selected journals</button>
           </div>
         </div>
-        <div class="hero-radar" aria-hidden="true"><div class="radar-sweep"></div><span class="signal signal-one"></span><span class="signal signal-two"></span><span class="signal signal-three"></span><strong>signal<br>over noise</strong></div>
+        <div class="hero-radar" aria-hidden="true"><div class="radar-sweep"></div><span class="signal signal-one"></span><span class="signal signal-two"></span><span class="signal signal-three"></span></div>
       </div>
 
       <div class="trust-strip" aria-label="How Paper Radar works">
-        <div><span>01</span><strong>Publisher-direct</strong><small>Official journal sources</small></div>
-        <div><span>02</span><strong>Profile-matched</strong><small>Your topics set the signal</small></div>
-        <div><span>03</span><strong>Researcher-controlled</strong><small>You decide when to scan</small></div>
+        <div><span>01</span><strong>Publisher sources</strong><small>Official feeds and journal pages</small></div>
+        <div><span>02</span><strong>Research profile</strong><small>Matched to your scientific interests</small></div>
+        <div><span>03</span><strong>Selected journals</strong><small>Limited to the sources you follow</small></div>
       </div>
 
       <div id="profile-warning" class="notice hidden">Add your research interests to personalize your radar. <button data-go-profile>Set up profile</button></div>
       <div id="journal-warning" class="notice hidden">Choose journals to focus your results. <button data-go-journals>Browse journals</button></div>
-      <div class="feed-toolbar"><div><p class="section-kicker">YOUR LATEST SIGNALS</p><h2>On your radar</h2><p id="feed-status">Ready when you are.</p></div>
+      <div class="feed-toolbar"><div><p class="section-kicker">RECENT MATCHES</p><h2>Relevant papers</h2><p id="feed-status">No search run yet.</p></div>
         <label>Publication window<select id="days-select"><option value="7">Past 7 days</option><option value="30" selected>Past 30 days</option><option value="90">Past 90 days</option></select></label>
       </div>
       <div id="paper-list" class="paper-list"></div>
       <div id="empty-state" class="empty">
         <div class="empty-radar" aria-hidden="true"><span></span></div>
-        <h3>Build your first research signal</h3>
-        <p>Tell Paper Radar what matters, choose the journals you trust, then scan when you are ready.</p>
-        <div class="empty-steps"><span><b>1</b> Define interests</span><span><b>2</b> Choose journals</span><span><b>3</b> Scan new papers</span></div>
-        <button class="secondary" data-go-profile>Set up my radar</button>
+        <h3>Start your first search</h3>
+        <p>Add your research interests and select journals to generate a ranked paper feed.</p>
+        <div class="empty-steps"><span><b>1</b> Define interests</span><span><b>2</b> Select journals</span><span><b>3</b> Search papers</span></div>
+        <button class="secondary" data-go-profile>Set up profile</button>
       </div>
     </section>
 
     <section id="journals-view" class="view hidden">
-      <div class="section-heading"><p class="eyebrow"><span></span> SIGNAL SOURCES</p><h1>Choose the journals<br><em>you trust.</em></h1><p>Build a focused source list from supported journals. Paper Radar monitors their official publisher pages and feeds, then searches only when you press the scan button.</p></div>
+      <div class="section-heading"><p class="eyebrow"><span></span> JOURNAL SOURCES</p><h1>Select journals<br><em>to follow.</em></h1><p>Build a focused source list from supported journals. Paper Radar monitors their official publisher pages and feeds.</p></div>
       <article class="panel journal-browser">
         <div class="journal-search-row">
           <label class="field">Find a journal by title or ISSN
@@ -82,7 +81,7 @@
     </section>
 
     <section id="profile-view" class="view hidden">
-      <div class="section-heading"><p class="eyebrow"><span></span> RESEARCH PROFILE</p><h1>Teach your radar<br><em>what matters.</em></h1><p>Describe your work in scientific language. Your profile stays in this browser and is used only to rank the publisher data you deliberately scan.</p></div>
+      <div class="section-heading"><p class="eyebrow"><span></span> RESEARCH PROFILE</p><h1>Define your<br><em>research interests.</em></h1><p>Describe your work in scientific language. Your profile remains in this browser and is used to rank papers from your selected journals.</p></div>
       <form id="profile-form" class="profile-grid">
         <article class="panel">
           <div class="step"><span>1</span><div><h2>Add your research context</h2><p>Upload a CV or paste selected research text. Extraction happens locally in your browser.</p></div></div>
@@ -90,7 +89,7 @@
           <label class="field">CV and research context<textarea id="cv-text" rows="8" placeholder="Extracted text appears here. You can also paste selected research context directly."></textarea></label>
         </article>
         <article class="panel">
-          <div class="step"><span>2</span><div><h2>Define your signal</h2><p>Combine specific systems, materials, methods, mechanisms, and applications.</p></div></div>
+          <div class="step"><span>2</span><div><h2>Define research interests</h2><p>Combine specific systems, materials, methods, mechanisms, and applications.</p></div></div>
           <label class="field">Research interests<textarea id="interests" rows="7" required placeholder="Example: magnetic hydrogel microrobots, ultrasound neuromodulation, droplet microfluidics, piezoelectric nanoparticles"></textarea></label>
           <label class="field">Topics to filter out<input id="excluded" placeholder="Optional: cancer, astronomy" /></label>
         </article>
@@ -105,15 +104,15 @@
   </main>
 
   <aside id="search-progress" class="search-progress hidden" aria-live="polite" aria-label="Paper search progress">
-    <div class="scan-head"><div class="scan-orbit" aria-hidden="true"><span></span></div><div><p class="scan-kicker">SCANNING YOUR SOURCES</p><h2>Radar in progress</h2></div><button id="minimize-scan" class="scan-minimize" type="button" aria-label="Minimize search progress">−</button></div>
+    <div class="scan-head"><div class="scan-orbit" aria-hidden="true"><span></span></div><div><p class="scan-kicker">SEARCHING SELECTED JOURNALS</p><h2>Search in progress</h2></div><button id="minimize-scan" class="scan-minimize" type="button" aria-label="Minimize search progress">−</button></div>
     <div class="scan-body"><div class="scan-progress-track"><span id="scan-progress-bar"></span></div><div class="scan-progress-meta"><strong id="scan-percent">0%</strong></div>
-      <div class="scan-current"><span class="scan-pulse"></span><div><small id="scan-current-label">JOURNAL NOW SCANNING</small><strong id="scan-current-value">Preparing selected journals</strong></div></div>
+      <div class="scan-current"><span class="scan-pulse"></span><div><small id="scan-current-label">CURRENT JOURNAL</small><strong id="scan-current-value">Preparing selected journals</strong></div></div>
       <div class="scan-stats"><div><strong id="scan-candidates">0</strong><span>papers checked</span></div><div><strong id="scan-matches">0</strong><span>matches found</span></div></div>
     </div>
     <button id="expand-scan" class="scan-expand hidden" type="button"><span class="scan-pulse"></span><span id="scan-mini-text">Scanning papers…</span><strong id="scan-mini-percent">0%</strong></button>
   </aside>
 
-  <footer><div class="footer-brand"><span class="mini-mark" aria-hidden="true"></span><strong>Paper Radar</strong></div><p>Focused research discovery from official publisher sources.</p><small>No paid API. No automatic search. Your profile stays in your browser.</small></footer>
-  <script type="module" src="app.js?v=brand-1"></script>
+  <footer><div class="footer-brand"><span class="mini-mark" aria-hidden="true"></span><strong>Paper Radar</strong></div><p>Focused research discovery from official publisher sources.</p><small>Publisher metadata is updated daily. Your profile remains in your browser.</small></footer>
+  <script type="module" src="app.js?v=brand-2"></script>
 </body>
 </html>
