@@ -36,7 +36,7 @@
 
   {"id":"science-robotics","title":"Science Robotics","publisher":"AAAS","issn":"2470-9476","frequency":"Weekly","feed_url":"https://www.science.org/action/showFeed?type=etoc&feed=rss&jc=scirobotics","enrich_articles":false},
   {"id":"science-advances","title":"Science Advances","publisher":"AAAS","issn":"2375-2548","frequency":"Weekly","feed_url":"https://www.science.org/action/showFeed?type=etoc&feed=rss&jc=sciadv","enrich_articles":false},
-  {"id":"science-translational-medicine","title":"Science Translational Medicine","publisher":"AAAS","issn":"1946-6242","frequency":"Weekly","feed_url":"https://www.science.org/action/showFeed?type=etoc&feed=rss&jc=scitranslmed","enrich_articles":false},
+  {"id":"science-translational-medicine","title":"Science Translational Medicine","publisher":"AAAS","issn":"1946-6242","frequency":"Weekly","feed_url":"https://www.science.org/action/showFeed?type=etoc&feed=rss&jc=stm","enrich_articles":false},
   {"id":"science","title":"Science","publisher":"AAAS","issn":"0036-8075","frequency":"Weekly","feed_url":"https://www.science.org/action/showFeed?type=etoc&feed=rss&jc=science","enrich_articles":false},
 
   {"id":"acs-nano","title":"ACS Nano","publisher":"American Chemical Society","issn":"1936-086X","frequency":"Weekly","feed_url":"https://pubs.acs.org/action/showFeed?type=axatoc&feed=rss&jc=ancac3","enrich_articles":false},
