@@ -90,8 +90,11 @@ async function submitAuth(event) {
       ? await authRequest(`/signup?redirect_to=${encodeURIComponent(authRedirectUrl)}`, { email, password, data: { alert_frequency: document.querySelector("#alert-frequency").value } })
       : await authRequest("/token?grant_type=password", { email, password });
     if (data.access_token) {
+      const completedMode = mode;
       saveSession(data);
+      window.paperFlareTrack?.(completedMode === "signup" ? "sign_up" : "login", { method: "email" });
     } else {
+      window.paperFlareTrack?.("sign_up_submitted", { method: "email" });
       setMode("signin");
       setStatus("Account created. Check your inbox and confirm your email before signing in.", "success");
     }
@@ -125,6 +128,7 @@ async function restoreConfirmationSession() {
       token_type: callback.get("token_type") || "bearer",
       user
     });
+    window.paperFlareTrack?.("sign_up", { method: "email_confirmation" });
     window.history.replaceState({}, document.title, `${window.location.pathname}${window.location.search}`);
     setMode("signin");
     setStatus("Email confirmed. You are now signed in.", "success");

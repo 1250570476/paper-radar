@@ -11,6 +11,17 @@
   <meta property="og:url" content="https://1250570476.github.io/paper-radar/" />
   <link rel="canonical" href="https://1250570476.github.io/paper-radar/" />
   <title>PaperFlare — Never miss a paper that matters</title>
+  <!-- Google Analytics: anonymous product usage only; no emails, CV text, interests, or paper metadata. -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-W74DSDD856"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-W74DSDD856", {
+      allow_google_signals: false,
+      allow_ad_personalization_signals: false
+    });
+  </script>
   <link rel="stylesheet" href="styles.css?v=paperflare-1" />
   <link rel="stylesheet" href="progress.css?v=1" />
   <link rel="stylesheet" href="paperflare.css?v=1" />
@@ -122,6 +133,7 @@
   </dialog>
 
   <footer><strong>PaperFlare</strong><span>Never miss a paper that matters.</span><small>Research metadata is collected from official journal publisher sources.</small></footer>
+  <script src="analytics.js?v=1"></script>
   <script src="supabase-config.js"></script>
   <script type="module" src="auth.js?v=2"></script>
   <script type="module" src="app.js?v=relevance-iterative-2"></script>
