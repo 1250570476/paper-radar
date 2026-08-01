@@ -1,0 +1,16 @@
+[
+  {"id":"nature","title":"Nature","publisher":"Springer Nature","issn":"0028-0836","frequency":"Weekly","listing_url":"https://www.nature.com/nature/research-articles","max_pages":6},
+  {"id":"nature-communications","title":"Nature Communications","publisher":"Springer Nature","issn":"2041-1723","frequency":"Continuous","listing_url":"https://www.nature.com/ncomms/research-articles","max_pages":14},
+  {"id":"nature-biomedical-engineering","title":"Nature Biomedical Engineering","publisher":"Springer Nature","issn":"2157-846X","frequency":"Continuous","listing_url":"https://www.nature.com/natbiomedeng/research-articles","max_pages":8},
+  {"id":"nature-materials","title":"Nature Materials","publisher":"Springer Nature","issn":"1476-1122","frequency":"Monthly","listing_url":"https://www.nature.com/nmat/research-articles","max_pages":6},
+  {"id":"nature-nanotechnology","title":"Nature Nanotechnology","publisher":"Springer Nature","issn":"1748-3387","frequency":"Monthly","listing_url":"https://www.nature.com/nnano/research-articles","max_pages":6},
+  {"id":"nature-electronics","title":"Nature Electronics","publisher":"Springer Nature","issn":"2520-1131","frequency":"Monthly","listing_url":"https://www.nature.com/natelectron/research-articles","max_pages":6},
+  {"id":"nature-machine-intelligence","title":"Nature Machine Intelligence","publisher":"Springer Nature","issn":"2522-5839","frequency":"Monthly","listing_url":"https://www.nature.com/natmachintell/research-articles","max_pages":6},
+  {"id":"nature-methods","title":"Nature Methods","publisher":"Springer Nature","issn":"1548-7091","frequency":"Monthly","listing_url":"https://www.nature.com/nmeth/research-articles","max_pages":6},
+  {"id":"nature-biotechnology","title":"Nature Biotechnology","publisher":"Springer Nature","issn":"1087-0156","frequency":"Monthly","listing_url":"https://www.nature.com/nbt/research-articles","max_pages":6},
+  {"id":"nature-chemical-engineering","title":"Nature Chemical Engineering","publisher":"Springer Nature","issn":"2948-1198","frequency":"Monthly","listing_url":"https://www.nature.com/natchemeng/research-articles","max_pages":6},
+  {"id":"communications-materials","title":"Communications Materials","publisher":"Springer Nature","issn":"2662-4443","frequency":"Continuous","listing_url":"https://www.nature.com/commsmat/research-articles","max_pages":8},
+  {"id":"communications-engineering","title":"Communications Engineering","publisher":"Springer Nature","issn":"2731-3395","frequency":"Continuous","listing_url":"https://www.nature.com/commseng/research-articles","max_pages":8},
+  {"id":"npj-flexible-electronics","title":"npj Flexible Electronics","publisher":"Springer Nature","issn":"2397-4621","frequency":"Continuous","listing_url":"https://www.nature.com/npjflexelectron/research-articles","max_pages":8},
+  {"id":"microsystems-and-nanoengineering","title":"Microsystems & Nanoengineering","publisher":"Springer Nature","issn":"2055-7434","frequency":"Continuous","listing_url":"https://www.nature.com/micronano/research-articles","max_pages":8}
+]
