@@ -1,0 +1,41 @@
+name: Update direct publisher papers
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 4 * * *"
+  push:
+    paths:
+      - ".github/workflows/update-papers.yml"
+      - "scripts/scrape_publishers.py"
+      - "data/journals.json"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publisher-index
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install beautifulsoup4==4.13.4
+      - name: Read publisher pages
+        run: python scripts/scrape_publishers.py
+      - name: Commit updated paper index
+        run: |
+          if git diff --quiet -- data/papers.json; then
+            echo "No publisher changes"
+            exit 0
+          fi
+          git config user.name "paper-radar-bot"
+          git config user.email "paper-radar-bot@users.noreply.github.com"
+          git add data/papers.json
+          git commit -m "Update direct publisher paper index"
+          git push
