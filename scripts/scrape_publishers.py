@@ -7,6 +7,7 @@ import hashlib
 import json
 import re
 import time
+import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from urllib.parse import urlencode, urljoin
@@ -79,6 +80,47 @@ def article_details(url: str) -> tuple[str, str]:
     return abstract, doi
 
 
+def scrape_feed(journal: dict) -> list[dict]:
+    """Use the journal's own RSS as a resilient direct-source fallback."""
+    feed_url = journal["listing_url"].rsplit("/", 1)[0] + ".rss"
+    try:
+        root = ET.fromstring(fetch(feed_url))
+    except Exception:
+        return []
+    papers: list[dict] = []
+    for item in root.findall(".//item"):
+        def field(name: str) -> str:
+            node = item.find(name)
+            if node is None:
+                node = next((child for child in item if child.tag.split("}")[-1] == name), None)
+            return " ".join((node.text or "").split()) if node is not None else ""
+
+        title = field("title")
+        url = field("link")
+        published = parse_date(field("date") or field("pubDate"))
+        if not title or not url or (published and published < CUTOFF):
+            continue
+        summary = BeautifulSoup(field("description"), "html.parser").get_text(" ", strip=True)
+        doi = field("doi")
+        if not summary or not doi:
+            detail_summary, detail_doi = article_details(url)
+            summary = summary or detail_summary
+            doi = doi or detail_doi
+        papers.append({
+            "id": doi or hashlib.sha1(url.encode()).hexdigest()[:16],
+            "doi": doi,
+            "title": title,
+            "abstract": summary,
+            "url": url,
+            "published": published.date().isoformat() if published else "",
+            "journal_id": journal["id"],
+            "journal": journal["title"],
+            "publisher": journal["publisher"],
+            "source": feed_url,
+        })
+    return papers
+
+
 def scrape_journal(journal: dict) -> list[dict]:
     papers: list[dict] = []
     seen_urls: set[str] = set()
@@ -88,13 +130,13 @@ def scrape_journal(journal: dict) -> list[dict]:
         query = urlencode({"searchType": "journalSearch", "sort": "PubDate", "page": page})
         url = f'{journal["listing_url"]}?{query}'
         soup = BeautifulSoup(fetch(url), "html.parser")
-        cards = soup.select("article")
+        links = soup.select('a[href*="/articles/"]')
         page_items = 0
 
-        for card in cards:
-            link = card.select_one('h3 a[href*="/articles/"]') or card.select_one('a[href*="/articles/"]')
+        for link in links:
             if not link or not link.get("href"):
                 continue
+            card = link.find_parent(["article", "li"]) or link.parent
             article_url = urljoin("https://www.nature.com", link["href"].split("?")[0])
             if article_url in seen_urls:
                 continue
@@ -134,7 +176,11 @@ def scrape_journal(journal: dict) -> list[dict]:
             break
         time.sleep(0.35)
 
-    return papers
+    # Nature's listing HTML can occasionally be replaced by a cookie/bot page.
+    # Its own RSS feed is merged every time, so direct publisher coverage remains
+    # available even when that happens.
+    papers.extend(scrape_feed(journal))
+    return list({paper["doi"] or paper["url"]: paper for paper in papers}.values())
 
 
 def main() -> None:
