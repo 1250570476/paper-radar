@@ -6,7 +6,8 @@
   <meta name="description" content="A no-cost personalized feed for newly published research." />
   <title>Paper Radar</title>
   <link rel="preconnect" href="https://api.openalex.org" />
-  <link rel="stylesheet" href="styles.css?v=6" />
+  <link rel="stylesheet" href="styles.css?v=7" />
+  <link rel="stylesheet" href="progress.css?v=1" />
 </head>
 <body>
   <header class="topbar">
@@ -74,13 +75,13 @@
   </main>
   <aside id="search-progress" class="search-progress hidden" aria-live="polite" aria-label="Paper search progress">
     <div class="scan-head"><div class="scan-orbit" aria-hidden="true"><span></span></div><div><p class="scan-kicker">RADAR SCAN IN PROGRESS</p><h2 id="scan-title">Preparing your search</h2></div><button id="minimize-scan" class="scan-minimize" type="button" aria-label="Minimize search progress">−</button></div>
-    <div class="scan-body"><div class="scan-progress-track"><span id="scan-progress-bar"></span></div><div class="scan-progress-meta"><strong id="scan-percent">0%</strong><span id="scan-stage">Building your research profile…</span></div>
-      <div class="scan-current"><span class="scan-pulse"></span><div><small id="scan-current-label">CURRENT ACTIVITY</small><strong id="scan-current-value">Identifying key concepts and synonyms</strong></div></div>
-      <div class="scan-stats"><div><strong id="scan-journals">0</strong><span>journals</span></div><div><strong id="scan-queries">0</strong><span>queries</span></div><div><strong id="scan-candidates">0</strong><span>papers examined</span></div></div>
-      <div class="scan-log-wrap"><p>Live activity</p><ul id="scan-log"></ul></div><p id="scan-tip" class="scan-tip">Searching title, abstract, and topic metadata—not titles alone.</p></div>
+    <div class="scan-body"><div class="scan-progress-track"><span id="scan-progress-bar"></span></div><div class="scan-progress-meta"><strong id="scan-percent">0%</strong><span id="scan-stage">Preparing scan…</span></div>
+      <div class="scan-current"><span class="scan-pulse"></span><div><small id="scan-current-label">JOURNAL BEING CHECKED</small><strong id="scan-current-value">Preparing selected journals</strong></div></div>
+      <div class="scan-stats"><div><strong id="scan-candidates">0</strong><span>papers checked</span></div><div><strong id="scan-matches">0</strong><span>matches found</span></div></div>
+    </div>
     <button id="expand-scan" class="scan-expand hidden" type="button"><span class="scan-pulse"></span><span id="scan-mini-text">Scanning papers…</span><strong id="scan-mini-percent">0%</strong></button>
   </aside>
   <footer>Paper and journal metadata provided by <a href="https://openalex.org" target="_blank" rel="noreferrer">OpenAlex</a>. No paid API is required.</footer>
-  <script type="module" src="app.js?v=scan-window-1"></script>
+  <script type="module" src="app.js?v=ranking-progress-2"></script>
 </body>
 </html>
