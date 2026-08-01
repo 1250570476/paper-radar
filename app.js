@@ -182,16 +182,18 @@ async function fetchWorks(){
   let scans=0;
   const report=()=>{const unique=uniqueWorks(collected);return{checked:unique.length,matches:unique.filter(w=>scorePaper(w,model)).length};};
   if(favorites.length){
-    const ids=favorites.map(sourceId).join("|");
-    updateScan({progress:8,title:"Searching selected journals",stage:"Finding topic matches",current:"Selected journals",label:"SEARCH SCOPE"});
-    const targeted=await fetchTargeted(ids,date,plan,(i,total,item,pending)=>{const combined=uniqueWorks([...collected,...pending]),matches=combined.filter(w=>scorePaper(w,model)).length;updateScan({progress:8+38*i/Math.max(1,total),stage:`Searching ${i}/${total} topic variants`,current:"Selected journals",label:"SEARCH SCOPE",candidates:combined.length,matches});});
-    collected.push(...targeted);scans+=plan.length;
+    // A complete journal census already contains every candidate in the selected
+    // date window. Running dozens of keyword searches first only duplicated work.
     for(let j=0;j<favorites.length;j++){
-      const journal=favorites[j],name=journal.display_name||"Selected journal",id=sourceId(journal),base=48+Math.round(38*j/favorites.length),span=38/favorites.length;
+      const journal=favorites[j],name=journal.display_name||"Selected journal",id=sourceId(journal),base=5+Math.round(82*j/favorites.length),span=82/favorites.length;
       updateScan({progress:base,title:"Checking selected journals",stage:`Journal ${j+1} of ${favorites.length}`,current:name,label:"JOURNAL BEING CHECKED"});
-      const census=await fetchJournalCensus(id,date,(page,count)=>{const r=report();updateScan({progress:base+Math.min(span*.9,page*span*.3),stage:`Checking all recent papers · page ${page}`,current:name,candidates:r.checked+count,matches:r.matches});});
+      const census=await fetchJournalCensus(id,date,(page,count)=>{
+        const existing=report();
+        updateScan({progress:base+Math.min(span*.9,page*span*.28),stage:`Checking recent papers · page ${page}`,current:name,candidates:existing.checked+count,matches:existing.matches});
+      });
       collected.push(...census);scans++;
-      const r=report();updateScan({progress:base+span*.95,stage:`${name} complete`,current:name,candidates:r.checked,matches:r.matches});
+      const r=report();
+      updateScan({progress:base+span*.95,stage:`${name} complete`,current:name,candidates:r.checked,matches:r.matches});
     }
   }else{
     updateScan({progress:8,title:"Searching recent literature",stage:"Searching topic variants",current:"All indexed journals",label:"SEARCH SCOPE"});
@@ -206,7 +208,7 @@ async function fetchWorks(){
   }
   const unique=uniqueWorks(collected),matches=unique.filter(w=>scorePaper(w,model)).length;
   updateScan({progress:90,title:"Ranking relevant papers",stage:"Final relevance check",current:favorites.length?"Selected journals":"All indexed journals",label:"SEARCH SCOPE",candidates:unique.length,matches});
-  state.lastSearchReport={queries:plan.length,scans,candidates:unique.length,journals:favorites.length,date};return unique;
+  state.lastSearchReport={queries:favorites.length?0:plan.length,scans,candidates:unique.length,journals:favorites.length,date};return unique;
 }
 let refreshInFlight=false;
 async function refreshFeed(){if(refreshInFlight)return;if(!state.profile.interests){$("#profile-warning").classList.remove("hidden");return;}refreshInFlight=true;$("#profile-warning").classList.add("hidden");$("#refresh-button").disabled=true;document.body.classList.add("loading");$("#feed-status").textContent="Building a multi-pass search plan…";openScan();try{const works=await fetchWorks();$("#feed-status").textContent=`Ranking ${works.length} unique candidates…`;updateScan({progress:96,current:"Selected journals",label:"SEARCH SCOPE",stage:"Final relevance check"});renderPapers(works);closeScan(true);const r=state.lastSearchReport;$("#feed-status").textContent+=` · ${r.candidates} unique papers examined across ${r.scans} retrieval passes`;}catch(err){$("#feed-status").textContent="The literature service is temporarily unavailable. Try again shortly.";closeScan(false);console.error(err);}finally{refreshInFlight=false;$("#refresh-button").disabled=false;document.body.classList.remove("loading");}}
