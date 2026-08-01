@@ -1,6 +1,6 @@
-# Paper Radar
+# PaperFlare
 
-A privacy-friendly, no-cost prototype that discovers recently published research and ranks it against a user's CV and stated interests.
+A research-monitoring product built around one promise: never miss a newly published paper that matters. PaperFlare follows selected journal sources, matches new work to each research profile, and is being extended with personal email alerts.
 
 ## Current MVP
 
@@ -12,8 +12,10 @@ A privacy-friendly, no-cost prototype that discovers recently published research
 - Explain which research terms produced each match
 - Save papers in browser storage
 - Keep CV text and preferences in the user's browser
+- Create or sign in to an account through Supabase Auth once the project configuration is connected
+- Choose an intended email-alert frequency during account creation
 
-No OpenAI API key, database, user account, or paid service is required.
+The paper feed remains usable without an account. Account creation requires a Supabase project URL and public anonymous key in `supabase-config.js`; never place a Supabase `service_role` key in this repository.
 
 ## Run locally
 
