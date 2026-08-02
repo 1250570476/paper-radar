@@ -75,16 +75,48 @@ def meta_content(soup: BeautifulSoup, names: tuple[str, ...]) -> str:
     return ""
 
 
-def article_details(url: str) -> tuple[str, str]:
+def image_url_from_soup(soup: BeautifulSoup, base_url: str) -> str:
+    image = meta_content(soup, (
+        "citation_graphical_abstract",
+        "citation_image",
+        "og:image:secure_url",
+        "og:image",
+        "twitter:image",
+        "twitter:image:src",
+    ))
+    return normalize_image_url(urljoin(base_url, image)) if image else ""
+
+
+def normalize_image_url(value: str) -> str:
+    """Avoid mixed-content failures when an official feed still emits HTTP links."""
+    return re.sub(r"^http://", "https://", value.strip(), flags=re.I) if value else ""
+
+
+def article_details(url: str) -> tuple[str, str, str]:
     try:
         soup = BeautifulSoup(fetch(url), "html.parser")
     except Exception:
-        return "", ""
+        return "", "", ""
     abstract = meta_content(soup, ("description", "dc.description", "citation_abstract", "og:description"))
     doi = meta_content(soup, ("citation_doi", "dc.identifier"))
     if doi.lower().startswith("doi:"):
         doi = doi[4:].strip()
-    return abstract, doi
+    return abstract, doi, image_url_from_soup(soup, url)
+
+
+def feed_image(item, summary_html: str, article_url: str) -> str:
+    """Return an article image exposed by the publisher's own feed."""
+    for node in item.iter():
+        tag = node.tag.split("}")[-1].lower()
+        if tag not in {"thumbnail", "content", "enclosure", "image"}:
+            continue
+        media_type = str(node.get("type", "")).lower()
+        candidate = node.get("url") or node.get("href") or node.get("resource") or ""
+        if candidate and (tag in {"thumbnail", "image"} or media_type.startswith("image/")):
+            return normalize_image_url(urljoin(article_url, candidate))
+    embedded = BeautifulSoup(summary_html, "html.parser").find("img")
+    candidate = (embedded.get("src") or embedded.get("data-src") or "") if embedded else ""
+    return normalize_image_url(urljoin(article_url, candidate)) if candidate else ""
 
 
 def scrape_feed(journal: dict) -> list[dict]:
@@ -113,13 +145,15 @@ def scrape_feed(journal: dict) -> list[dict]:
         if not title or not url or (published and published < CUTOFF):
             continue
         summary_html = field("description") or field("summary") or field("content")
+        image_url = feed_image(item, summary_html, url)
         summary = BeautifulSoup(summary_html, "html.parser").get_text(" ", strip=True)
         doi = field("doi") or field("identifier")
         doi = re.sub(r"^(?:doi:\s*|https?://(?:dx\.)?doi\.org/)", "", doi, flags=re.I).strip()
         if journal.get("enrich_articles", True) and (not summary or not doi):
-            detail_summary, detail_doi = article_details(url)
+            detail_summary, detail_doi, detail_image = article_details(url)
             summary = summary or detail_summary
             doi = doi or detail_doi
+            image_url = image_url or detail_image
         papers.append({
             "id": doi or hashlib.sha1(url.encode()).hexdigest()[:16],
             "doi": doi,
@@ -131,6 +165,7 @@ def scrape_feed(journal: dict) -> list[dict]:
             "journal": journal["title"],
             "publisher": journal["publisher"],
             "source": feed_url,
+            "image_url": image_url,
         })
     return papers
 
@@ -170,12 +205,20 @@ def scrape_journal(journal: dict) -> list[dict]:
                 continue
             summary_node = card.select_one(".c-card__summary") or card.select_one("[data-test='article-description']")
             summary = text_of(summary_node)
+            image_node = card.find("img")
+            image_url = ""
+            if image_node:
+                image_url = image_node.get("src") or image_node.get("data-src") or ""
+                if not image_url and image_node.get("srcset"):
+                    image_url = image_node["srcset"].split(",")[-1].strip().split(" ")[0]
+                image_url = normalize_image_url(urljoin(article_url, image_url))
             doi_match = re.search(r"/articles/(10\.\d{4,9}/[^/?#]+)", article_url)
             doi = doi_match.group(1) if doi_match else ""
             if not summary or not doi:
-                detail_summary, detail_doi = article_details(article_url)
+                detail_summary, detail_doi, detail_image = article_details(article_url)
                 summary = summary or detail_summary
                 doi = doi or detail_doi
+                image_url = image_url or detail_image
             paper_id = doi or hashlib.sha1(article_url.encode()).hexdigest()[:16]
             papers.append({
                 "id": paper_id,
@@ -188,6 +231,7 @@ def scrape_journal(journal: dict) -> list[dict]:
                 "journal": journal["title"],
                 "publisher": journal["publisher"],
                 "source": url,
+                "image_url": image_url,
             })
             page_items += 1
 
@@ -225,9 +269,10 @@ def main() -> None:
         backfill = json.loads(BACKFILL_PATH.read_text(encoding="utf-8"))
         for paper in backfill:
             if not paper.get("abstract"):
-                abstract, doi = article_details(paper["url"])
+                abstract, doi, image_url = article_details(paper["url"])
                 paper["abstract"] = abstract
                 paper["doi"] = paper.get("doi") or doi
+                paper["image_url"] = paper.get("image_url") or image_url
             all_papers.append(paper)
 
     deduplicated = {paper["doi"] or paper["url"]: paper for paper in all_papers}
