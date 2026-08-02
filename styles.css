@@ -116,6 +116,13 @@ main { max-width: 1220px; margin: auto; padding: 0 30px 82px; }
 
 .notice { margin: 25px 0 0; padding: 15px 18px; background: #fff5d9; border: 1px solid #e6d5a4; border-radius: 14px; color: var(--ink-soft); }
 .notice button { min-height: 38px; border: 0; background: transparent; color: var(--green); font-weight: 800; cursor: pointer; }
+.paper-tabs { display: flex; gap: 8px; margin-top: 34px; padding-bottom: 10px; border-bottom: 1px solid var(--line); overflow-x: auto; }
+.paper-tab { position: relative; min-height: 46px; border: 0; border-radius: 12px; padding: 12px 18px; background: transparent; color: var(--muted); font-weight: 780; cursor: pointer; white-space: nowrap; }
+.paper-tab:hover { color: var(--green-dark); background: rgba(255,255,255,.52); }
+.paper-tab.active { color: var(--green-dark); background: var(--card); box-shadow: 0 5px 18px rgba(20,37,31,.07); }
+.paper-tab.active::after { content: ""; position: absolute; left: 18px; right: 18px; bottom: -11px; height: 3px; border-radius: 3px 3px 0 0; background: var(--orange); }
+.paper-tab span { display: inline-grid; min-width: 23px; height: 23px; margin-left: 7px; padding: 0 7px; place-items: center; border-radius: 999px; background: var(--mint); color: var(--green-dark); font-size: 11px; }
+.paper-tab-panel > .feed-toolbar { margin-top: 32px; }
 .feed-toolbar, .favorites-heading { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin: 46px 0 20px; }
 .feed-toolbar h2, .favorites-heading h2 { margin: 4px 0 6px; font-family: Georgia, serif; font-size: 34px; font-weight: 500; letter-spacing: -.025em; }
 .feed-toolbar p:not(.section-kicker), .favorites-heading p:not(.section-kicker) { margin: 0; color: var(--muted); }
@@ -126,6 +133,9 @@ main { max-width: 1220px; margin: auto; padding: 0 30px 82px; }
 .paper-card { position: relative; background: var(--card); border: 1px solid var(--line); border-radius: 19px; padding: 22px; display: grid; grid-template-columns: 190px 74px minmax(0,1fr) auto; gap: 20px; align-items: start; box-shadow: 0 3px 12px rgba(20,37,31,.035); transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
 .paper-card::before { content: ""; position: absolute; left: -1px; top: 24px; bottom: 24px; width: 3px; border-radius: 0 3px 3px 0; background: var(--green); opacity: .75; }
 .paper-card:hover { transform: translateY(-2px); border-color: #c1cac4; box-shadow: var(--shadow); }
+.favorite-paper-card { grid-template-columns: 190px minmax(0,1fr) auto; }
+.favorite-paper-card::before { background: var(--orange); }
+.favorite-empty { margin-top: 4px; }
 .score { width: 74px; height: 74px; border-radius: 50%; display: grid; place-items: center; background: conic-gradient(var(--green) calc(var(--score)*1%), var(--mint) 0); position: relative; }
 .score::after { content: ""; position: absolute; inset: 7px; background: var(--card); border-radius: 50%; }
 .score strong { z-index: 1; font-size: 19px; }
@@ -214,6 +224,8 @@ footer p { text-align: center; }
   .trust-strip > div:last-child { border-bottom: 0; }
   .profile-grid { grid-template-columns: 1fr; }
   .paper-card { grid-template-columns: 160px 62px minmax(0,1fr); }
+  .favorite-paper-card { grid-template-columns: 160px minmax(0,1fr); }
+  .favorite-paper-card .paper-actions { grid-column: 2; }
   .paper-preview { width: 160px; }
   .paper-actions { grid-column: 3; }
   .panel.journals { grid-column: auto; }
@@ -233,9 +245,13 @@ footer p { text-align: center; }
   .hero-summary { font-size: 16px; }
   .hero-actions { align-items: flex-start; flex-direction: column; gap: 10px; }
   .hero-actions .primary { width: 100%; }
+  .paper-tabs { margin-top: 28px; }
+  .paper-tab { padding-inline: 13px; }
   .feed-toolbar { align-items: flex-start; margin-top: 36px; }
   .feed-toolbar label { display: none; }
   .paper-card { grid-template-columns: 62px 1fr; padding: 16px; gap: 15px; }
+  .favorite-paper-card { grid-template-columns: 1fr; }
+  .favorite-paper-card .paper-content, .favorite-paper-card .paper-actions { grid-column: 1; }
   .paper-preview { grid-column: 1/-1; width: 100%; aspect-ratio: 16/9; }
   .paper-content { min-width: 0; }
   .score { width: 60px; height: 60px; }

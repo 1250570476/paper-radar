@@ -245,6 +245,19 @@ $$(".nav-button").forEach(button => button.addEventListener("click", () => showV
 $$("[data-go-profile]").forEach(button => button.addEventListener("click", () => showView("profile")));
 $$("[data-go-journals]").forEach(button => button.addEventListener("click", () => showView("journals")));
 
+function showPaperTab(name) {
+  $$("[data-paper-tab]").forEach(button => {
+    const selected = button.dataset.paperTab === name;
+    button.classList.toggle("active", selected);
+    button.setAttribute("aria-selected", String(selected));
+  });
+  $("#relevant-papers-panel").classList.toggle("hidden", name !== "relevant");
+  $("#favorite-papers-panel").classList.toggle("hidden", name !== "favorites");
+  if (name === "favorites") renderStarredPapers();
+}
+
+$$("[data-paper-tab]").forEach(button => button.addEventListener("click", () => showPaperTab(button.dataset.paperTab)));
+
 function populateProfile() {
   $("#cv-text").value = state.profile.cvText;
   $("#interests").value = state.profile.interests;
@@ -414,20 +427,25 @@ function renderPapers(ranked) {
 }
 
 function renderStarredPapers() {
-  const box = $("#starred-papers");
-  const count = $("#starred-count");
-  if (!box || !count) return;
+  const box = $("#favorite-paper-list");
+  const count = $("#favorite-paper-count");
+  const tabCount = $("#favorite-tab-count");
+  if (!box || !count || !tabCount) return;
   const papersById = new Map(state.papers.map(paper => [paperKey(paper), paper]));
   const papers = [...state.saved].map(id => papersById.get(String(id))).filter(Boolean);
-  count.textContent = `${state.saved.size} saved`;
+  const savedLabel = `${state.saved.size} saved paper${state.saved.size === 1 ? "" : "s"}`;
+  count.textContent = savedLabel;
+  tabCount.textContent = state.saved.size;
   if (!state.saved.size) {
-    box.innerHTML = `<p class="starred-empty">Star papers in your feed to keep them here.</p>`;
+    box.innerHTML = `<div class="empty favorite-empty"><div class="radar-icon">☆</div><h3>No favorite papers yet</h3><p>Use the star button on any paper in your personalized feed. It will be saved here and synchronized to your account.</p><button class="secondary" type="button" data-show-relevant>Browse new papers</button></div>`;
+    box.querySelector("[data-show-relevant]")?.addEventListener("click", () => showPaperTab("relevant"));
     return;
   }
   box.innerHTML = papers.length ? papers.map(paper => {
     const id = paperKey(paper);
-    return `<article class="starred-paper">${paperPreview(paper, { compact: true })}<div><small>${escapeHtml(paper.journal)} · ${escapeHtml(paper.published || "New")}</small><h4><a href="${escapeHtml(safeUrl(paper.url))}" target="_blank" rel="noopener noreferrer">${escapeHtml(paper.title)}</a></h4></div><button class="unstar-paper" type="button" data-id="${escapeHtml(id)}" aria-label="Remove ${escapeHtml(paper.title)} from starred papers">★</button></article>`;
-  }).join("") : `<p class="starred-empty">Your saved paper IDs are synced, but their publisher metadata is not in the current index yet.</p>`;
+    const summary = paper.abstract || paper.summary || "Open the publisher page to read the abstract.";
+    return `<article class="paper-card favorite-paper-card">${paperPreview(paper)}<div class="paper-content"><div class="paper-meta">${escapeHtml(paper.journal)} · ${escapeHtml(paper.published || "New")}</div><h3>${escapeHtml(paper.title)}</h3><p>${escapeHtml(summary.slice(0, 520))}</p></div><div class="paper-actions"><button class="icon-button unstar-paper" type="button" data-id="${escapeHtml(id)}" title="Remove from favorite papers" aria-label="Remove ${escapeHtml(paper.title)} from favorite papers">★</button><a class="icon-button" href="${escapeHtml(safeUrl(paper.url))}" target="_blank" rel="noopener noreferrer" title="Open publisher page" aria-label="Open publisher page">↗</a></div></article>`;
+  }).join("") : `<div class="empty favorite-empty"><h3>Favorite papers are syncing</h3><p>Your saved-paper IDs are available, but their publisher metadata is not in the current 90-day index.</p></div>`;
   bindPreviewFallbacks(box);
   box.querySelectorAll(".unstar-paper").forEach(button => button.addEventListener("click", () => {
     state.saved.delete(button.dataset.id);
