@@ -8,6 +8,7 @@ on:
     paths:
       - ".github/workflows/update-papers.yml"
       - "scripts/scrape_publishers.py"
+      - "scripts/send_alerts.py"
       - "data/journals.json"
 
 permissions:
