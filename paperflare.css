@@ -49,6 +49,21 @@
 .logout-button:hover { border-color: var(--green); background: #f1f7f3; }
 .account-note { color: var(--muted); font-size: 14px; line-height: 1.5; }
 .account-settings-form { display: grid; gap: 14px; margin: 18px 0; }
+.starred-library { margin: 24px 0 20px; padding-top: 22px; border-top: 1px solid var(--line); }
+.starred-library-heading { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin-bottom: 12px; }
+.starred-library-heading h3 { margin: 4px 0 0; font-family: Georgia,serif; font-size: 25px; font-weight: 500; }
+.starred-library-heading > span { color: var(--muted); font-size: 12px; }
+.starred-papers { display: grid; gap: 9px; max-height: 330px; overflow: auto; padding-right: 3px; }
+.starred-paper { display: grid; grid-template-columns: 72px minmax(0,1fr) 32px; gap: 11px; align-items: center; padding: 9px; border: 1px solid var(--line); border-radius: 12px; background: #fbfbf8; }
+.starred-paper .paper-preview.compact { width: 72px; aspect-ratio: 4/3; border-radius: 8px; }
+.starred-paper .paper-preview-label,.starred-paper .paper-preview-fallback strong,.starred-paper .paper-preview-fallback small { display: none; }
+.starred-paper .paper-preview-fallback i { width: 28px; height: 21px; margin: 0; }
+.starred-paper small { color: var(--orange); font-size: 9px; text-transform: uppercase; letter-spacing: .04em; }
+.starred-paper h4 { margin: 3px 0 0; font-family: Georgia,serif; font-size: 15px; line-height: 1.25; font-weight: 500; }
+.starred-paper h4 a { color: var(--ink); text-decoration: none; }
+.starred-paper h4 a:hover { color: var(--green); text-decoration: underline; }
+.unstar-paper { width: 30px; height: 30px; border: 0; border-radius: 50%; background: var(--orange-soft); color: var(--orange); cursor: pointer; }
+.starred-empty { margin: 0; padding: 18px; border: 1px dashed var(--line); border-radius: 12px; color: var(--muted); text-align: center; font-size: 13px; }
 .toggle-field { display: flex; gap: 11px; align-items: flex-start; color: var(--ink); cursor: pointer; }
 .toggle-field input { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--green); }
 .toggle-field span { display: grid; gap: 3px; }

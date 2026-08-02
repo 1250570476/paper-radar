@@ -36,6 +36,24 @@ const safeUrl = value => {
   try { const url = new URL(value); return url.protocol === "https:" ? url.href : "#"; }
   catch { return "#"; }
 };
+const paperKey = paper => String(paper?.id || paper?.doi || paper?.url || "");
+
+function paperPreview(paper, { compact = false } = {}) {
+  const imageUrl = safeUrl(paper.image_url);
+  const publisherUrl = safeUrl(paper.url);
+  const label = compact ? "Paper preview" : "Graphical abstract / article preview";
+  const fallback = `<span class="paper-preview-fallback" aria-hidden="true"><i></i><strong>Preview</strong><small>not available</small></span>`;
+  return `<a class="paper-preview${compact ? " compact" : ""}" href="${escapeHtml(publisherUrl)}" target="_blank" rel="noopener noreferrer" aria-label="Open ${escapeHtml(paper.title)} on the publisher website">${imageUrl === "#" ? fallback : `<img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(label)} for ${escapeHtml(paper.title)}" loading="lazy" decoding="async" referrerpolicy="no-referrer" /><span class="paper-preview-label">${escapeHtml(label)}</span>${fallback}`}</a>`;
+}
+
+function bindPreviewFallbacks(container = document) {
+  container.querySelectorAll(".paper-preview img").forEach(image => {
+    const hideFallback = () => image.closest(".paper-preview")?.classList.add("image-loaded");
+    if (image.complete && image.naturalWidth) hideFallback();
+    image.addEventListener("load", hideFallback, { once: true });
+    image.addEventListener("error", () => image.remove(), { once: true });
+  });
+}
 
 const stopWords = new Set(["the", "and", "for", "with", "from", "into", "using", "use", "based", "study", "studies", "effect", "effects", "development", "design", "analysis", "novel", "approach", "applications", "application", "research", "system", "systems", "method", "methods", "results", "their", "our", "this", "that", "are", "was", "were", "have", "has", "its", "can", "may", "university", "engineering", "mechanical", "present", "student", "grade", "author", "publications", "experience", "skills"]);
 const conceptFamilies = [
@@ -188,6 +206,7 @@ async function syncProfileFromAccount() {
     localStorage.setItem("paper-radar-saved", JSON.stringify([...state.saved]));
     populateProfile();
     renderFavorites();
+    renderStarredPapers();
     $("#feed-status").textContent = "Your CatchPapers profile is synced.";
   } catch (error) {
     console.error("Account profile sync failed", error);
@@ -207,6 +226,7 @@ async function loadPublisherData(force = false) {
   state.generatedAt = snapshot.generated_at || null;
   state.latestByJournal = snapshot.latest_by_journal || {};
   migrateFavorites();
+  renderStarredPapers();
 }
 
 function migrateFavorites() {
@@ -371,8 +391,10 @@ $("#expand-scan").addEventListener("click", () => {
 function renderPapers(ranked) {
   $("#paper-list").innerHTML = ranked.map(({ paper, score }) => {
     const summary = paper.abstract || paper.summary || "Open the publisher page to read the abstract.";
-    return `<article class="paper-card"><div class="score" style="--score:${score.value}"><strong>${score.value}</strong><small>RELEVANCE</small></div><div><div class="paper-meta">${escapeHtml(paper.journal)} · ${escapeHtml(paper.published || "New")}</div><h3>${escapeHtml(paper.title)}</h3><p>${escapeHtml(summary.slice(0, 520))}</p><div class="why"><strong>Why it matches:</strong> ${escapeHtml(score.explanation)} · ${score.hits.map(escapeHtml).join(", ")}</div></div><div class="paper-actions"><button class="icon-button save-paper" data-id="${escapeHtml(paper.id)}" title="Save paper">${state.saved.has(paper.id) ? "★" : "☆"}</button><a class="icon-button" href="${escapeHtml(safeUrl(paper.url))}" target="_blank" rel="noopener noreferrer" title="Open publisher page">↗</a></div></article>`;
+    const id = paperKey(paper);
+    return `<article class="paper-card">${paperPreview(paper)}<div class="score" style="--score:${score.value}"><strong>${score.value}</strong><small>RELEVANCE</small></div><div class="paper-content"><div class="paper-meta">${escapeHtml(paper.journal)} · ${escapeHtml(paper.published || "New")}</div><h3>${escapeHtml(paper.title)}</h3><p>${escapeHtml(summary.slice(0, 520))}</p><div class="why"><strong>Why it matches:</strong> ${escapeHtml(score.explanation)} · ${score.hits.map(escapeHtml).join(", ")}</div></div><div class="paper-actions"><button class="icon-button save-paper" data-id="${escapeHtml(id)}" title="${state.saved.has(id) ? "Remove from starred papers" : "Star paper"}" aria-label="${state.saved.has(id) ? "Remove from starred papers" : "Star paper"}">${state.saved.has(id) ? "★" : "☆"}</button><a class="icon-button" href="${escapeHtml(safeUrl(paper.url))}" target="_blank" rel="noopener noreferrer" title="Open publisher page" aria-label="Open publisher page">↗</a></div></article>`;
   }).join("");
+  bindPreviewFallbacks($("#paper-list"));
 
   $("#empty-state").classList.toggle("hidden", ranked.length > 0);
   $("#empty-state h3").textContent = "No relevant papers found";
@@ -385,6 +407,38 @@ function renderPapers(ranked) {
     localStorage.setItem("paper-radar-saved", JSON.stringify([...state.saved]));
     syncProfileToAccount();
     button.textContent = state.saved.has(button.dataset.id) ? "★" : "☆";
+    button.title = state.saved.has(button.dataset.id) ? "Remove from starred papers" : "Star paper";
+    button.setAttribute("aria-label", button.title);
+    renderStarredPapers();
+  }));
+}
+
+function renderStarredPapers() {
+  const box = $("#starred-papers");
+  const count = $("#starred-count");
+  if (!box || !count) return;
+  const papersById = new Map(state.papers.map(paper => [paperKey(paper), paper]));
+  const papers = [...state.saved].map(id => papersById.get(String(id))).filter(Boolean);
+  count.textContent = `${state.saved.size} saved`;
+  if (!state.saved.size) {
+    box.innerHTML = `<p class="starred-empty">Star papers in your feed to keep them here.</p>`;
+    return;
+  }
+  box.innerHTML = papers.length ? papers.map(paper => {
+    const id = paperKey(paper);
+    return `<article class="starred-paper">${paperPreview(paper, { compact: true })}<div><small>${escapeHtml(paper.journal)} · ${escapeHtml(paper.published || "New")}</small><h4><a href="${escapeHtml(safeUrl(paper.url))}" target="_blank" rel="noopener noreferrer">${escapeHtml(paper.title)}</a></h4></div><button class="unstar-paper" type="button" data-id="${escapeHtml(id)}" aria-label="Remove ${escapeHtml(paper.title)} from starred papers">★</button></article>`;
+  }).join("") : `<p class="starred-empty">Your saved paper IDs are synced, but their publisher metadata is not in the current index yet.</p>`;
+  bindPreviewFallbacks(box);
+  box.querySelectorAll(".unstar-paper").forEach(button => button.addEventListener("click", () => {
+    state.saved.delete(button.dataset.id);
+    localStorage.setItem("paper-radar-saved", JSON.stringify([...state.saved]));
+    syncProfileToAccount();
+    document.querySelectorAll(`.save-paper[data-id="${CSS.escape(button.dataset.id)}"]`).forEach(feedButton => {
+      feedButton.textContent = "☆";
+      feedButton.title = "Star paper";
+      feedButton.setAttribute("aria-label", "Star paper");
+    });
+    renderStarredPapers();
   }));
 }
 
@@ -465,6 +519,7 @@ async function initialize() {
 
 window.addEventListener("paperflare:session", event => {
   if (event.detail?.session?.user) syncProfileFromAccount();
+  else renderStarredPapers();
 });
 
 initialize();
