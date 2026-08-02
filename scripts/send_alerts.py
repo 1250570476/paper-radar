@@ -17,7 +17,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PAPERS_PATH = ROOT / "data" / "papers.json"
-SUPABASE_URL = os.environ.get("SUPABASE_URL", "").rstrip("/")
+SUPABASE_URL = os.environ.get("SUPABASE_URL", "").strip().rstrip("/")
+# Accept either the Supabase project URL or the Data API URL shown in some
+# dashboard screens. API paths below are always added relative to the project.
+if SUPABASE_URL.endswith("/rest/v1"):
+    SUPABASE_URL = SUPABASE_URL[: -len("/rest/v1")]
 SERVICE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "")
 RESEND_KEY = os.environ.get("RESEND_API_KEY", "")
 FROM_EMAIL = os.environ.get("CATCHPAPERS_FROM_EMAIL") or "CatchPapers <papers@updates.catchpapers.app>"
