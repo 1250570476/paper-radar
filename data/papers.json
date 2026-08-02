@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-02T10:52:28.412394+00:00",
+  "generated_at": "2026-08-02T10:56:15.104186+00:00",
   "source": "Direct publisher journal and article pages",
   "latest_by_journal": {
     "nature": "2026-07-31",
@@ -7,33 +7,24 @@
     "nature-biomedical-engineering": "2026-07-31",
     "nature-materials": "2026-07-31",
     "nature-nanotechnology": "2026-07-31",
-    "nature-electronics": "2026-07-31",
     "nature-machine-intelligence": "2026-07-30",
     "nature-methods": "2026-07-31",
-    "nature-chemical-engineering": "2026-07-21",
-    "communications-materials": "2026-07-31",
-    "communications-engineering": "2026-07-31",
-    "npj-flexible-electronics": "2026-07-30",
+    "nature-biotechnology": "2026-07-29",
     "microsystems-and-nanoengineering": "2026-07-31",
-    "npj-robotics": "2026-07-29",
     "scientific-reports": "2026-08-02",
     "communications-biology": "2026-08-01",
     "communications-chemistry": "2026-08-01",
     "communications-physics": "2026-07-31",
-    "communications-medicine": "2026-08-01",
     "nature-chemistry": "2026-07-31",
     "nature-physics": "2026-07-31",
     "nature-photonics": "2026-07-31",
     "nature-synthesis": "2026-07-30",
-    "nature-water": "2026-07-31",
     "nature-computational-science": "2026-07-31",
+    "nature-energy": "2026-07-31",
     "nature-sustainability": "2026-07-30",
     "nature-medicine": "2026-07-31",
     "nature-cardiovascular-research": "2026-07-31",
-    "nature-reviews-bioengineering": "2026-07-28",
-    "nature-reviews-materials": "2026-07-27",
     "npj-regenerative-medicine": "2026-07-23",
-    "npj-digital-medicine": "2026-08-01",
     "science-robotics": "2026-07-29",
     "science-advances": "2026-07-31",
     "science-translational-medicine": "2026-07-29",
@@ -109,35 +100,35 @@
       "source": "https://www.nature.com/srep.rss"
     },
     {
-      "id": "10.1038/s41598-026-64589-3",
-      "doi": "10.1038/s41598-026-64589-3",
-      "title": "Demographic drivers of the far eastern leopard population recovery",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s41598-026-64589-3",
-      "published": "2026-08-02",
-      "journal_id": "scientific-reports",
-      "journal": "Scientific Reports",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/srep.rss"
-    },
-    {
-      "id": "10.1038/s41598-026-63415-0",
-      "doi": "10.1038/s41598-026-63415-0",
-      "title": "Renovation dimensions and residents’ subjective well-being in old residential neighbourhoods: a structural equation modeling study in Hangzhou, China",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s41598-026-63415-0",
-      "published": "2026-08-02",
-      "journal_id": "scientific-reports",
-      "journal": "Scientific Reports",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/srep.rss"
-    },
-    {
       "id": "10.1038/s41598-026-65063-w",
       "doi": "10.1038/s41598-026-65063-w",
       "title": "Potential mediating role of triglycerides in the nonlinear association between body roundness index and MASLD in nondiabetic adults",
       "abstract": "",
       "url": "https://www.nature.com/articles/s41598-026-65063-w",
+      "published": "2026-08-02",
+      "journal_id": "scientific-reports",
+      "journal": "Scientific Reports",
+      "publisher": "Springer Nature",
+      "source": "https://www.nature.com/srep.rss"
+    },
+    {
+      "id": "10.1038/s41598-026-64815-y",
+      "doi": "10.1038/s41598-026-64815-y",
+      "title": "Longitudinal characterization of medial gastrocnemius muscle growth deficits throughout childhood in spastic cerebral palsy",
+      "abstract": "",
+      "url": "https://www.nature.com/articles/s41598-026-64815-y",
+      "published": "2026-08-02",
+      "journal_id": "scientific-reports",
+      "journal": "Scientific Reports",
+      "publisher": "Springer Nature",
+      "source": "https://www.nature.com/srep.rss"
+    },
+    {
+      "id": "10.1038/s41598-026-64471-2",
+      "doi": "10.1038/s41598-026-64471-2",
+      "title": "Alignment-free convolutional neural network classification of glycemic states in type 1 diabetes from GC–IMS breath spectra",
+      "abstract": "",
+      "url": "https://www.nature.com/articles/s41598-026-64471-2",
       "published": "2026-08-02",
       "journal_id": "scientific-reports",
       "journal": "Scientific Reports",
@@ -287,78 +278,6 @@
       "journal": "Communications Chemistry",
       "publisher": "Springer Nature",
       "source": "https://www.nature.com/commschem.rss"
-    },
-    {
-      "id": "10.1038/s43856-026-01833-x",
-      "doi": "10.1038/s43856-026-01833-x",
-      "title": "Systemic fragility in European total intravenous anesthesia delivery and opportunities for resilient real-time decision support",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s43856-026-01833-x",
-      "published": "2026-08-01",
-      "journal_id": "communications-medicine",
-      "journal": "Communications Medicine",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/commsmed.rss"
-    },
-    {
-      "id": "10.1038/s41746-026-03080-9",
-      "doi": "10.1038/s41746-026-03080-9",
-      "title": "AI chatbots and youth suicide risk: current evidence, critical gaps, and a clinical research agenda",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s41746-026-03080-9",
-      "published": "2026-08-01",
-      "journal_id": "npj-digital-medicine",
-      "journal": "npj Digital Medicine",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/npjdigitalmed.rss"
-    },
-    {
-      "id": "10.1038/s41746-026-03031-4",
-      "doi": "10.1038/s41746-026-03031-4",
-      "title": "Author Correction: Digital biomarkers for brain health: passive and continuous assessment from wearable sensors",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s41746-026-03031-4",
-      "published": "2026-08-01",
-      "journal_id": "npj-digital-medicine",
-      "journal": "npj Digital Medicine",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/npjdigitalmed.rss"
-    },
-    {
-      "id": "10.1038/s41746-026-03096-1",
-      "doi": "10.1038/s41746-026-03096-1",
-      "title": "Reply to: Clinician engagement modifies effectiveness of AI enabled ECG screening",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s41746-026-03096-1",
-      "published": "2026-08-01",
-      "journal_id": "npj-digital-medicine",
-      "journal": "npj Digital Medicine",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/npjdigitalmed.rss"
-    },
-    {
-      "id": "10.1038/s41746-026-02998-4",
-      "doi": "10.1038/s41746-026-02998-4",
-      "title": "Digital versus in-person physical therapy for osteoarthritis pain and function",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s41746-026-02998-4",
-      "published": "2026-08-01",
-      "journal_id": "npj-digital-medicine",
-      "journal": "npj Digital Medicine",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/npjdigitalmed.rss"
-    },
-    {
-      "id": "10.1038/s41746-026-02842-9",
-      "doi": "10.1038/s41746-026-02842-9",
-      "title": "Real-world use of large language models for mental health in 2024",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s41746-026-02842-9",
-      "published": "2026-08-01",
-      "journal_id": "npj-digital-medicine",
-      "journal": "npj Digital Medicine",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/npjdigitalmed.rss"
     },
     {
       "id": "10.1002/adma.74385",
@@ -805,18 +724,6 @@
       "source": "https://www.nature.com/nnano.rss"
     },
     {
-      "id": "10.1038/s41928-026-01672-7",
-      "doi": "10.1038/s41928-026-01672-7",
-      "title": "High-transconductance molybdenum disulfide top-gate transistors using epitaxial interface engineering",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s41928-026-01672-7",
-      "published": "2026-07-31",
-      "journal_id": "nature-electronics",
-      "journal": "Nature Electronics",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/natelectron.rss"
-    },
-    {
       "id": "10.1038/s41592-026-03187-7",
       "doi": "10.1038/s41592-026-03187-7",
       "title": "Getting over ANOVA: estimation graphics for multi-group comparisons",
@@ -851,66 +758,6 @@
       "journal": "Nature Methods",
       "publisher": "Springer Nature",
       "source": "https://www.nature.com/nmeth.rss"
-    },
-    {
-      "id": "10.1038/s43246-026-01269-9",
-      "doi": "10.1038/s43246-026-01269-9",
-      "title": "Coalescing nephron and ureteric bud progenitors potentiates nephrogenesis in recellularized kidney scaffolds",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s43246-026-01269-9",
-      "published": "2026-07-31",
-      "journal_id": "communications-materials",
-      "journal": "Communications Materials",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/commsmat.rss"
-    },
-    {
-      "id": "10.1038/s43246-026-01307-6",
-      "doi": "10.1038/s43246-026-01307-6",
-      "title": "Two-dimensional clay channels for tunable nanofluidic memristor",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s43246-026-01307-6",
-      "published": "2026-07-31",
-      "journal_id": "communications-materials",
-      "journal": "Communications Materials",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/commsmat.rss"
-    },
-    {
-      "id": "10.1038/s43246-026-01312-9",
-      "doi": "10.1038/s43246-026-01312-9",
-      "title": "Superconductivity with enhanced critical current density in ultrathin infinite-layer nickelate films",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s43246-026-01312-9",
-      "published": "2026-07-31",
-      "journal_id": "communications-materials",
-      "journal": "Communications Materials",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/commsmat.rss"
-    },
-    {
-      "id": "10.1038/s44172-026-00744-y",
-      "doi": "10.1038/s44172-026-00744-y",
-      "title": "Impact in engineering research: more than a number",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s44172-026-00744-y",
-      "published": "2026-07-31",
-      "journal_id": "communications-engineering",
-      "journal": "Communications Engineering",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/commseng.rss"
-    },
-    {
-      "id": "10.1038/s44172-026-00743-z",
-      "doi": "10.1038/s44172-026-00743-z",
-      "title": "Four years on: following the pathway to real world impact of engineering research",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s44172-026-00743-z",
-      "published": "2026-07-31",
-      "journal_id": "communications-engineering",
-      "journal": "Communications Engineering",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/commseng.rss"
     },
     {
       "id": "10.1038/s41378-026-01406-x",
@@ -1019,66 +866,6 @@
       "journal": "Communications Physics",
       "publisher": "Springer Nature",
       "source": "https://www.nature.com/commsphys.rss"
-    },
-    {
-      "id": "10.1038/s43856-026-01781-6",
-      "doi": "10.1038/s43856-026-01781-6",
-      "title": "A systematic review of the prevalence and diagnostic approaches of respiratory sarcopenia",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s43856-026-01781-6",
-      "published": "2026-07-31",
-      "journal_id": "communications-medicine",
-      "journal": "Communications Medicine",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/commsmed.rss"
-    },
-    {
-      "id": "10.1038/s43856-026-01775-4",
-      "doi": "10.1038/s43856-026-01775-4",
-      "title": "FGL-1 plasma levels correlate with markers of inflammation and severe disease during SARS-CoV-2 infection",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s43856-026-01775-4",
-      "published": "2026-07-31",
-      "journal_id": "communications-medicine",
-      "journal": "Communications Medicine",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/commsmed.rss"
-    },
-    {
-      "id": "10.1038/s43856-026-01815-z",
-      "doi": "10.1038/s43856-026-01815-z",
-      "title": "Prenatal antifungal exposure disrupts fetal steroidogenesis and is associated with persistent effects in children",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s43856-026-01815-z",
-      "published": "2026-07-31",
-      "journal_id": "communications-medicine",
-      "journal": "Communications Medicine",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/commsmed.rss"
-    },
-    {
-      "id": "10.1038/s43856-026-01740-1",
-      "doi": "10.1038/s43856-026-01740-1",
-      "title": "A meta-learning method with reduced data requirements for training and updating deep learning models on wearable devices",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s43856-026-01740-1",
-      "published": "2026-07-31",
-      "journal_id": "communications-medicine",
-      "journal": "Communications Medicine",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/commsmed.rss"
-    },
-    {
-      "id": "10.1038/s43856-026-01811-3",
-      "doi": "10.1038/s43856-026-01811-3",
-      "title": "Asymmetric plantar temperature downshifts are associated with atrial fibrillation and thromboembolic events: an observational post hoc analysis of the SmartPreventDiabeticFeet study",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s43856-026-01811-3",
-      "published": "2026-07-31",
-      "journal_id": "communications-medicine",
-      "journal": "Communications Medicine",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/commsmed.rss"
     },
     {
       "id": "10.1038/s41557-026-02200-y",
@@ -1225,30 +1012,6 @@
       "source": "https://www.nature.com/nphoton.rss"
     },
     {
-      "id": "10.1038/s44221-026-00680-3",
-      "doi": "10.1038/s44221-026-00680-3",
-      "title": "Differences in PFAS drinking water limits create barriers to cost-effective risk reduction",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s44221-026-00680-3",
-      "published": "2026-07-31",
-      "journal_id": "nature-water",
-      "journal": "Nature Water",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/natwater.rss"
-    },
-    {
-      "id": "10.1038/s44221-026-00670-5",
-      "doi": "10.1038/s44221-026-00670-5",
-      "title": "Implementation of the Drinking Water Directive limit values for per- and polyfluoroalkyl substances in Europe",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s44221-026-00670-5",
-      "published": "2026-07-31",
-      "journal_id": "nature-water",
-      "journal": "Nature Water",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/natwater.rss"
-    },
-    {
       "id": "10.1038/s43588-026-01030-9",
       "doi": "10.1038/s43588-026-01030-9",
       "title": "Continual integration of single-cell multimodal data with MIRACLE",
@@ -1259,6 +1022,18 @@
       "journal": "Nature Computational Science",
       "publisher": "Springer Nature",
       "source": "https://www.nature.com/natcomputsci.rss"
+    },
+    {
+      "id": "10.1038/s41560-026-02118-2",
+      "doi": "10.1038/s41560-026-02118-2",
+      "title": "Diffusion-like overpotentials from non-diffusion mechanisms in battery particles",
+      "abstract": "",
+      "url": "https://www.nature.com/articles/s41560-026-02118-2",
+      "published": "2026-07-31",
+      "journal_id": "nature-energy",
+      "journal": "Nature Energy",
+      "publisher": "Springer Nature",
+      "source": "https://www.nature.com/nenergy.rss"
     },
     {
       "id": "10.1038/s41591-026-04567-4",
@@ -1319,30 +1094,6 @@
       "journal": "Nature Cardiovascular Research",
       "publisher": "Springer Nature",
       "source": "https://www.nature.com/natcardiovascres.rss"
-    },
-    {
-      "id": "10.1038/s41746-026-03042-1",
-      "doi": "10.1038/s41746-026-03042-1",
-      "title": "Health professions education (HPE) in the age of generative AI",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s41746-026-03042-1",
-      "published": "2026-07-31",
-      "journal_id": "npj-digital-medicine",
-      "journal": "npj Digital Medicine",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/npjdigitalmed.rss"
-    },
-    {
-      "id": "10.1038/s41746-026-02933-7",
-      "doi": "10.1038/s41746-026-02933-7",
-      "title": "Benchmarking and developing large language models using one million clinical trials",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s41746-026-02933-7",
-      "published": "2026-07-31",
-      "journal_id": "npj-digital-medicine",
-      "journal": "npj Digital Medicine",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/npjdigitalmed.rss"
     },
     {
       "id": "10.1126/sciadv.adv6851",
@@ -3217,18 +2968,6 @@
       "source": "https://www.nature.com/nnano.rss"
     },
     {
-      "id": "10.1038/s41928-026-01690-5",
-      "doi": "10.1038/s41928-026-01690-5",
-      "title": "Author Correction: Industrial reliability testing of transistor gate dielectrics",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s41928-026-01690-5",
-      "published": "2026-07-30",
-      "journal_id": "nature-electronics",
-      "journal": "Nature Electronics",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/natelectron.rss"
-    },
-    {
       "id": "10.1038/s42256-026-01284-y",
       "doi": "10.1038/s42256-026-01284-y",
       "title": "Classifying multipartite continuous-variable entanglement structures through data-augmented neural networks",
@@ -3311,54 +3050,6 @@
       "journal": "Nature Methods",
       "publisher": "Springer Nature",
       "source": "https://www.nature.com/nmeth.rss"
-    },
-    {
-      "id": "10.1038/s43246-026-01313-8",
-      "doi": "10.1038/s43246-026-01313-8",
-      "title": "Macroscale nanofluidic memristors enable iontronic memory, sensing and programmable separation",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s43246-026-01313-8",
-      "published": "2026-07-30",
-      "journal_id": "communications-materials",
-      "journal": "Communications Materials",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/commsmat.rss"
-    },
-    {
-      "id": "10.1038/s43246-026-01286-8",
-      "doi": "10.1038/s43246-026-01286-8",
-      "title": "Self-powered, linear, low-light upconversion for high-quality near-infrared imaging",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s43246-026-01286-8",
-      "published": "2026-07-30",
-      "journal_id": "communications-materials",
-      "journal": "Communications Materials",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/commsmat.rss"
-    },
-    {
-      "id": "10.1038/s43246-026-01306-7",
-      "doi": "10.1038/s43246-026-01306-7",
-      "title": "Equilibrium trions on the surface of Ta<sub>2</sub>NiS<sub>5</sub>",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s43246-026-01306-7",
-      "published": "2026-07-30",
-      "journal_id": "communications-materials",
-      "journal": "Communications Materials",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/commsmat.rss"
-    },
-    {
-      "id": "10.1038/s41528-026-00625-6",
-      "doi": "10.1038/s41528-026-00625-6",
-      "title": "Flexible polymer-based liquid crystal sensor for label-free electro-optical recording of electrophysiological activity",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s41528-026-00625-6",
-      "published": "2026-07-30",
-      "journal_id": "npj-flexible-electronics",
-      "journal": "npj Flexible Electronics",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/npjflexelectron.rss"
     },
     {
       "id": "10.1038/s42003-026-10692-0",
@@ -3481,30 +3172,6 @@
       "source": "https://www.nature.com/commsphys.rss"
     },
     {
-      "id": "10.1038/s43856-026-01777-2",
-      "doi": "10.1038/s43856-026-01777-2",
-      "title": "Leveraging AI for selective use of gadolinium contrast in brain MR",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s43856-026-01777-2",
-      "published": "2026-07-30",
-      "journal_id": "communications-medicine",
-      "journal": "Communications Medicine",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/commsmed.rss"
-    },
-    {
-      "id": "10.1038/s43856-026-01796-z",
-      "doi": "10.1038/s43856-026-01796-z",
-      "title": "Empirical assessment of constraints and credibility when emulating a placebo-controlled trial with the clone-censor-weight approach",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s43856-026-01796-z",
-      "published": "2026-07-30",
-      "journal_id": "communications-medicine",
-      "journal": "Communications Medicine",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/commsmed.rss"
-    },
-    {
       "id": "10.1038/s41557-026-02215-5",
       "doi": "10.1038/s41557-026-02215-5",
       "title": "Innovation without inventors",
@@ -3551,30 +3218,6 @@
       "journal": "Nature Synthesis",
       "publisher": "Springer Nature",
       "source": "https://www.nature.com/natsynth.rss"
-    },
-    {
-      "id": "10.1038/s44221-026-00689-8",
-      "doi": "10.1038/s44221-026-00689-8",
-      "title": "Programming electrochemical separations for metal recovery",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s44221-026-00689-8",
-      "published": "2026-07-30",
-      "journal_id": "nature-water",
-      "journal": "Nature Water",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/natwater.rss"
-    },
-    {
-      "id": "10.1038/s44221-026-00679-w",
-      "doi": "10.1038/s44221-026-00679-w",
-      "title": "Simultaneous desalination and selective metal recovery enabled by potential-regulated electrochemical ion pumping",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s44221-026-00679-w",
-      "published": "2026-07-30",
-      "journal_id": "nature-water",
-      "journal": "Nature Water",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/natwater.rss"
     },
     {
       "id": "10.1038/s43588-026-01028-3",
@@ -6589,28 +6232,40 @@
       "source": "https://www.nature.com/nnano.rss"
     },
     {
-      "id": "10.1038/s43246-026-01311-w",
-      "doi": "10.1038/s43246-026-01311-w",
-      "title": "Nonlinear cesium release behavior from idiomorphic analcime–pollucite solid solutions with controlled cesium content",
+      "id": "10.1038/s41587-026-03251-9",
+      "doi": "10.1038/s41587-026-03251-9",
+      "title": "Ten commitments for a bold biotechnology industry",
       "abstract": "",
-      "url": "https://www.nature.com/articles/s43246-026-01311-w",
+      "url": "https://www.nature.com/articles/s41587-026-03251-9",
       "published": "2026-07-29",
-      "journal_id": "communications-materials",
-      "journal": "Communications Materials",
+      "journal_id": "nature-biotechnology",
+      "journal": "Nature Biotechnology",
       "publisher": "Springer Nature",
-      "source": "https://www.nature.com/commsmat.rss"
+      "source": "https://www.nature.com/nbt.rss"
     },
     {
-      "id": "10.1038/s44172-026-00726-0",
-      "doi": "10.1038/s44172-026-00726-0",
-      "title": "Millisecond magnetic particle imaging of a cerebral aneurysm phantom with and without flow diverter stent",
+      "id": "10.1038/s41587-026-03207-z",
+      "doi": "10.1038/s41587-026-03207-z",
+      "title": "Property guidance for protein sequence generative models with ProteinGuide",
       "abstract": "",
-      "url": "https://www.nature.com/articles/s44172-026-00726-0",
+      "url": "https://www.nature.com/articles/s41587-026-03207-z",
       "published": "2026-07-29",
-      "journal_id": "communications-engineering",
-      "journal": "Communications Engineering",
+      "journal_id": "nature-biotechnology",
+      "journal": "Nature Biotechnology",
       "publisher": "Springer Nature",
-      "source": "https://www.nature.com/commseng.rss"
+      "source": "https://www.nature.com/nbt.rss"
+    },
+    {
+      "id": "10.1038/s41587-026-03239-5",
+      "doi": "10.1038/s41587-026-03239-5",
+      "title": "An AI-enabled structural atlas decodes kinase specificity across the human proteome",
+      "abstract": "",
+      "url": "https://www.nature.com/articles/s41587-026-03239-5",
+      "published": "2026-07-29",
+      "journal_id": "nature-biotechnology",
+      "journal": "Nature Biotechnology",
+      "publisher": "Springer Nature",
+      "source": "https://www.nature.com/nbt.rss"
     },
     {
       "id": "10.1038/s41378-026-01337-7",
@@ -6635,18 +6290,6 @@
       "journal": "Microsystems & Nanoengineering",
       "publisher": "Springer Nature",
       "source": "https://www.nature.com/micronano.rss"
-    },
-    {
-      "id": "10.1038/s44182-026-00108-w",
-      "doi": "10.1038/s44182-026-00108-w",
-      "title": "Aerial and ground locomotion of winged drones powered by a single actuator",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s44182-026-00108-w",
-      "published": "2026-07-29",
-      "journal_id": "npj-robotics",
-      "journal": "npj Robotics",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/npjrobot.rss"
     },
     {
       "id": "10.1038/s42003-026-10666-2",
@@ -6721,42 +6364,6 @@
       "source": "https://www.nature.com/natsynth.rss"
     },
     {
-      "id": "10.1038/s44221-026-00686-x",
-      "doi": "10.1038/s44221-026-00686-x",
-      "title": "Unequal costs of community stress responses",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s44221-026-00686-x",
-      "published": "2026-07-29",
-      "journal_id": "nature-water",
-      "journal": "Nature Water",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/natwater.rss"
-    },
-    {
-      "id": "10.1038/s44221-026-00691-0",
-      "doi": "10.1038/s44221-026-00691-0",
-      "title": "Human health risk from manganese in groundwater",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s44221-026-00691-0",
-      "published": "2026-07-29",
-      "journal_id": "nature-water",
-      "journal": "Nature Water",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/natwater.rss"
-    },
-    {
-      "id": "10.1038/s44221-026-00677-y",
-      "doi": "10.1038/s44221-026-00677-y",
-      "title": "Quorum sensing-driven metabolic altruism of nitrite-oxidizing bacteria fuels nitritation",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s44221-026-00677-y",
-      "published": "2026-07-29",
-      "journal_id": "nature-water",
-      "journal": "Nature Water",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/natwater.rss"
-    },
-    {
       "id": "10.1038/s41591-026-04555-8",
       "doi": "10.1038/s41591-026-04555-8",
       "title": "Deciphering the role of histidine in cancer",
@@ -6767,18 +6374,6 @@
       "journal": "Nature Medicine",
       "publisher": "Springer Nature",
       "source": "https://www.nature.com/nm.rss"
-    },
-    {
-      "id": "10.1038/s41746-026-03072-9",
-      "doi": "10.1038/s41746-026-03072-9",
-      "title": "Causal machine learning for exploring radiation dose effects on mandibular osteoradionecrosis",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s41746-026-03072-9",
-      "published": "2026-07-29",
-      "journal_id": "npj-digital-medicine",
-      "journal": "npj Digital Medicine",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/npjdigitalmed.rss"
     },
     {
       "id": "10.1126/scirobotics.aec1762",
@@ -10393,40 +9988,16 @@
       "source": "https://www.nature.com/nnano.rss"
     },
     {
-      "id": "10.1038/s43246-026-01305-8",
-      "doi": "10.1038/s43246-026-01305-8",
-      "title": "Real-space observation of the temporal evolution of nanoscale mechanical heterogeneities in deeply aged polymer glasses",
+      "id": "10.1038/s41587-026-03264-4",
+      "doi": "10.1038/s41587-026-03264-4",
+      "title": "EU relaxes rules for gene-edited crops",
       "abstract": "",
-      "url": "https://www.nature.com/articles/s43246-026-01305-8",
+      "url": "https://www.nature.com/articles/s41587-026-03264-4",
       "published": "2026-07-28",
-      "journal_id": "communications-materials",
-      "journal": "Communications Materials",
+      "journal_id": "nature-biotechnology",
+      "journal": "Nature Biotechnology",
       "publisher": "Springer Nature",
-      "source": "https://www.nature.com/commsmat.rss"
-    },
-    {
-      "id": "10.1038/s44172-026-00742-0",
-      "doi": "10.1038/s44172-026-00742-0",
-      "title": "Secure wireless key generation for static Internet-of-Things",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s44172-026-00742-0",
-      "published": "2026-07-28",
-      "journal_id": "communications-engineering",
-      "journal": "Communications Engineering",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/commseng.rss"
-    },
-    {
-      "id": "10.1038/s41528-026-00624-7",
-      "doi": "10.1038/s41528-026-00624-7",
-      "title": "Ultrathin multi-gate organic electrochemical transistors for insertable multianalyte biochemical sensing",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s41528-026-00624-7",
-      "published": "2026-07-28",
-      "journal_id": "npj-flexible-electronics",
-      "journal": "npj Flexible Electronics",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/npjflexelectron.rss"
+      "source": "https://www.nature.com/nbt.rss"
     },
     {
       "id": "10.1038/s41567-026-03376-3",
@@ -10463,18 +10034,6 @@
       "journal": "Nature Physics",
       "publisher": "Springer Nature",
       "source": "https://www.nature.com/nphys.rss"
-    },
-    {
-      "id": "10.1038/s44221-026-00682-1",
-      "doi": "10.1038/s44221-026-00682-1",
-      "title": "The use of ultrahigh- and high-resolution mass spectrometry to examine the anthropogenic signature of dissolved organic matter in aquatic systems",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s44221-026-00682-1",
-      "published": "2026-07-28",
-      "journal_id": "nature-water",
-      "journal": "Nature Water",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/natwater.rss"
     },
     {
       "id": "10.1038/s41893-026-01874-z",
@@ -10523,18 +10082,6 @@
       "journal": "Nature Medicine",
       "publisher": "Springer Nature",
       "source": "https://www.nature.com/nm.rss"
-    },
-    {
-      "id": "10.1038/s44222-026-00471-1",
-      "doi": "10.1038/s44222-026-00471-1",
-      "title": "Bioiontronics",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s44222-026-00471-1",
-      "published": "2026-07-28",
-      "journal_id": "nature-reviews-bioengineering",
-      "journal": "Nature Reviews Bioengineering",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/natrevbioeng.rss"
     },
     {
       "id": "10.1002/adma.74236",
@@ -12613,6 +12160,18 @@
       "source": "https://www.nature.com/nnano.rss"
     },
     {
+      "id": "10.1038/s41587-026-03229-7",
+      "doi": "10.1038/s41587-026-03229-7",
+      "title": "Engineered polyketide synthases enable a microbial chassis for recyclable plastics with tunable properties",
+      "abstract": "",
+      "url": "https://www.nature.com/articles/s41587-026-03229-7",
+      "published": "2026-07-27",
+      "journal_id": "nature-biotechnology",
+      "journal": "Nature Biotechnology",
+      "publisher": "Springer Nature",
+      "source": "https://www.nature.com/nbt.rss"
+    },
+    {
       "id": "10.1038/s41378-026-01400-3",
       "doi": "10.1038/s41378-026-01400-3",
       "title": "Innovations in glaucoma treatment: development and testing of a novel self-adjustable implant for effective pressure regulation",
@@ -12733,6 +12292,30 @@
       "source": "https://www.nature.com/natsynth.rss"
     },
     {
+      "id": "10.1038/s41560-026-02106-6",
+      "doi": "10.1038/s41560-026-02106-6",
+      "title": "From takeout to takeoff",
+      "abstract": "",
+      "url": "https://www.nature.com/articles/s41560-026-02106-6",
+      "published": "2026-07-27",
+      "journal_id": "nature-energy",
+      "journal": "Nature Energy",
+      "publisher": "Springer Nature",
+      "source": "https://www.nature.com/nenergy.rss"
+    },
+    {
+      "id": "10.1038/s41560-026-02117-3",
+      "doi": "10.1038/s41560-026-02117-3",
+      "title": "Quasi-ballistic ion transport in a vertical microrod enabling efficient evaporation-driven power generation",
+      "abstract": "",
+      "url": "https://www.nature.com/articles/s41560-026-02117-3",
+      "published": "2026-07-27",
+      "journal_id": "nature-energy",
+      "journal": "Nature Energy",
+      "publisher": "Springer Nature",
+      "source": "https://www.nature.com/nenergy.rss"
+    },
+    {
       "id": "10.1038/s41893-026-01906-8",
       "doi": "10.1038/s41893-026-01906-8",
       "title": "Towards safe and just planetary boundaries for novel entities",
@@ -12767,18 +12350,6 @@
       "journal": "Nature Cardiovascular Research",
       "publisher": "Springer Nature",
       "source": "https://www.nature.com/natcardiovascres.rss"
-    },
-    {
-      "id": "10.1038/s41578-026-00947-x",
-      "doi": "10.1038/s41578-026-00947-x",
-      "title": "Closed-loop battery recycling through cathode resynthesis",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s41578-026-00947-x",
-      "published": "2026-07-27",
-      "journal_id": "nature-reviews-materials",
-      "journal": "Nature Reviews Materials",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/natrevmats.rss"
     },
     {
       "id": "10.1002/smtd.70890",
@@ -13057,18 +12628,6 @@
       "source": "https://onlinelibrary.wiley.com/action/showFeed?type=etoc&feed=rss&jc=23669608"
     },
     {
-      "id": "10.1038/s41928-026-01679-0",
-      "doi": "10.1038/s41928-026-01679-0",
-      "title": "An AI fix for an AI problem?",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s41928-026-01679-0",
-      "published": "2026-07-24",
-      "journal_id": "nature-electronics",
-      "journal": "Nature Electronics",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/natelectron.rss"
-    },
-    {
       "id": "10.1038/s42256-026-01288-8",
       "doi": "10.1038/s42256-026-01288-8",
       "title": "Thinking and rethinking data AI readiness",
@@ -13115,6 +12674,18 @@
       "journal": "Nature Synthesis",
       "publisher": "Springer Nature",
       "source": "https://www.nature.com/natsynth.rss"
+    },
+    {
+      "id": "10.1038/s41560-026-02116-4",
+      "doi": "10.1038/s41560-026-02116-4",
+      "title": "High-performance perovskite/silicon tandem solar cells enabled by multifunctional titanium oxynitride recombination layers",
+      "abstract": "",
+      "url": "https://www.nature.com/articles/s41560-026-02116-4",
+      "published": "2026-07-24",
+      "journal_id": "nature-energy",
+      "journal": "Nature Energy",
+      "publisher": "Springer Nature",
+      "source": "https://www.nature.com/nenergy.rss"
     },
     {
       "id": "10.1002/adhm.71476",
@@ -14341,42 +13912,6 @@
       "source": "https://www.nature.com/nnano.rss"
     },
     {
-      "id": "10.1038/s44172-026-00727-z",
-      "doi": "10.1038/s44172-026-00727-z",
-      "title": "Polarization-resolved imaging improves eye tracking",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s44172-026-00727-z",
-      "published": "2026-07-23",
-      "journal_id": "communications-engineering",
-      "journal": "Communications Engineering",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/commseng.rss"
-    },
-    {
-      "id": "10.1038/s44172-026-00725-1",
-      "doi": "10.1038/s44172-026-00725-1",
-      "title": "Self-deploying reinforced concrete structures",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s44172-026-00725-1",
-      "published": "2026-07-23",
-      "journal_id": "communications-engineering",
-      "journal": "Communications Engineering",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/commseng.rss"
-    },
-    {
-      "id": "10.1038/s41528-026-00620-x",
-      "doi": "10.1038/s41528-026-00620-x",
-      "title": "Data-driven design of disordered structures for direction- and geometry-independent stretchable electrodes",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s41528-026-00620-x",
-      "published": "2026-07-23",
-      "journal_id": "npj-flexible-electronics",
-      "journal": "npj Flexible Electronics",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/npjflexelectron.rss"
-    },
-    {
       "id": "10.1038/s44160-026-01135-z",
       "doi": "10.1038/s44160-026-01135-z",
       "title": "Cations control CO<sub>2</sub> electroreduction",
@@ -14399,6 +13934,18 @@
       "journal": "Nature Computational Science",
       "publisher": "Springer Nature",
       "source": "https://www.nature.com/natcomputsci.rss"
+    },
+    {
+      "id": "10.1038/s41560-026-02115-5",
+      "doi": "10.1038/s41560-026-02115-5",
+      "title": "Low-temperature oxide-ion conduction in Aurivillius-type ((Na<sub>0.5</sub>Bi<sub>0.5</sub>)<sub><i>n</i>–1</sub>Ti<sub><i>n</i></sub>O<sub>3<i>n</i></sub>)(Bi<sub>2</sub>O<sub>2</sub>) phases",
+      "abstract": "",
+      "url": "https://www.nature.com/articles/s41560-026-02115-5",
+      "published": "2026-07-23",
+      "journal_id": "nature-energy",
+      "journal": "Nature Energy",
+      "publisher": "Springer Nature",
+      "source": "https://www.nature.com/nenergy.rss"
     },
     {
       "id": "10.1038/s41893-026-01899-4",
@@ -15817,100 +15364,28 @@
       "source": "https://iopscience.iop.org/journal/rss/1758-5090"
     },
     {
-      "id": "10.1038/s41928-026-01674-5",
-      "doi": "10.1038/s41928-026-01674-5",
-      "title": "Nickel silicide seeds for 3D NAND flash",
+      "id": "10.1038/s41587-026-03203-3",
+      "doi": "10.1038/s41587-026-03203-3",
+      "title": "A spatial view of tumor neoantigen recognition",
       "abstract": "",
-      "url": "https://www.nature.com/articles/s41928-026-01674-5",
+      "url": "https://www.nature.com/articles/s41587-026-03203-3",
       "published": "2026-07-22",
-      "journal_id": "nature-electronics",
-      "journal": "Nature Electronics",
+      "journal_id": "nature-biotechnology",
+      "journal": "Nature Biotechnology",
       "publisher": "Springer Nature",
-      "source": "https://www.nature.com/natelectron.rss"
+      "source": "https://www.nature.com/nbt.rss"
     },
     {
-      "id": "10.1038/s41928-026-01678-1",
-      "doi": "10.1038/s41928-026-01678-1",
-      "title": "Three on three with a gate pitch of 42 nm",
+      "id": "10.1038/s41587-026-03194-1",
+      "doi": "10.1038/s41587-026-03194-1",
+      "title": "Single-nucleus multimodal spatial transcriptomics reveals spatial colocalization of neoantigen-expressing tumor cells and cognate T cells",
       "abstract": "",
-      "url": "https://www.nature.com/articles/s41928-026-01678-1",
+      "url": "https://www.nature.com/articles/s41587-026-03194-1",
       "published": "2026-07-22",
-      "journal_id": "nature-electronics",
-      "journal": "Nature Electronics",
+      "journal_id": "nature-biotechnology",
+      "journal": "Nature Biotechnology",
       "publisher": "Springer Nature",
-      "source": "https://www.nature.com/natelectron.rss"
-    },
-    {
-      "id": "10.1038/s41928-026-01669-2",
-      "doi": "10.1038/s41928-026-01669-2",
-      "title": "High-resolution full-colour displays from cracking-assisted transfer printing of quantum dot light-emitting diodes",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s41928-026-01669-2",
-      "published": "2026-07-22",
-      "journal_id": "nature-electronics",
-      "journal": "Nature Electronics",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/natelectron.rss"
-    },
-    {
-      "id": "10.1038/s44172-026-00738-w",
-      "doi": "10.1038/s44172-026-00738-w",
-      "title": "Generative AI empowered inverse design of 3D energetic material structures for customizable combustion",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s44172-026-00738-w",
-      "published": "2026-07-22",
-      "journal_id": "communications-engineering",
-      "journal": "Communications Engineering",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/commseng.rss"
-    },
-    {
-      "id": "10.1038/s44172-026-00731-3",
-      "doi": "10.1038/s44172-026-00731-3",
-      "title": "Mass spectrometry imaging reveals different allocation of the starting steps of benzalkonium biotransformation in wastewater biofilms",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s44172-026-00731-3",
-      "published": "2026-07-22",
-      "journal_id": "communications-engineering",
-      "journal": "Communications Engineering",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/commseng.rss"
-    },
-    {
-      "id": "10.1038/s41528-026-00622-9",
-      "doi": "10.1038/s41528-026-00622-9",
-      "title": "A skin-adhesive bimodal sensing patch for occlusal function assessment",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s41528-026-00622-9",
-      "published": "2026-07-22",
-      "journal_id": "npj-flexible-electronics",
-      "journal": "npj Flexible Electronics",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/npjflexelectron.rss"
-    },
-    {
-      "id": "10.1038/s41528-026-00623-8",
-      "doi": "10.1038/s41528-026-00623-8",
-      "title": "Closed-loop theranostic hydrogel-electronics patch for chronic wound management",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s41528-026-00623-8",
-      "published": "2026-07-22",
-      "journal_id": "npj-flexible-electronics",
-      "journal": "npj Flexible Electronics",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/npjflexelectron.rss"
-    },
-    {
-      "id": "10.1038/s41528-026-00619-4",
-      "doi": "10.1038/s41528-026-00619-4",
-      "title": "Knitting RFID yarns towards smart fabrics for motion sensing and identification",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s41528-026-00619-4",
-      "published": "2026-07-22",
-      "journal_id": "npj-flexible-electronics",
-      "journal": "npj Flexible Electronics",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/npjflexelectron.rss"
+      "source": "https://www.nature.com/nbt.rss"
     },
     {
       "id": "10.1038/s41557-026-02217-3",
@@ -15959,30 +15434,6 @@
       "journal": "Nature Sustainability",
       "publisher": "Springer Nature",
       "source": "https://www.nature.com/natsustain.rss"
-    },
-    {
-      "id": "10.1038/s44222-026-00480-0",
-      "doi": "10.1038/s44222-026-00480-0",
-      "title": "New approach methodologies to reduce reliance on animal toxicity testing",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s44222-026-00480-0",
-      "published": "2026-07-22",
-      "journal_id": "nature-reviews-bioengineering",
-      "journal": "Nature Reviews Bioengineering",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/natrevbioeng.rss"
-    },
-    {
-      "id": "10.1038/s41578-026-00945-z",
-      "doi": "10.1038/s41578-026-00945-z",
-      "title": "Nanoscale additive manufacturing of metals, alloys, and metal oxides",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s41578-026-00945-z",
-      "published": "2026-07-22",
-      "journal_id": "nature-reviews-materials",
-      "journal": "Nature Reviews Materials",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/natrevmats.rss"
     },
     {
       "id": "10.1126/scirobotics.aed6267",
@@ -16105,30 +15556,6 @@
       "source": "https://www.nature.com/natbiomedeng/research-articles"
     },
     {
-      "id": "10.1038/s41928-026-01676-3",
-      "doi": "10.1038/s41928-026-01676-3",
-      "title": "Wafer-scale transition metal channels using extreme ultraviolet",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s41928-026-01676-3",
-      "published": "2026-07-21",
-      "journal_id": "nature-electronics",
-      "journal": "Nature Electronics",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/natelectron.rss"
-    },
-    {
-      "id": "10.1038/s41928-026-01673-6",
-      "doi": "10.1038/s41928-026-01673-6",
-      "title": "A ferroelectric capacitor with a 3-nm-thick hafnium zirconium oxide layer",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s41928-026-01673-6",
-      "published": "2026-07-21",
-      "journal_id": "nature-electronics",
-      "journal": "Nature Electronics",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/natelectron.rss"
-    },
-    {
       "id": "10.1038/s42256-026-01254-4",
       "doi": "10.1038/s42256-026-01254-4",
       "title": "Neural sampling from cognitive maps enables goal-directed imagination and planning",
@@ -16141,64 +15568,28 @@
       "source": "https://www.nature.com/natmachintell.rss"
     },
     {
-      "id": "10.1038/s44286-026-00423-x",
-      "doi": "10.1038/s44286-026-00423-x",
-      "title": "Disentangling thermosets from crosslinks",
+      "id": "10.1038/s41587-026-03230-0",
+      "doi": "10.1038/s41587-026-03230-0",
+      "title": "ENVnet provides a global molecular resource of dissolved organic matter",
       "abstract": "",
-      "url": "https://www.nature.com/articles/s44286-026-00423-x",
+      "url": "https://www.nature.com/articles/s41587-026-03230-0",
       "published": "2026-07-21",
-      "journal_id": "nature-chemical-engineering",
-      "journal": "Nature Chemical Engineering",
+      "journal_id": "nature-biotechnology",
+      "journal": "Nature Biotechnology",
       "publisher": "Springer Nature",
-      "source": "https://www.nature.com/natchemeng.rss"
+      "source": "https://www.nature.com/nbt.rss"
     },
     {
-      "id": "10.1038/s44286-026-00412-0",
-      "doi": "10.1038/s44286-026-00412-0",
-      "title": "Teaching ratios before Reynolds",
+      "id": "10.1038/s41560-026-02110-w",
+      "doi": "10.1038/s41560-026-02110-w",
+      "title": "Towards technology-smart green industrial policy",
       "abstract": "",
-      "url": "https://www.nature.com/articles/s44286-026-00412-0",
+      "url": "https://www.nature.com/articles/s41560-026-02110-w",
       "published": "2026-07-21",
-      "journal_id": "nature-chemical-engineering",
-      "journal": "Nature Chemical Engineering",
+      "journal_id": "nature-energy",
+      "journal": "Nature Energy",
       "publisher": "Springer Nature",
-      "source": "https://www.nature.com/natchemeng.rss"
-    },
-    {
-      "id": "10.1038/s44286-026-00426-8",
-      "doi": "10.1038/s44286-026-00426-8",
-      "title": "Harnessing interfacial instabilities",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s44286-026-00426-8",
-      "published": "2026-07-21",
-      "journal_id": "nature-chemical-engineering",
-      "journal": "Nature Chemical Engineering",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/natchemeng.rss"
-    },
-    {
-      "id": "10.1038/s44286-026-00418-8",
-      "doi": "10.1038/s44286-026-00418-8",
-      "title": "Pinning ångström-size solid ionic channels for rare-earth element separation",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s44286-026-00418-8",
-      "published": "2026-07-21",
-      "journal_id": "nature-chemical-engineering",
-      "journal": "Nature Chemical Engineering",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/natchemeng.rss"
-    },
-    {
-      "id": "10.1038/s44286-026-00420-0",
-      "doi": "10.1038/s44286-026-00420-0",
-      "title": "Assessing the industrial impact of an alternative lactide production method for polylactic acid manufacturing",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s44286-026-00420-0",
-      "published": "2026-07-21",
-      "journal_id": "nature-chemical-engineering",
-      "journal": "Nature Chemical Engineering",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/natchemeng.rss"
+      "source": "https://www.nature.com/nenergy.rss"
     },
     {
       "id": "10.1038/s41536-026-00494-7",
@@ -17149,66 +16540,6 @@
       "source": "https://www.nature.com/natmachintell.rss"
     },
     {
-      "id": "10.1038/s44286-026-00421-z",
-      "doi": "10.1038/s44286-026-00421-z",
-      "title": "Beyond noble metals",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s44286-026-00421-z",
-      "published": "2026-07-20",
-      "journal_id": "nature-chemical-engineering",
-      "journal": "Nature Chemical Engineering",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/natchemeng.rss"
-    },
-    {
-      "id": "10.1038/s44286-026-00422-y",
-      "doi": "10.1038/s44286-026-00422-y",
-      "title": "Filtered by the feed",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s44286-026-00422-y",
-      "published": "2026-07-20",
-      "journal_id": "nature-chemical-engineering",
-      "journal": "Nature Chemical Engineering",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/natchemeng.rss"
-    },
-    {
-      "id": "10.1038/s41528-026-00616-7",
-      "doi": "10.1038/s41528-026-00616-7",
-      "title": "Deformation-stabilized flexible receive coil with modulus-transition interfaces for high-fidelity static and multi-pose dynamic MRI",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s41528-026-00616-7",
-      "published": "2026-07-20",
-      "journal_id": "npj-flexible-electronics",
-      "journal": "npj Flexible Electronics",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/npjflexelectron.rss"
-    },
-    {
-      "id": "10.1038/s41528-026-00621-w",
-      "doi": "10.1038/s41528-026-00621-w",
-      "title": "Seed-assisted polarity control of flexible WSe<sub>2</sub> transistors and demonstration of CMOS inverter",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s41528-026-00621-w",
-      "published": "2026-07-20",
-      "journal_id": "npj-flexible-electronics",
-      "journal": "npj Flexible Electronics",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/npjflexelectron.rss"
-    },
-    {
-      "id": "10.1038/s41578-026-00943-1",
-      "doi": "10.1038/s41578-026-00943-1",
-      "title": "Engineering bamboo as a multiscale platform for carbon-negative materials",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s41578-026-00943-1",
-      "published": "2026-07-20",
-      "journal_id": "nature-reviews-materials",
-      "journal": "Nature Reviews Materials",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/natrevmats.rss"
-    },
-    {
       "id": "10.1038/s41536-026-00496-5",
       "doi": "10.1038/s41536-026-00496-5",
       "title": "Prophylactic inhibition of LATS1/2 before high-dose irradiation promotes the regeneration of the damaged intestinal epithelium",
@@ -17927,6 +17258,18 @@
       "journal": "Biofabrication",
       "publisher": "IOP Publishing",
       "source": "https://iopscience.iop.org/journal/rss/1758-5090"
+    },
+    {
+      "id": "10.1038/s41560-026-02092-9",
+      "doi": "10.1038/s41560-026-02092-9",
+      "title": "Challenges and trends in automotive battery recycling",
+      "abstract": "",
+      "url": "https://www.nature.com/articles/s41560-026-02092-9",
+      "published": "2026-07-17",
+      "journal_id": "nature-energy",
+      "journal": "Nature Energy",
+      "publisher": "Springer Nature",
+      "source": "https://www.nature.com/nenergy.rss"
     },
     {
       "id": "10.1002/adma.74100",
@@ -21133,6 +20476,18 @@
       "source": "https://onlinelibrary.wiley.com/action/showFeed?type=etoc&feed=rss&jc=16136829"
     },
     {
+      "id": "10.1038/s41560-026-02044-3",
+      "doi": "10.1038/s41560-026-02044-3",
+      "title": "Building chemical stability with mechanics",
+      "abstract": "",
+      "url": "https://www.nature.com/articles/s41560-026-02044-3",
+      "published": "2026-07-16",
+      "journal_id": "nature-energy",
+      "journal": "Nature Energy",
+      "publisher": "Springer Nature",
+      "source": "https://www.nature.com/nenergy.rss"
+    },
+    {
       "id": "10.1002/smtd.70862",
       "doi": "10.1002/smtd.70862",
       "title": "Tessellation‐Enabled Hexagonal Hollow‐Shell Cavity Arrays for Broadband Microwave Absorption via Acoustic‐to‐Electromagnetic Cavity Mapping",
@@ -21277,54 +20632,6 @@
       "source": "https://www.nature.com/natmachintell.rss"
     },
     {
-      "id": "10.1038/s44286-026-00417-9",
-      "doi": "10.1038/s44286-026-00417-9",
-      "title": "The importance of separation optimizations in CO<sub>2</sub> electrolysis",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s44286-026-00417-9",
-      "published": "2026-07-14",
-      "journal_id": "nature-chemical-engineering",
-      "journal": "Nature Chemical Engineering",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/natchemeng.rss"
-    },
-    {
-      "id": "10.1038/s44222-026-00469-9",
-      "doi": "10.1038/s44222-026-00469-9",
-      "title": "Bioengineering needs systems thinking",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s44222-026-00469-9",
-      "published": "2026-07-14",
-      "journal_id": "nature-reviews-bioengineering",
-      "journal": "Nature Reviews Bioengineering",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/natrevbioeng.rss"
-    },
-    {
-      "id": "10.1038/s41578-026-00948-w",
-      "doi": "10.1038/s41578-026-00948-w",
-      "title": "Replace the vitreous permanently",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s41578-026-00948-w",
-      "published": "2026-07-14",
-      "journal_id": "nature-reviews-materials",
-      "journal": "Nature Reviews Materials",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/natrevmats.rss"
-    },
-    {
-      "id": "10.1038/s41578-026-00946-y",
-      "doi": "10.1038/s41578-026-00946-y",
-      "title": "Rethinking energy density limits in dielectric materials",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s41578-026-00946-y",
-      "published": "2026-07-14",
-      "journal_id": "nature-reviews-materials",
-      "journal": "Nature Reviews Materials",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/natrevmats.rss"
-    },
-    {
       "id": "10.1038/s41536-026-00483-w",
       "doi": "10.1038/s41536-026-00483-w",
       "title": "Gli2-serpinh1 drives fibroblast state transition during skin wound healing",
@@ -21383,30 +20690,6 @@
       "journal": "Small Methods",
       "publisher": "Wiley",
       "source": "https://onlinelibrary.wiley.com/action/showFeed?type=etoc&feed=rss&jc=23669608"
-    },
-    {
-      "id": "10.1038/s44222-026-00478-8",
-      "doi": "10.1038/s44222-026-00478-8",
-      "title": "Author Correction: Organoids as platforms for infectious disease research",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s44222-026-00478-8",
-      "published": "2026-07-13",
-      "journal_id": "nature-reviews-bioengineering",
-      "journal": "Nature Reviews Bioengineering",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/natrevbioeng.rss"
-    },
-    {
-      "id": "10.1038/s44222-026-00474-y",
-      "doi": "10.1038/s44222-026-00474-y",
-      "title": "Soft robotic phantoms for ethical and multimodal surgical simulation",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s44222-026-00474-y",
-      "published": "2026-07-13",
-      "journal_id": "nature-reviews-bioengineering",
-      "journal": "Nature Reviews Bioengineering",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/natrevbioeng.rss"
     },
     {
       "id": "10.1002/adma.73944",
@@ -23603,18 +22886,6 @@
       "journal": "Small",
       "publisher": "Wiley",
       "source": "https://onlinelibrary.wiley.com/action/showFeed?type=etoc&feed=rss&jc=16136829"
-    },
-    {
-      "id": "10.1038/s44182-026-00107-x",
-      "doi": "10.1038/s44182-026-00107-x",
-      "title": "CRAFT: a 3D-printed modular design library for task-specific continuum robots",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s44182-026-00107-x",
-      "published": "2026-07-11",
-      "journal_id": "npj-robotics",
-      "journal": "npj Robotics",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/npjrobot.rss"
     },
     {
       "id": "10.1002/adhm.71291",
@@ -27589,42 +26860,6 @@
       "source": "https://onlinelibrary.wiley.com/action/showFeed?type=etoc&feed=rss&jc=16136829"
     },
     {
-      "id": "10.1038/s44222-026-00472-0",
-      "doi": "10.1038/s44222-026-00472-0",
-      "title": "CAR-T cells reshape the tumour microenvironment",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s44222-026-00472-0",
-      "published": "2026-07-08",
-      "journal_id": "nature-reviews-bioengineering",
-      "journal": "Nature Reviews Bioengineering",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/natrevbioeng.rss"
-    },
-    {
-      "id": "10.1038/s41578-026-00944-0",
-      "doi": "10.1038/s41578-026-00944-0",
-      "title": "From screening to generative design in nucleic acid delivery",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s41578-026-00944-0",
-      "published": "2026-07-08",
-      "journal_id": "nature-reviews-materials",
-      "journal": "Nature Reviews Materials",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/natrevmats.rss"
-    },
-    {
-      "id": "10.1038/s41578-026-00937-z",
-      "doi": "10.1038/s41578-026-00937-z",
-      "title": "Understanding and engineering electrocatalyst durability",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s41578-026-00937-z",
-      "published": "2026-07-08",
-      "journal_id": "nature-reviews-materials",
-      "journal": "Nature Reviews Materials",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/natrevmats.rss"
-    },
-    {
       "id": "10.1038/s44161-026-00833-3",
       "doi": "10.1038/s44161-026-00833-3",
       "title": "Mavacamten shows broad benefit in human and mouse models of <i>MYBPC3</i>-related hypertrophic cardiomyopathy",
@@ -27673,18 +26908,6 @@
       "source": "https://www.nature.com/npjregenmed.rss"
     },
     {
-      "id": "10.1038/s44182-026-00105-z",
-      "doi": "10.1038/s44182-026-00105-z",
-      "title": "ScaFi: length-scalable, compliant, parametric robotic fish design for operation in multiple environmental niches",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s44182-026-00105-z",
-      "published": "2026-07-03",
-      "journal_id": "npj-robotics",
-      "journal": "npj Robotics",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/npjrobot.rss"
-    },
-    {
       "id": "10.1038/s44161-026-00846-y",
       "doi": "10.1038/s44161-026-00846-y",
       "title": "Publisher Correction: Genome-wide association study of coronary flow reserve assessed by cardiac perfusion PET suggests a role for NF-κB pathway",
@@ -27695,30 +26918,6 @@
       "journal": "Nature Cardiovascular Research",
       "publisher": "Springer Nature",
       "source": "https://www.nature.com/natcardiovascres.rss"
-    },
-    {
-      "id": "10.1038/s44222-026-00455-1",
-      "doi": "10.1038/s44222-026-00455-1",
-      "title": "Computational approaches in bioprinting processes",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s44222-026-00455-1",
-      "published": "2026-07-03",
-      "journal_id": "nature-reviews-bioengineering",
-      "journal": "Nature Reviews Bioengineering",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/natrevbioeng.rss"
-    },
-    {
-      "id": "10.1038/s41578-026-00936-0",
-      "doi": "10.1038/s41578-026-00936-0",
-      "title": "Irregular metamaterial networks",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s41578-026-00936-0",
-      "published": "2026-07-03",
-      "journal_id": "nature-reviews-materials",
-      "journal": "Nature Reviews Materials",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/natrevmats.rss"
     },
     {
       "id": "10.1002/adfm.76082",
@@ -31405,18 +30604,6 @@
       "source": "https://onlinelibrary.wiley.com/action/showFeed?type=etoc&feed=rss&jc=16136829"
     },
     {
-      "id": "10.1038/s44182-026-00099-8",
-      "doi": "10.1038/s44182-026-00099-8",
-      "title": "Programmable online stiffness modulation for optimized aquatic locomotion",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s44182-026-00099-8",
-      "published": "2026-06-30",
-      "journal_id": "npj-robotics",
-      "journal": "npj Robotics",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/npjrobot.rss"
-    },
-    {
       "id": "10.1038/s41551-026-01712-9",
       "doi": "10.1038/s41551-026-01712-9",
       "title": "Derivation of functional retinal endothelial cells from human pluripotent stem cells for therapeutics and modelling",
@@ -31429,18 +30616,6 @@
       "source": "https://www.nature.com/natbiomedeng/research-articles"
     },
     {
-      "id": "10.1038/s44222-026-00462-2",
-      "doi": "10.1038/s44222-026-00462-2",
-      "title": "CRISPR-based ex vivo gene editing of donor organs",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s44222-026-00462-2",
-      "published": "2026-06-29",
-      "journal_id": "nature-reviews-bioengineering",
-      "journal": "Nature Reviews Bioengineering",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/natrevbioeng.rss"
-    },
-    {
       "id": "10.1038/s41467-026-74203-9",
       "doi": "10.1038/s41467-026-74203-9",
       "title": "Automated in situ microfluidic Random-seq for robust single-nucleus and spatial total RNA profiling",
@@ -31451,54 +30626,6 @@
       "journal": "Nature Communications",
       "publisher": "Springer Nature",
       "source": "https://www.nature.com/ncomms/research-articles"
-    },
-    {
-      "id": "10.1038/s44182-026-00086-z",
-      "doi": "10.1038/s44182-026-00086-z",
-      "title": "Embodied intelligence for sustainable flight: a soaring robot with active morphological control",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s44182-026-00086-z",
-      "published": "2026-06-21",
-      "journal_id": "npj-robotics",
-      "journal": "npj Robotics",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/npjrobot.rss"
-    },
-    {
-      "id": "10.1038/s44182-026-00104-0",
-      "doi": "10.1038/s44182-026-00104-0",
-      "title": "A flexible and room-temperature operatable gas sensor for robotic olfaction: selective detection of formic acid via UV excitation",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s44182-026-00104-0",
-      "published": "2026-06-18",
-      "journal_id": "npj-robotics",
-      "journal": "npj Robotics",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/npjrobot.rss"
-    },
-    {
-      "id": "10.1038/s44182-026-00103-1",
-      "doi": "10.1038/s44182-026-00103-1",
-      "title": "A 3D-printed, multi-degree of freedom soft origami robot arm",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s44182-026-00103-1",
-      "published": "2026-06-16",
-      "journal_id": "npj-robotics",
-      "journal": "npj Robotics",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/npjrobot.rss"
-    },
-    {
-      "id": "10.1038/s44182-026-00102-2",
-      "doi": "10.1038/s44182-026-00102-2",
-      "title": "HapMorph: a pneumatic framework for multi-dimensional haptic property rendering",
-      "abstract": "",
-      "url": "https://www.nature.com/articles/s44182-026-00102-2",
-      "published": "2026-06-15",
-      "journal_id": "npj-robotics",
-      "journal": "npj Robotics",
-      "publisher": "Springer Nature",
-      "source": "https://www.nature.com/npjrobot.rss"
     },
     {
       "id": "10.1038/s41467-026-73736-3",
