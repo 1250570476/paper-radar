@@ -8,6 +8,7 @@ import json
 import re
 import time
 import xml.etree.ElementTree as ET
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timedelta, timezone
 from email.utils import parsedate_to_datetime
 from pathlib import Path
@@ -21,17 +22,18 @@ JOURNALS_PATH = ROOT / "data" / "journals.json"
 OUTPUT_PATH = ROOT / "data" / "papers.json"
 BACKFILL_PATH = ROOT / "data" / "backfill.json"
 CUTOFF = datetime.now(timezone.utc) - timedelta(days=190)
+IMAGE_CUTOFF = datetime.now(timezone.utc) - timedelta(days=95)
 HEADERS = {
     "User-Agent": "PaperRadar/1.0 (+https://github.com/1250570476/paper-radar; publisher-metadata index)",
     "Accept": "text/html,application/xhtml+xml,application/rss+xml,application/atom+xml,application/xml,text/xml",
 }
 
 
-def fetch(url: str, attempts: int = 3) -> str:
+def fetch(url: str, attempts: int = 3, timeout: int = 35) -> str:
     for attempt in range(attempts):
         try:
             request = Request(url, headers=HEADERS)
-            with urlopen(request, timeout=35) as response:
+            with urlopen(request, timeout=timeout) as response:
                 return response.read().decode("utf-8", errors="replace")
         except Exception:
             if attempt == attempts - 1:
@@ -102,6 +104,41 @@ def article_details(url: str) -> tuple[str, str, str]:
     if doi.lower().startswith("doi:"):
         doi = doi[4:].strip()
     return abstract, doi, image_url_from_soup(soup, url)
+
+
+def article_image(url: str) -> str:
+    """Fetch only publisher image metadata with a short, single-attempt timeout."""
+    try:
+        soup = BeautifulSoup(fetch(url, attempts=1, timeout=12), "html.parser")
+        return image_url_from_soup(soup, url)
+    except Exception:
+        return ""
+
+
+def enrich_recent_images(papers: list[dict], existing_images: dict[str, str]) -> None:
+    """Cache official preview images for papers visible in the longest UI window."""
+    pending: list[dict] = []
+    for paper in papers:
+        key = paper.get("doi") or paper.get("url") or paper.get("id")
+        paper["image_url"] = paper.get("image_url") or existing_images.get(key, "")
+        published = parse_date(paper.get("published"))
+        if not paper["image_url"] and published and published >= IMAGE_CUTOFF and paper.get("url"):
+            pending.append(paper)
+
+    if not pending:
+        return
+    print(f"Enriching official previews for {len(pending)} recent papers…", flush=True)
+    found = 0
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        futures = {pool.submit(article_image, paper["url"]): paper for paper in pending}
+        for completed, future in enumerate(as_completed(futures), 1):
+            image_url = future.result()
+            if image_url:
+                futures[future]["image_url"] = image_url
+                found += 1
+            if completed % 100 == 0:
+                print(f"  {completed}/{len(pending)} preview pages checked", flush=True)
+    print(f"  {found} official previews found", flush=True)
 
 
 def feed_image(item, summary_html: str, article_url: str) -> str:
@@ -248,6 +285,17 @@ def scrape_journal(journal: dict) -> list[dict]:
 
 def main() -> None:
     journals = json.loads(JOURNALS_PATH.read_text(encoding="utf-8"))
+    existing_images: dict[str, str] = {}
+    if OUTPUT_PATH.exists():
+        try:
+            previous = json.loads(OUTPUT_PATH.read_text(encoding="utf-8"))
+            existing_images = {
+                paper.get("doi") or paper.get("url") or paper.get("id"): paper.get("image_url", "")
+                for paper in previous.get("papers", [])
+                if paper.get("image_url")
+            }
+        except (OSError, ValueError, TypeError):
+            existing_images = {}
     all_papers: list[dict] = []
     latest: dict[str, str] = {}
     errors: dict[str, str] = {}
@@ -277,6 +325,7 @@ def main() -> None:
 
     deduplicated = {paper["doi"] or paper["url"]: paper for paper in all_papers}
     papers = sorted(deduplicated.values(), key=lambda paper: paper["published"], reverse=True)
+    enrich_recent_images(papers, existing_images)
     payload = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "source": "Direct publisher journal and article pages",
