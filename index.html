@@ -24,12 +24,12 @@
   </script>
   <link rel="stylesheet" href="styles.css?v=paperflare-1" />
   <link rel="stylesheet" href="progress.css?v=1" />
-  <link rel="stylesheet" href="paperflare.css?v=1" />
+  <link rel="stylesheet" href="paperflare.css?v=2" />
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
   <header class="topbar">
-    <a class="brand" href="#" aria-label="CatchPapers home"><span class="brand-mark" aria-hidden="true">CP</span><span>CatchPapers</span></a>
+    <a class="brand" href="#" aria-label="CatchPapers home"><span class="brand-mark" aria-hidden="true"></span><span>CatchPapers</span></a>
     <div class="top-actions">
       <nav aria-label="Primary navigation">
         <button class="nav-button active" data-view="feed">My papers</button>
@@ -125,7 +125,7 @@
       <small class="privacy-note">CatchPapers never stores your password. Authentication is handled by Supabase, and email confirmation is required.</small>
     </div>
     <div id="account-panel" class="hidden">
-      <p class="eyebrow">YOUR ACCOUNT</p><h2>Welcome to CatchPapers</h2><p id="account-email" class="dialog-intro"></p>
+      <div class="account-heading"><div><p class="eyebrow">YOUR ACCOUNT</p><h2>Welcome to CatchPapers</h2><p id="account-email" class="dialog-intro"></p></div><button id="signout-button" class="logout-button" type="button">Log out</button></div>
       <div class="account-benefit"><strong>Alert preference</strong><span id="account-frequency">Daily digest</span></div>
       <form id="account-settings-form" class="account-settings-form">
         <label class="field">Digest frequency<select id="account-alert-frequency"><option value="daily">Daily digest</option><option value="weekly">Weekly digest</option></select></label>
@@ -134,7 +134,7 @@
         <p id="account-settings-status" class="auth-status" role="status" aria-live="polite"></p>
       </form>
       <p class="account-note">CatchPapers stores your research interests, selected journals, saved-paper IDs, and alert settings. It does not upload your CV or store your password.</p>
-      <div class="account-actions"><button id="signout-button" class="secondary" type="button">Sign out</button><button id="delete-account-button" class="danger-button" type="button">Delete account</button></div>
+      <div class="account-actions"><button id="delete-account-button" class="danger-button" type="button">Delete account</button></div>
     </div>
   </dialog>
 
