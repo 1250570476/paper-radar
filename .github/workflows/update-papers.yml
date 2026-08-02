@@ -39,3 +39,16 @@ jobs:
           git add data/papers.json
           git commit -m "Update direct publisher paper index"
           git push
+      - name: Send due CatchPapers alerts
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          CATCHPAPERS_FROM_EMAIL: ${{ vars.CATCHPAPERS_FROM_EMAIL }}
+          CATCHPAPERS_SITE_URL: ${{ vars.CATCHPAPERS_SITE_URL }}
+        run: |
+          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_SERVICE_ROLE_KEY" ] || [ -z "$RESEND_API_KEY" ]; then
+            echo "CatchPapers alert secrets are not configured; skipping email delivery."
+            exit 0
+          fi
+          python scripts/send_alerts.py

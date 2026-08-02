@@ -2,15 +2,20 @@ const STORAGE_KEY = "paper-radar-profile-v2";
 const LEGACY_KEY = "paper-radar-profile-v1";
 const DAY = 864e5;
 
-const legacy = JSON.parse(localStorage.getItem(LEGACY_KEY) || "null");
+function readStoredJson(key, fallback) {
+  try { return JSON.parse(localStorage.getItem(key) || "null") ?? fallback; }
+  catch { localStorage.removeItem(key); return fallback; }
+}
+
+const legacy = readStoredJson(LEGACY_KEY, null);
 const state = {
-  profile: JSON.parse(localStorage.getItem(STORAGE_KEY) || "null") || {
+  profile: readStoredJson(STORAGE_KEY, null) || {
     cvText: legacy?.cvText || "",
     interests: legacy?.interests || "",
     excluded: legacy?.excluded || "",
     favoriteJournals: []
   },
-  saved: new Set(JSON.parse(localStorage.getItem("paper-radar-saved") || "[]")),
+  saved: new Set(readStoredJson("paper-radar-saved", [])),
   journals: [],
   papers: [],
   generatedAt: null,
@@ -27,6 +32,10 @@ const clean = value => String(value || "").toLowerCase().replace(/[^a-z0-9+ -]/g
 const normalizeTitle = value => clean(value).replace(/\bthe\b/g, "").replace(/\s+/g, " ").trim();
 const journalId = journal => journal?.id || normalizeTitle(journal?.title || journal?.display_name || "").replace(/\s+/g, "-");
 const formatDate = value => value ? new Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(new Date(value)) : "Not checked";
+const safeUrl = value => {
+  try { const url = new URL(value); return url.protocol === "https:" ? url.href : "#"; }
+  catch { return "#"; }
+};
 
 const stopWords = new Set(["the", "and", "for", "with", "from", "into", "using", "use", "based", "study", "studies", "effect", "effects", "development", "design", "analysis", "novel", "approach", "applications", "application", "research", "system", "systems", "method", "methods", "results", "their", "our", "this", "that", "are", "was", "were", "have", "has", "its", "can", "may", "university", "engineering", "mechanical", "present", "student", "grade", "author", "publications", "experience", "skills"]);
 const conceptFamilies = [
@@ -139,6 +148,52 @@ function saveProfile() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state.profile));
 }
 
+function cloudProfile() {
+  return {
+    interests: state.profile.interests,
+    excluded: state.profile.excluded,
+    favorite_journal_ids: state.profile.favoriteJournals.map(journal => journal.id),
+    saved_paper_ids: [...state.saved]
+  };
+}
+
+async function syncProfileToAccount({ showStatus = false } = {}) {
+  if (!window.paperFlareAuth?.isSignedIn()) return false;
+  try {
+    await window.paperFlareAuth.saveProfile(cloudProfile());
+    if (showStatus) $("#save-status").textContent = "Profile synced to your account";
+    return true;
+  } catch (error) {
+    if (showStatus) $("#save-status").textContent = `${error.message} Saved in this browser only.`;
+    console.error(error);
+    return false;
+  }
+}
+
+async function syncProfileFromAccount() {
+  if (!window.paperFlareAuth?.isSignedIn() || !state.journals.length) return;
+  try {
+    const remote = await window.paperFlareAuth.loadProfile();
+    const remoteIsEmpty = remote && !remote.interests?.trim() && !(remote.favorite_journal_ids || []).length && !(remote.saved_paper_ids || []).length;
+    if (!remote || remoteIsEmpty) {
+      await syncProfileToAccount();
+      return;
+    }
+    state.profile.interests = remote.interests || state.profile.interests;
+    state.profile.excluded = remote.excluded || "";
+    const selected = new Set(remote.favorite_journal_ids || []);
+    state.profile.favoriteJournals = state.journals.filter(journal => selected.has(journal.id));
+    state.saved = new Set(remote.saved_paper_ids || []);
+    saveProfile();
+    localStorage.setItem("paper-radar-saved", JSON.stringify([...state.saved]));
+    populateProfile();
+    renderFavorites();
+    $("#feed-status").textContent = "Your CatchPapers profile is synced.";
+  } catch (error) {
+    console.error("Account profile sync failed", error);
+  }
+}
+
 async function loadPublisherData(force = false) {
   const suffix = force ? `?t=${Date.now()}` : "";
   const [journalsResponse, papersResponse] = await Promise.all([
@@ -195,6 +250,7 @@ function bindJournalButtons(container, journals) {
     if (journal && !state.profile.favoriteJournals.some(item => item.id === journal.id)) {
       state.profile.favoriteJournals.push(journal);
       saveProfile();
+      syncProfileToAccount();
       renderFavorites();
       searchJournals();
     }
@@ -202,6 +258,7 @@ function bindJournalButtons(container, journals) {
   container.querySelectorAll(".remove-journal").forEach(button => button.addEventListener("click", () => {
     state.profile.favoriteJournals = state.profile.favoriteJournals.filter(item => item.id !== button.dataset.id);
     saveProfile();
+    syncProfileToAccount();
     renderFavorites();
   }));
 }
@@ -229,9 +286,11 @@ $("#journal-search").addEventListener("keydown", event => {
 });
 
 async function extractPdf(file) {
-  const pdfjs = await import("https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs");
-  pdfjs.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs";
+  if (file.size > 10 * 1024 * 1024) throw new Error("CV files must be 10 MB or smaller.");
+  const pdfjs = await import("./vendor/pdfjs/pdf.min.mjs");
+  pdfjs.GlobalWorkerOptions.workerSrc = new URL("./vendor/pdfjs/pdf.worker.min.mjs", import.meta.url).href;
   const pdf = await pdfjs.getDocument({ data: await file.arrayBuffer() }).promise;
+  if (pdf.numPages > 60) throw new Error("CV PDFs must contain 60 pages or fewer.");
   let text = "";
   for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
     const page = await pdf.getPage(pageNumber);
@@ -244,24 +303,29 @@ async function extractPdf(file) {
 $("#cv-file").addEventListener("change", async event => {
   const file = event.target.files[0];
   if (!file) return;
+  if (file.size > 10 * 1024 * 1024) {
+    $("#file-label").textContent = "CV files must be 10 MB or smaller.";
+    return;
+  }
   $("#file-label").textContent = `Reading ${file.name}…`;
   try {
-    $("#cv-text").value = file.type === "application/pdf" || file.name.endsWith(".pdf") ? await extractPdf(file) : await file.text();
+    $("#cv-text").value = file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf") ? await extractPdf(file) : await file.text();
     $("#file-label").textContent = file.name;
   } catch (error) {
-    $("#file-label").textContent = "Could not extract this file. Paste its text below.";
+    $("#file-label").textContent = error.message || "Could not extract this file. Paste its text below.";
     console.error(error);
   }
 });
 
-$("#profile-form").addEventListener("submit", event => {
+$("#profile-form").addEventListener("submit", async event => {
   event.preventDefault();
   state.profile.cvText = $("#cv-text").value.trim();
   state.profile.interests = $("#interests").value.trim();
   state.profile.excluded = $("#excluded").value.trim();
   saveProfile();
-  $("#save-status").textContent = "Profile saved locally";
-  setTimeout(() => { $("#save-status").textContent = ""; }, 1800);
+  $("#save-status").textContent = window.paperFlareAuth?.isSignedIn() ? "Syncing profile…" : "Profile saved in this browser";
+  await syncProfileToAccount({ showStatus: true });
+  setTimeout(() => { $("#save-status").textContent = ""; }, 2600);
   showView("feed");
   $("#feed-status").textContent = "Profile saved. Check for new papers when you are ready.";
 });
@@ -307,7 +371,7 @@ $("#expand-scan").addEventListener("click", () => {
 function renderPapers(ranked) {
   $("#paper-list").innerHTML = ranked.map(({ paper, score }) => {
     const summary = paper.abstract || paper.summary || "Open the publisher page to read the abstract.";
-    return `<article class="paper-card"><div class="score" style="--score:${score.value}"><strong>${score.value}</strong><small>RELEVANCE</small></div><div><div class="paper-meta">${escapeHtml(paper.journal)} · ${escapeHtml(paper.published || "New")}</div><h3>${escapeHtml(paper.title)}</h3><p>${escapeHtml(summary.slice(0, 520))}</p><div class="why"><strong>Why it matches:</strong> ${escapeHtml(score.explanation)} · ${score.hits.map(escapeHtml).join(", ")}</div></div><div class="paper-actions"><button class="icon-button save-paper" data-id="${escapeHtml(paper.id)}" title="Save paper">${state.saved.has(paper.id) ? "★" : "☆"}</button><a class="icon-button" href="${escapeHtml(paper.url)}" target="_blank" rel="noreferrer" title="Open publisher page">↗</a></div></article>`;
+    return `<article class="paper-card"><div class="score" style="--score:${score.value}"><strong>${score.value}</strong><small>RELEVANCE</small></div><div><div class="paper-meta">${escapeHtml(paper.journal)} · ${escapeHtml(paper.published || "New")}</div><h3>${escapeHtml(paper.title)}</h3><p>${escapeHtml(summary.slice(0, 520))}</p><div class="why"><strong>Why it matches:</strong> ${escapeHtml(score.explanation)} · ${score.hits.map(escapeHtml).join(", ")}</div></div><div class="paper-actions"><button class="icon-button save-paper" data-id="${escapeHtml(paper.id)}" title="Save paper">${state.saved.has(paper.id) ? "★" : "☆"}</button><a class="icon-button" href="${escapeHtml(safeUrl(paper.url))}" target="_blank" rel="noopener noreferrer" title="Open publisher page">↗</a></div></article>`;
   }).join("");
 
   $("#empty-state").classList.toggle("hidden", ranked.length > 0);
@@ -319,6 +383,7 @@ function renderPapers(ranked) {
   $$(".save-paper").forEach(button => button.addEventListener("click", () => {
     state.saved.has(button.dataset.id) ? state.saved.delete(button.dataset.id) : state.saved.add(button.dataset.id);
     localStorage.setItem("paper-radar-saved", JSON.stringify([...state.saved]));
+    syncProfileToAccount();
     button.textContent = state.saved.has(button.dataset.id) ? "★" : "☆";
   }));
 }
@@ -390,11 +455,16 @@ async function initialize() {
   try {
     await loadPublisherData();
     renderFavorites();
+    await syncProfileFromAccount();
   } catch (error) {
     $("#feed-status").textContent = "Publisher index is being prepared. Try again shortly.";
     console.error(error);
   }
   if (!state.profile.interests) $("#profile-warning").classList.remove("hidden");
 }
+
+window.addEventListener("paperflare:session", event => {
+  if (event.detail?.session?.user) syncProfileFromAccount();
+});
 
 initialize();
