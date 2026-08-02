@@ -153,7 +153,11 @@ def send_email(email: str, matches: list[tuple[dict, int, list[str]]], unsubscri
     request_json(
         "https://api.resend.com/emails",
         method="POST",
-        headers={"Authorization": f"Bearer {RESEND_KEY}", "Content-Type": "application/json"},
+        headers={
+            "Authorization": f"Bearer {RESEND_KEY}",
+            "Content-Type": "application/json",
+            "User-Agent": "CatchPapers/1.0 (+https://catchpapers.app)",
+        },
         data={
             "from": FROM_EMAIL,
             "to": [email],
