@@ -22,9 +22,9 @@
       allow_ad_personalization_signals: false
     });
   </script>
-  <link rel="stylesheet" href="styles.css?v=paperflare-1" />
+  <link rel="stylesheet" href="styles.css?v=paper-previews-1" />
   <link rel="stylesheet" href="progress.css?v=1" />
-  <link rel="stylesheet" href="paperflare.css?v=2" />
+  <link rel="stylesheet" href="paperflare.css?v=3" />
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
@@ -133,6 +133,10 @@
         <button id="save-account-settings" class="primary" type="submit">Save alert settings</button>
         <p id="account-settings-status" class="auth-status" role="status" aria-live="polite"></p>
       </form>
+      <section class="starred-library" aria-labelledby="starred-title">
+        <div class="starred-library-heading"><div><p class="eyebrow">YOUR LIBRARY</p><h3 id="starred-title">Starred papers</h3></div><span id="starred-count">0 saved</span></div>
+        <div id="starred-papers" class="starred-papers"><p class="starred-empty">Star papers in your feed to keep them here.</p></div>
+      </section>
       <p class="account-note">CatchPapers stores your research interests, selected journals, saved-paper IDs, and alert settings. It does not upload your CV or store your password.</p>
       <div class="account-actions"><button id="delete-account-button" class="danger-button" type="button">Delete account</button></div>
     </div>
@@ -142,6 +146,6 @@
   <script src="analytics.js?v=1"></script>
   <script src="supabase-config.js"></script>
   <script type="module" src="auth.js?v=3"></script>
-  <script type="module" src="app.js?v=core-alerts-1"></script>
+  <script type="module" src="app.js?v=paper-previews-1"></script>
 </body>
 </html>
