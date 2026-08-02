@@ -39,6 +39,18 @@
 .account-benefit { display: flex; justify-content: space-between; gap: 20px; background: var(--mint); padding: 15px 17px; border-radius: 13px; margin: 20px 0; }
 .account-benefit span { color: var(--green); }
 .account-note { color: var(--muted); font-size: 14px; line-height: 1.5; }
+.account-settings-form { display: grid; gap: 14px; margin: 18px 0; }
+.toggle-field { display: flex; gap: 11px; align-items: flex-start; color: var(--ink); cursor: pointer; }
+.toggle-field input { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--green); }
+.toggle-field span { display: grid; gap: 3px; }
+.toggle-field small { color: var(--muted); line-height: 1.4; }
+.account-actions { display: flex; justify-content: space-between; gap: 12px; padding-top: 16px; border-top: 1px solid var(--line); }
+.danger-button { border: 1px solid #d9aaa3; background: #fff; color: #a83c2f; border-radius: 10px; padding: 10px 14px; font-weight: 700; cursor: pointer; }
+.danger-button:hover { background: #fff3f1; }
+.policy-page { max-width: 760px; padding-top: 70px; padding-bottom: 90px; }
+.policy-page h1 { font-family: Georgia,serif; font-size: clamp(38px,6vw,62px); line-height: 1.04; font-weight: 500; }
+.policy-page h2 { margin-top: 34px; }
+.policy-page p { color: var(--muted); line-height: 1.75; }
 footer { display: flex; justify-content: center; align-items: center; gap: 14px; flex-wrap: wrap; }
 footer strong { color: var(--ink); }
 footer small { width: 100%; }

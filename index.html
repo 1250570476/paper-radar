@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="description" content="PaperFlare monitors the journals you trust and alerts you when newly published research matches your work." />
+  <meta name="description" content="CatchPapers monitors the journals you trust and alerts you when newly published research matches your work." />
   <meta name="theme-color" content="#1f684f" />
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="PaperFlare — Never miss a paper that matters" />
+  <meta property="og:title" content="CatchPapers — Catch every paper that matters" />
   <meta property="og:description" content="Newly published research, matched to your interests and delivered without the noise." />
-  <meta property="og:url" content="https://1250570476.github.io/paper-radar/" />
-  <link rel="canonical" href="https://1250570476.github.io/paper-radar/" />
-  <title>PaperFlare — Never miss a paper that matters</title>
+  <meta property="og:url" content="https://catchpapers.app/" />
+  <link rel="canonical" href="https://catchpapers.app/" />
+  <title>CatchPapers — Catch every paper that matters</title>
   <!-- Google Analytics: anonymous product usage only; no emails, CV text, interests, or paper metadata. -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-W74DSDD856"></script>
   <script>
@@ -29,7 +29,7 @@
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
   <header class="topbar">
-    <a class="brand" href="#" aria-label="PaperFlare home"><span class="brand-mark" aria-hidden="true">PF</span><span>PaperFlare</span></a>
+    <a class="brand" href="#" aria-label="CatchPapers home"><span class="brand-mark" aria-hidden="true">CP</span><span>CatchPapers</span></a>
     <div class="top-actions">
       <nav aria-label="Primary navigation">
         <button class="nav-button active" data-view="feed">My papers</button>
@@ -43,12 +43,12 @@
   <main id="main-content">
     <section id="feed-view" class="view">
       <div class="hero">
-        <div><p class="eyebrow">YOUR FIELD, ALWAYS WITHIN REACH</p><h1>Never miss a paper<br><span>that matters.</span></h1>
-        <p>PaperFlare monitors the journals you trust, detects newly published work, and matches it to your research interests—so the right paper reaches you while it is still new.</p>
+        <div><p class="eyebrow">YOUR FIELD, ALWAYS WITHIN REACH</p><h1>Catch every paper<br><span>that matters.</span></h1>
+        <p>CatchPapers monitors the journals you trust, detects newly published work, and matches it to your research interests—so the right paper reaches you while it is still new.</p>
         <div class="hero-actions"><button id="refresh-button" class="primary">Check new papers</button><button class="secondary" type="button" data-open-account>Create free account</button></div></div>
         <div class="flare-visual" aria-hidden="true"><span class="flare-core"></span><span class="flare-ring ring-one"></span><span class="flare-ring ring-two"></span><i class="flare-dot dot-one"></i><i class="flare-dot dot-two"></i><i class="flare-dot dot-three"></i><strong>NEW<br>PAPER</strong></div>
       </div>
-      <div class="value-strip" aria-label="PaperFlare core values">
+      <div class="value-strip" aria-label="CatchPapers core values">
         <div><span>01</span><strong>Complete coverage</strong><small>Follow the journals you trust</small></div>
         <div><span>02</span><strong>Timely discovery</strong><small>See research as it appears</small></div>
         <div><span>03</span><strong>Personal relevance</strong><small>Only papers connected to your work</small></div>
@@ -59,11 +59,11 @@
         <label>Time window<select id="days-select"><option value="7">7 days</option><option value="30" selected>30 days</option><option value="90">90 days</option></select></label>
       </div>
       <div id="paper-list" class="paper-list"></div>
-      <div id="empty-state" class="empty"><div class="radar-icon">✦</div><h3>Your next important paper starts here</h3><p>Define your interests and trusted journals, then let PaperFlare separate the signal from the noise.</p><button class="secondary" data-go-profile>Build my research profile</button></div>
+      <div id="empty-state" class="empty"><div class="radar-icon">✦</div><h3>Your next important paper starts here</h3><p>Define your interests and trusted journals, then let CatchPapers separate the signal from the noise.</p><button class="secondary" data-go-profile>Build my research profile</button></div>
     </section>
 
     <section id="journals-view" class="view hidden">
-      <div class="section-heading"><p class="eyebrow">YOUR TRUSTED SOURCES</p><h1>Follow the journals that matter</h1><p>Choose the journals PaperFlare should watch. New articles are collected from official publisher pages and checked against your research profile.</p></div>
+      <div class="section-heading"><p class="eyebrow">YOUR TRUSTED SOURCES</p><h1>Follow the journals that matter</h1><p>Choose the journals CatchPapers should watch. New articles are collected from official publisher pages and checked against your research profile.</p></div>
       <article class="panel journal-browser">
         <div class="journal-search-row">
           <label class="field">Search journals by name or ISSN
@@ -79,10 +79,10 @@
     </section>
 
     <section id="profile-view" class="view hidden">
-      <div class="section-heading"><p class="eyebrow">PERSONAL RELEVANCE</p><h1>Teach PaperFlare what matters</h1><p>Your scientific interests guide every match. Until you connect an account, this profile remains only in this browser.</p></div>
+      <div class="section-heading"><p class="eyebrow">PERSONAL RELEVANCE</p><h1>Teach CatchPapers what matters</h1><p>Your scientific interests guide every match. Signed-in users can sync their interests and journal choices across devices; CV files and extracted CV text stay in this browser.</p></div>
       <form id="profile-form" class="profile-grid">
         <article class="panel">
-          <div class="step"><span>1</span><div><h2>Upload your CV</h2><p>PDF, TXT, or Markdown. We extract research terms locally in your browser.</p></div></div>
+          <div class="step"><span>1</span><div><h2>Upload your CV</h2><p>PDF, TXT, or Markdown. Extraction happens locally; your CV is never uploaded to CatchPapers.</p></div></div>
           <label class="dropzone" for="cv-file"><input id="cv-file" type="file" accept=".pdf,.txt,.md,text/plain,application/pdf" /><strong>Choose a CV file</strong><span id="file-label">or drag it here</span></label>
           <label class="field">Extracted CV text<textarea id="cv-text" rows="8" placeholder="Extracted text will appear here. You can also paste CV text directly."></textarea></label>
         </article>
@@ -112,30 +112,36 @@
     <button id="close-account" class="dialog-close" type="button" aria-label="Close account dialog">×</button>
     <div id="auth-forms">
       <p class="eyebrow">PERSONAL PAPER ALERTS</p>
-      <h2 id="account-title">Create your PaperFlare account</h2>
+      <h2 id="account-title">Create your CatchPapers account</h2>
       <p id="account-intro" class="dialog-intro">Save your research setup and choose how often you want relevant new-paper alerts.</p>
       <div class="auth-tabs" role="tablist" aria-label="Account options"><button id="signup-tab" class="active" type="button" role="tab" aria-selected="true">Create account</button><button id="signin-tab" type="button" role="tab" aria-selected="false">Sign in</button></div>
       <form id="auth-form">
         <label class="field">Email address<input id="auth-email" type="email" autocomplete="email" required placeholder="you@university.edu" /></label>
         <label class="field">Password<input id="auth-password" type="password" autocomplete="new-password" minlength="8" required placeholder="At least 8 characters" /></label>
-        <label id="alert-frequency-field" class="field">Email alert frequency<select id="alert-frequency"><option value="daily" selected>Daily digest</option><option value="instant">As soon as possible</option><option value="weekly">Weekly digest</option></select></label>
+        <label id="alert-frequency-field" class="field">Email alert frequency<select id="alert-frequency"><option value="daily" selected>Daily digest</option><option value="weekly">Weekly digest</option></select></label>
         <button id="auth-submit" class="primary auth-submit" type="submit">Create account</button>
         <p id="auth-status" class="auth-status" role="status" aria-live="polite"></p>
       </form>
-      <small class="privacy-note">PaperFlare never stores your password. Authentication is handled by Supabase, and email confirmation is required.</small>
+      <small class="privacy-note">CatchPapers never stores your password. Authentication is handled by Supabase, and email confirmation is required.</small>
     </div>
     <div id="account-panel" class="hidden">
-      <p class="eyebrow">YOUR ACCOUNT</p><h2>Welcome to PaperFlare</h2><p id="account-email" class="dialog-intro"></p>
+      <p class="eyebrow">YOUR ACCOUNT</p><h2>Welcome to CatchPapers</h2><p id="account-email" class="dialog-intro"></p>
       <div class="account-benefit"><strong>Alert preference</strong><span id="account-frequency">Daily digest</span></div>
-      <p class="account-note">Your account is ready. Profile syncing and automatic paper-email delivery are the next backend connection.</p>
-      <button id="signout-button" class="secondary" type="button">Sign out</button>
+      <form id="account-settings-form" class="account-settings-form">
+        <label class="field">Digest frequency<select id="account-alert-frequency"><option value="daily">Daily digest</option><option value="weekly">Weekly digest</option></select></label>
+        <label class="toggle-field"><input id="account-alerts-enabled" type="checkbox" checked /><span><strong>Email alerts</strong><small>Send newly matched papers to my account email</small></span></label>
+        <button id="save-account-settings" class="primary" type="submit">Save alert settings</button>
+        <p id="account-settings-status" class="auth-status" role="status" aria-live="polite"></p>
+      </form>
+      <p class="account-note">CatchPapers stores your research interests, selected journals, saved-paper IDs, and alert settings. It does not upload your CV or store your password.</p>
+      <div class="account-actions"><button id="signout-button" class="secondary" type="button">Sign out</button><button id="delete-account-button" class="danger-button" type="button">Delete account</button></div>
     </div>
   </dialog>
 
-  <footer><strong>PaperFlare</strong><span>Never miss a paper that matters.</span><small>Research metadata is collected from official journal publisher sources.</small></footer>
+  <footer><strong>CatchPapers</strong><span>Catch every paper that matters.</span><a href="privacy.html">Privacy</a><small>Research metadata is collected from official journal publisher sources. CV processing stays on your device.</small></footer>
   <script src="analytics.js?v=1"></script>
   <script src="supabase-config.js"></script>
-  <script type="module" src="auth.js?v=2"></script>
-  <script type="module" src="app.js?v=relevance-iterative-2"></script>
+  <script type="module" src="auth.js?v=3"></script>
+  <script type="module" src="app.js?v=core-alerts-1"></script>
 </body>
 </html>
